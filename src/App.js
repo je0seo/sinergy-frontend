@@ -10,6 +10,7 @@ import './App.css'; // App.css 파일을 import
 // FindPathContent.js
 import legend from './components/images/legend.png';
 import axios from 'axios';
+import {NODE_BACKEND_URL} from "./constants/urls";
 //
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange }) => {
@@ -67,7 +68,7 @@ const usePathfinding = () => {
       };
       console.log('중간점검용:', requestData);
       try {
-        var response = await axios.post('http://localhost:5000/findPathServer', requestData, {
+        var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
           headers: {
             'Content-Type': 'application/json',
           },

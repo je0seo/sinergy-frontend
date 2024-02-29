@@ -6,6 +6,7 @@ import legend from './images/legend.png';
 import MapC from './MapC.js';
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import {NODE_BACKEND_URL} from "../constants/urls";
 
 const PathFinderPage = () => {
     const initialFeaturesState = {
@@ -57,7 +58,7 @@ const PathFinderPage = () => {
             };
             console.log('중간점검용:',requestData );
             try {
-                var response = await axios.post('http://localhost:5000/findPathServer', requestData, {
+                var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
