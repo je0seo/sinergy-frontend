@@ -1,0 +1,154 @@
+/*App.js에서 사용*/
+.container {
+  display: flex;
+  height: 100vh;
+}
+.main-left-side {
+  flex: 1;
+  background-color: #f0f0f0;
+  padding: 1px;
+}
+.main-right-side {
+  flex: 2.5;
+  background-color: #ffffff;
+}
+/*Header부분*/
+.header {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #f0f0f0; /* 헤더 배경색 */
+  color: #fff; /* 헤더 텍스트 색상 */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+}
+.search-bar {
+  display: flex;
+  border: 1px solid #44EAC5;
+  border-radius: 80px;
+  padding: 2px;
+  background-color: #ffffff;
+  width: 350px;
+  margin-bottom: 0px;
+}
+.search-bar input {
+  flex: 2;
+  border: none;
+  outline: none;
+}
+.search-bar button {
+  background-color: #44EAC5;
+  color: #f0f0f0;
+  border: none;
+  border-radius: 15px 15px 15px 15px;
+  cursor: pointer;
+  width: 45px;
+  height: 30px;
+}
+/*탭 구성*/
+.menu {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+}
+.menu-tab {
+  background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
+  color: black; /* 탭 텍스트 색상 */
+  border: none;
+  cursor: pointer;
+  display: block;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  text-decoration: none;
+  border-radius: 0px;
+  transition: background-color 1s ease;
+}
+.menu-tab:hover {
+  background-color: #555; /* 마우스 호버 시 배경색 변경 */
+}
+/*홈화면 좌측 패널*/
+.home-left {
+  background-color: #f0f0f0;
+  padding: 1px;
+  justify-content: space-around;
+}
+/*pathfinder-page*/
+.pathfinder-page {
+  flex: 1;
+  background-color: #f0f0f0;
+}
+.option-button-row {
+  display: flex;
+  padding: 0px;
+  justify-content: space-between;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+.option-button{
+  margin-top: 1px;
+  height: 35px;
+  font-size: 13.8px; 
+  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
+  border-width: 1px; /* 버튼의 테두리 두께 */
+  border-style: solid; 
+  border-color:rgb(175, 175, 175);
+}
+.option-button:hover {
+  color: black;
+  background-color: #44EAC5; /* 마우스 호버 시 배경색 변경 */
+}
+.selected-button {
+  background-color: #44EAC5;
+  height: 35px;
+  font-size: 13.8px;
+  color:white;
+  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
+  border-width: 1px; /* 버튼의 테두리 두께 */
+  border-style: solid; 
+}
+.input-row {
+  display: flex;
+  flex-direction: column; /* 내부 요소를 세로로 배열 */
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+.pf-input-style{ /* 출발,도착,경유지 입력창 */
+  height: 30px;
+  width: 96%;
+  margin: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.button-row {
+  display: flex;
+  padding: 1px;
+  justify-content: flex-end;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.button-style{
+  margin: 5px;
+  height:35px;
+  font-size:12px;
+  border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
+  border-width: 1px; /* 버튼의 테두리 두께 */
+  border-style: solid; 
+  background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
+  transition: background-color 0.1s ease;
+}
+.button-style:hover {
+  color: white;
+  background-color: #2a2828; /* 마우스 호버 시 배경색 변경 */
+}
+.shortest-path-text{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+  margin: 8px;
+  border: 1px solid black;
+}
