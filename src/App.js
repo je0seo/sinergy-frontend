@@ -220,14 +220,24 @@ const App = () => {
                             <p>서울시립대학교 어디로 안내할까요?</p>
                         </div>
                     )}
-                    {showShortestPathText && (
-                      <div>
-                        <div className="shortest-path-text">
-                          [최단 경로 검색 결과]
-                          <div id="total-distance">총 거리:  {totalDistance.toFixed(4)} m</div>
-                          <img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />
+                    {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
+                        <div>
+                            <div className="shortest-path-text">
+                                [최단 경로 검색 결과]
+                                <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
+                                <img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />
+                            </div>
                         </div>
-                      </div>
+                    )}
+                    {showShortestPathText && totalDistance !== null && totalDistance === 0 && (
+                        <div className="shortest-path-text">
+                            조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요.
+                        </div>
+                    )}
+                    {showShortestPathText && (!pathData || totalDistance === null || (totalDistance > 0 && !pathData.length)) && (
+                        <div className="shortest-path-text">
+                            입력지 오류입니다. 입력지를 다시한번 확인해주세요
+                        </div>
                     )}
                   </div>
                 </div>)}
