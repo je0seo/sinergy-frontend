@@ -46,12 +46,14 @@ const usePathfinding = () => {
   const [showShortestPathText, setShowShortestPathText] = useState(false);
   const [totalDistance, setTotalDistance] = useState(0);
   const [pathData, setPathData] = useState(null);
+  const [showText4deco, setShowText4deco] = useState(true);
 
   const handlePathResult = (data) => {
     console.log(data.minAggCost);
     const calculatedTotalDistance = data.minAggCost;
     setTotalDistance(calculatedTotalDistance);
     setShowShortestPathText(true);
+    setShowText4deco(false)
     const shortestPath = data.shortestPath;
     if (shortestPath) {
       setPathData(shortestPath);
@@ -66,17 +68,22 @@ const usePathfinding = () => {
         stopovers,
         features,
       };
-      console.log('중간점검용:', requestData);
-      try {
-        var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        handlePathResult(response.data);
+      if (start===""){
+          alert("출발지가 입력되지 않았습니다. 다시한번 확인해주세요")
+      } else if(end===""){
+          alert("도착지가 입력되지 않았습니다. 다시한번 확인해주세요")
+      } else{
+          console.log('중간점검용:', requestData);
+          try {
+          var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+          handlePathResult(response.data);
       } catch (error) {
-        console.error('Error during Axios POST request', error);
-      }
+          console.error('Error during Axios POST request', error);
+      }}
     } catch (error) {
       console.error('Error finding path:', error);
     }
@@ -98,6 +105,7 @@ const usePathfinding = () => {
     setEnd('');
     setStopovers([]);
     setShowShortestPathText(false);
+    setShowText4deco(true);
     setTotalDistance(0);
     setPathData(null);
   };
@@ -108,6 +116,7 @@ const usePathfinding = () => {
     end,
     stopovers,
     showShortestPathText,
+    showText4deco,
     totalDistance,
     pathData,
     setFeatures,
@@ -115,6 +124,7 @@ const usePathfinding = () => {
     setEnd,
     setStopovers,
     setShowShortestPathText,
+    setShowText4deco,
     setTotalDistance,
     setPathData,
     handleFindPathClick,
@@ -139,6 +149,7 @@ const App = () => {
       end,
       stopovers,
       showShortestPathText,
+      showText4deco,
       totalDistance,
       pathData,
       setFeatures,
@@ -146,6 +157,7 @@ const App = () => {
       setEnd,
       setStopovers,
       setShowShortestPathText,
+      setShowText4deco,
       setTotalDistance,
       setPathData,
       handleFindPathClick,
@@ -173,6 +185,11 @@ const App = () => {
                     <a href="https://www.uos.ac.kr/main.do?epTicket=INV">
                         <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
                     </a>
+                    {showText4deco && (
+                        <div className="deco-text-style">
+                            <p>서울시립대학교 어디가 궁금하세요?</p>
+                        </div>
+                    )}
                 </div>}
                 {activeTab === '길찾기' && (
                 <div>
@@ -198,6 +215,11 @@ const App = () => {
                       <button className="button-style" onClick={addStopover}>경유지 추가</button>
                       <button className="button-style" onClick={handleFindPathClick}>길찾기 결과 보기</button>
                     </div>
+                    {showText4deco && (
+                        <div className="deco-text-style">
+                            <p>서울시립대학교 어디로 안내할까요?</p>
+                        </div>
+                    )}
                     {showShortestPathText && (
                       <div>
                         <div className="shortest-path-text">
