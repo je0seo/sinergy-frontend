@@ -17,11 +17,14 @@ import { register } from 'ol/proj/proj4';
 
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
+import { within } from 'ol/format/filter';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumaker2.png';
 
+import axios from 'axios';
+import {NODE_BACKEND_URL} from "../constants/urls";
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
@@ -88,7 +91,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
       });
     };
 
-    const addShortestPathLayer = (pathData) => {
+    const createShortestPathLayer = (pathData) => {
         pathData.forEach((path, index) => {
             console.log(path);
             const listOfEdgeId = path.map(e => e.edge);
@@ -128,7 +131,8 @@ const MapC = ({ pathData, width, height, keyword }) => {
         }
     }
 
-    const markNodesFrom = (locaArray) => {
+    const createNAddNodeLayersFrom = (locaArray) => {
+        let nodeLayers = [];
         locaArray.forEach((nodeId, index) => {
             // shortestPathLayer->nodeLayer
             const nodeLayer = new VectorLayer({
@@ -147,15 +151,19 @@ const MapC = ({ pathData, width, height, keyword }) => {
                 style: basicMarkerStyle(setMarkerSrcOf(locaArray,index)),
                 zIndex: 5
             });
+            nodeLayers.push(nodeLayer);
             map.addLayer(nodeLayer);
         });
+        return nodeLayers;
     }
 
-    const markerClickEventWith = (locaArray) => {
+    const markerClickEventWith = (locaArray, layers) => {
         //feature 클릭 가능한 select 객체
         let selectSingleClick = new Select({
            condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
+           layers: layers
         });
+
         map.addInteraction(selectSingleClick);
 
         // feature를 선택할 때 이벤트
@@ -163,6 +171,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
             var selectedFeatures = e.selected;
 
             selectedFeatures.forEach(function(feature) {
+                console.log(feature)
                 if (feature.get('node_id')==locaArray[0]) {
                     feature.setStyle(clickedMarkerStyle(irumarkerS))
                     console.log('출발지 click: '+feature.getId());
@@ -176,6 +185,57 @@ const MapC = ({ pathData, width, height, keyword }) => {
             });
         });
     }
+
+    const poiMarkerClickEventWith = (keyword, layer) => {
+        let selectBuildClick = new Select({
+           condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
+           layers: layer
+        });
+        map.addInteraction(selectBuildClick);
+        // feature를 선택할 때 이벤트
+        selectBuildClick.on('select', function(e) {
+            var selectedFeatures = e.selected;
+
+            selectedFeatures.forEach(function(feature) {
+                if (feature.get('bg_name') === keyword) {
+                    feature.setStyle(clickedMarkerStyle(irumarker2))
+                    console.log(keyword + ' click')
+                }
+            });
+        });
+    }
+
+    const createPoiMarkerLayer = (cqlFilter) => {
+        console.log("hello?")
+        const poiSource = new VectorSource({ // feature들이 담겨있는 vector source
+            format: new GeoJSON({
+                dataProjection: 'EPSG:5181'
+            }),
+            url: function(extent) {
+                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                    '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+cqlFilter;
+            },
+            serverType: 'geoserver'
+        });
+
+        // poiLayer -> poiMarkerLayer (이름 변경)
+        const poiMarkerLayer = new VectorLayer({
+            title: 'POI',
+            visible: true,
+            source: poiSource,
+            style: basicMarkerStyle(irumarker2),
+            zIndex: 4
+        });
+
+        if(poiSource.getFeatures()){
+            console.log('features exists');
+        } else{
+            console.log('nothing');
+        }
+
+        return poiMarkerLayer;
+    }
+
 
 		//추가부분
     proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
@@ -238,44 +298,30 @@ const MapC = ({ pathData, width, height, keyword }) => {
             }
 
             var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
+
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
-                addShortestPathLayer(pathData);
+                createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
 
                 console.log(locaArray);
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
-                markNodesFrom(locaArray);
-                markerClickEventWith(locaArray); // 노드 마커 클릭 이벤트
+                markerClickEventWith(locaArray, createNAddNodeLayersFrom(locaArray)); // 노드 마커 클릭 이벤트
             }
 
+
+            //let buildingMarkerExists = false;
             if (keyword) {
                 let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+                let poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
+                map.addLayer(poiMarkerLayer)
+                poiMarkerClickEventWith(keyword,poiMarkerLayer);
 
-                const poiSource = new VectorSource({ // feature들이 담겨있는 vector source
-                    format: new GeoJSON({
-                        dataProjection: 'EPSG:5181'
-                    }),
-                    url: function(extent) {
-                        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                            '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+cqlFilter;
-                    },
-                    serverType: 'geoserver'
-                });
-
-                // poiLayer -> makerLayer (이름 변경)
-                const markerLayer = new VectorLayer({
-                    title: 'POI',
-                    visible: true,
-                    source: poiSource,
-                    style: basicMarkerStyle(irumarker2),
-                    zIndex: 4
-                });
-                map.addLayer(markerLayer)
-
+                //console.log(poiMarkerLayer)
             }
+
         }
     }, [map, layerState, pathData, keyword]);
 
