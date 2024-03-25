@@ -7,7 +7,7 @@ import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
 import { get as getProjection, fromLonLat } from 'ol/proj';
 import makeCrsFilter4node from "./utils/filter-for-node.js";
-import makeCrsFilter from "./utils/crs-filter.js";
+import {makeCrsFilter, ShowReqFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
@@ -18,7 +18,6 @@ import { register } from 'ol/proj/proj4';
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumarker2.png';
-
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
@@ -46,7 +45,7 @@ const vworldSatelliteLayer = new TileLayer({
     //preload: Infinity,
 });
 
-const MapC = ({ pathData, width, height, keyword }) => {
+const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
 
@@ -131,7 +130,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
 
     useEffect(() => {
         if (map) {
-            console.log(pathData);
+            //console.log(pathData);
             const layerExists = map.getLayers();
             if (layerExists) {
                 switch (layerState) {
@@ -158,6 +157,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
                     const listOfEdgeId = path.map(e => e.edge);
                     const listOfNodeId = path.map(n => n.node);
                     locaArray.push(listOfNodeId[0]);
+                    console.log(listOfEdgeId);
                     const crsFilter = makeCrsFilter(listOfEdgeId);
                     if (index === pathData.length - 1) {
                         locaArray.push(listOfNodeId[listOfNodeId.length - 1]);
@@ -166,7 +166,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
                         title: `UOS Shortest Path ${index + 1}`,
                         source: new TileWMS({
                             url: 'http://localhost:8080/geoserver/gp/wms',
-                            params: { 'LAYERS': 'gp:link', ...crsFilter },
+                            params: {'LAYERS': 'gp:link', ...crsFilter},
                             serverType: 'geoserver',
                             visible: true,
                         }),
@@ -178,17 +178,17 @@ const MapC = ({ pathData, width, height, keyword }) => {
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
-                locaArray.forEach((path, index) => {
+                locaArray.forEach((nodeId, index) => {
                     let poiStyle;
-                     if (index === 0) {
+                    if (index === 0) { // 출발지
                         poiStyle = poiStyleS;
-                    } else if (index === locaArray.length - 1) {
+                    } else if (index === locaArray.length - 1) { //도착지
                         poiStyle = poiStyleE;
                     } else {
-                        poiStyle = poiStyle2;
+                        poiStyle = poiStyle2; // 경유지
                     }
-                    const crsFilter = makeCrsFilter4node(locaArray);
-                    const shortestPathLayer = new TileLayer({
+                    //const crsFilter = makeCrsFilter4node(locaArray);
+                    /*const shortestPathLayer = new TileLayer({
                         title: `Marker ${index + 1}`,
                         source: new TileWMS({
                             url: 'http://localhost:8080/geoserver/gp/wms',
@@ -199,20 +199,79 @@ const MapC = ({ pathData, width, height, keyword }) => {
                         zIndex: 5,
                         style: poiStyle,
                     });
+                    */
+
+                    // shortestPathLayer을 WMS방식에서 WFS로 변경. 아래 poiSource랑 poiLayer 코드에서 수정.
+                    const shortestPathLayer = new VectorLayer({
+                        title: `Marker ${index + 1}`,
+                        visible: true,
+                        source: new VectorSource({ // feature들이 담겨있는 vector source
+                            format: new GeoJSON({
+                                dataProjection: 'EPSG:5181'
+                            }),
+                            url: function (extent) {
+                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                                    '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id=' + nodeId;
+                            },
+                            serverType: 'geoserver'
+                        }),
+                        style: poiStyle,
+                        zIndex: 5
+                    });
                     map.addLayer(shortestPathLayer);
                 });
             }
 
+            if (ShowReqIdsNtype) {
+                if (ShowReqIdsNtype.type === 'facilities'|| ShowReqIdsNtype.type === 'bump' || ShowReqIdsNtype.type === 'bol'){
+                    const ShowLayer = new VectorLayer({
+                        title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
+                        visible: true,
+                        source: new VectorSource({
+                            format: new GeoJSON({
+                                dataProjection: 'EPSG:5181'
+                            }),
+                            url: function (extent) {
+                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                                    '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('+ShowReqIdsNtype.Ids +')';
+                            },
+                            serverType: 'geoserver'
+                        }),
+                        zIndex: 5
+                    });
+                    map.addLayer(ShowLayer);
+                }
+                else if (ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope'){
+                    const ShowLayer = new VectorLayer({
+                        title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
+                        visible: true,
+                        source: new VectorSource({
+                            format: new GeoJSON({
+                                dataProjection: 'EPSG:5181'
+                            }),
+                            url: function (extent) {
+                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                                    '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in (' +
+                                    ShowReqIdsNtype.Ids + ')';
+                            },
+                            serverType: 'geoserver'
+                        }),
+                        zIndex: 5
+                    });
+                    map.addLayer(ShowLayer);
+                }
+            }
+
             if (keyword) {
-                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+                let cqlFilter = encodeURIComponent("name like '%" + keyword + "%'"); // Replace 'desiredName' with the name you want to filter by
 
                 const poiSource = new VectorSource({
                     format: new GeoJSON({
                         dataProjection: 'EPSG:5181'
                     }),
-                    url: function(extent) {
+                    url: function (extent) {
                         return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                            '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+cqlFilter;
+                            '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=' + cqlFilter;
                     },
                     serverType: 'geoserver'
                 });
@@ -226,7 +285,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
                 map.addLayer(poiLayer)
             }
         }
-    }, [map, layerState, pathData, keyword]);
+    }, [map, layerState, pathData, keyword, ShowReqIdsNtype]);
 
     return (
         <div>
