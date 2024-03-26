@@ -134,6 +134,35 @@ const usePathfinding = () => {
   };
 };
 
+// 건물 정보 조회
+const useFindingBuildingInfo = () => {
+    const [bdName, setBdName] = useState('');
+    const [bdId, setBdId] = useState(0);
+    const [bdSummary, setBdSummary] = useState('');
+    const [bdImage, setBdImage] = useState('');
+    const [totalFloors, setTotalFloors] = useState(0);
+    const [numberOfLounge, setNumberOfLounge] = useState(0);
+
+    const bdInfo = {bdName, bdId,bdSummary, totalFloors, numberOfLounge};
+
+    const response = handleBuildingInfoClick(bdInfo);
+}
+
+const handleBuildingInfoClick = async (wanted) => {
+    const requestData = wanted;
+    try {
+          var response = await axios.post(NODE_BACKEND_URL+'/findBuildingServer', requestData, {
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+    } catch(error) {
+     console.error('Error during Axios POST request', error);
+    };
+    console.log(response)
+    return response;
+}
+
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [keyword, setKeyword] = useState('');
@@ -186,6 +215,11 @@ const App = () => {
         }
     };
 
+    // 건물 정보 조회
+//    const { bdName, bdId, bdSummary, bdImage, totalFloors, numberOfLounge }
+//    = findingBuildingInfo();
+    //console.log(useFindingBuildingInfo)
+
     return (
         <div className='container' >
             <div className="main-left-side">
@@ -197,6 +231,7 @@ const App = () => {
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
                   <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>3D</button>
                 </div>
+
                 {activeTab === '' && <div className='home-left'>
                     <div>
                         <button className='showingBtn' onClick={() => handleShowReq('facilities')}>편의시설 보기</button>
