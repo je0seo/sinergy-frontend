@@ -7,7 +7,7 @@ import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
 import { get as getProjection, fromLonLat } from 'ol/proj';
 import makeCrsFilter4node from "./utils/filter-for-node.js";
-import makeCrsFilter from "./utils/crs-filter.js";
+import {makeCrsFilter, ShowReqFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
@@ -52,7 +52,7 @@ const vworldSatelliteLayer = new TileLayer({
     //preload: Infinity,
 });
 
-const MapC = ({ pathData, width, height, keyword }) => {
+const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
 
@@ -303,7 +303,7 @@ const MapC = ({ pathData, width, height, keyword }) => {
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-
+              
                 console.log(locaArray);
             }
             // 출발, 도착, 경유 노드 표시
@@ -318,12 +318,49 @@ const MapC = ({ pathData, width, height, keyword }) => {
                 let poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
                 poiMarkerClickEventWith(keyword,poiMarkerLayer);
-
-                //console.log(poiMarkerLayer)
             }
 
+            if (ShowReqIdsNtype) {
+                if (ShowReqIdsNtype.type === 'facilities'|| ShowReqIdsNtype.type === 'bump' || ShowReqIdsNtype.type === 'bol'){
+                    const ShowLayer = new VectorLayer({
+                        title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
+                        visible: true,
+                        source: new VectorSource({
+                            format: new GeoJSON({
+                                dataProjection: 'EPSG:5181'
+                            }),
+                            url: function (extent) {
+                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                                    '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('+ShowReqIdsNtype.Ids +')';
+                            },
+                            serverType: 'geoserver'
+                        }),
+                        zIndex: 5
+                    });
+                    map.addLayer(ShowLayer);
+                }
+                else if (ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope'){
+                    const ShowLayer = new VectorLayer({
+                        title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
+                        visible: true,
+                        source: new VectorSource({
+                            format: new GeoJSON({
+                                dataProjection: 'EPSG:5181'
+                            }),
+                            url: function (extent) {
+                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                                    '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in (' +
+                                    ShowReqIdsNtype.Ids + ')';
+                            },
+                            serverType: 'geoserver'
+                        }),
+                        zIndex: 5
+                    });
+                    map.addLayer(ShowLayer);
+                }
+            }
         }
-    }, [map, layerState, pathData, keyword]);
+    }, [map, layerState, pathData, keyword, ShowReqIdsNtype]);
 
     return (
         <div>
