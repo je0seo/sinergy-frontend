@@ -39,6 +39,7 @@ const usePathfinding = () => {
     bump: false,
     bol: false,
   };
+
   const [features, setFeatures] = useState(initialFeaturesState);
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
@@ -53,13 +54,12 @@ const usePathfinding = () => {
     const calculatedTotalDistance = data.minAggCost;
     setTotalDistance(calculatedTotalDistance);
     setShowShortestPathText(true);
-    setShowText4deco(false)
+    setShowText4deco(false);
     const shortestPath = data.shortestPath;
     if (shortestPath) {
       setPathData(shortestPath);
     }
   };
-
   const handleFindPathClick = async () => {
     try {
       const requestData = {
@@ -167,10 +167,20 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [keyword, setKeyword] = useState('');
     const [activeTab, setActiveTab] = useState('');
+    const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
+    const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
 
+    const handleShowReq = async (ReqType) => {
+        const Ids = await showReq(ReqType);
+        setShowReqIdsNtype({ type: ReqType, Ids });
+    };
     const handleTabChange = (tab) => {
         setActiveTab(tab);
     };
+    const handleToggleObstacleMenu = () => {
+        setShowObstacleMenu(!showObstacleMenu);
+    };
+
     //길찾기
     const {
       features,
@@ -184,11 +194,6 @@ const App = () => {
       setFeatures,
       setStart,
       setEnd,
-      setStopovers,
-      setShowShortestPathText,
-      setShowText4deco,
-      setTotalDistance,
-      setPathData,
       handleFindPathClick,
       addStopover,
       handleStopoverChange,
@@ -197,6 +202,17 @@ const App = () => {
   
     const toggleFeature = (feature) => {
       setFeatures({ ...features, [feature]: !features[feature] });
+    };
+    const showReq = async (Req) => {
+        try {
+            const response = await axios.post(NODE_BACKEND_URL + '/ShowReq', { Req }, {
+                headers: {'Content-Type': 'application/json'},
+            });
+            //console.log(response.data.Ids);
+            return response.data.Ids
+        } catch (error) {
+            console.error('Error during Axios POST request while Showing Request Maker', error);
+        }
     };
 
     // 건물 정보 조회
@@ -217,6 +233,22 @@ const App = () => {
                 </div>
 
                 {activeTab === '' && <div className='home-left'>
+                    <div>
+                        <button className='showingBtn' onClick={() => handleShowReq('facilities')}>편의시설 보기</button>
+                        {!showObstacleMenu && (
+                            <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
+                        )}
+                        {showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정
+                            <div className='showingObstacleBtns'>
+                                <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button> {/* 버튼 토글 기능 추가 */}
+                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}>비포장도로 보기</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}>계단 보기</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('slope')}>경사로 보기</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bump')}>도로턱 보기</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bol')}>볼라드 보기</button>
+                            </div>
+                        )}
+                    </div>
                     <a href="https://www.uos.ac.kr/main.do?epTicket=INV">
                         <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
                     </a>
@@ -279,7 +311,7 @@ const App = () => {
                 {activeTab === '3D' && <ThreeDContent />}
             </div>
             <div className='main-right-side'>
-                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} />}
+                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype}/>}
                 {activeTab === '길찾기' && <Map width='100%' height='100vh' keyword={keyword} pathData={pathData} />}
             </div>
         </div>
