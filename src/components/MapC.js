@@ -15,6 +15,9 @@ import {Circle, Fill, Stroke, Style, Icon} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 
+import Select from 'ol/interaction/Select';
+import { click } from 'ol/events/condition';
+
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumarker2.png';
@@ -130,7 +133,6 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
 
     useEffect(() => {
         if (map) {
-            //console.log(pathData);
             const layerExists = map.getLayers();
             if (layerExists) {
                 switch (layerState) {
@@ -143,6 +145,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                         map.getLayers().clear();
                         map.addLayer(vworldSatelliteLayer);
                         map.addLayer(UOSorthoTile);
+                        console.log('항공');
                         break;
                     default:
                         map.getLayers().clear();
@@ -152,7 +155,8 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             }
             // Add UOS Shortest Path layers
             var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
-            if (pathData && pathData.length >= 1) {
+            // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
+            if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 pathData.forEach((path, index) => {
                     const listOfEdgeId = path.map(e => e.edge);
                     const listOfNodeId = path.map(n => n.node);
@@ -173,6 +177,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                         zIndex: 2
                     });
                     map.addLayer(shortestPathLayer);
+                    
                 });
                 console.log(locaArray);
             }
@@ -180,6 +185,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             if (locaArray && locaArray.length >= 2) {
                 locaArray.forEach((nodeId, index) => {
                     let poiStyle;
+                  
                     if (index === 0) { // 출발지
                         poiStyle = poiStyleS;
                     } else if (index === locaArray.length - 1) { //도착지
@@ -201,7 +207,9 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                     });
                     */
 
+
                     // shortestPathLayer을 WMS방식에서 WFS로 변경. 아래 poiSource랑 poiLayer 코드에서 수정.
+
                     const shortestPathLayer = new VectorLayer({
                         title: `Marker ${index + 1}`,
                         visible: true,
@@ -218,8 +226,9 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                         style: poiStyle,
                         zIndex: 5
                     });
+
                     map.addLayer(shortestPathLayer);
-                });
+                })
             }
 
             if (ShowReqIdsNtype) {
@@ -265,7 +274,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             if (keyword) {
                 let cqlFilter = encodeURIComponent("name like '%" + keyword + "%'"); // Replace 'desiredName' with the name you want to filter by
 
-                const poiSource = new VectorSource({
+                const poiSource = new VectorSource({ // feature들이 담겨있는 vector source
                     format: new GeoJSON({
                         dataProjection: 'EPSG:5181'
                     }),
@@ -275,14 +284,38 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                     },
                     serverType: 'geoserver'
                 });
-                const poiLayer = new VectorLayer({
+                // poiLayer -> makerLayer (이름 변경)
+                const markerLayer = new VectorLayer({
                     title: 'POI',
                     visible: true,
                     source: poiSource,
                     style: poiStyle2,
                     zIndex: 4
                 });
-                map.addLayer(poiLayer)
+                map.addLayer(markerLayer)
+
+                // 수아 추가
+                // feature 클릭 가능한 select 객체
+                let selectSingleClick = new Select({
+                    condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
+                    style: new Style({
+                        stroke: new Stroke({
+                            color: 'white',
+                            width: 3
+                        }),
+                        fill: new Fill({
+                            color: 'rgba(0,0,255,0.6)'
+                        })
+                    })
+                });
+                map.addInteraction(selectSingleClick); // map 객체에 Select 객체 추가
+                
+                // 기존 색상을 담는 객체
+                let _style = null;
+                // feature를 선택할 때 이벤트
+                selectSingleClick.on('select', function(e) {
+                    console.log('click');
+                });
             }
         }
     }, [map, layerState, pathData, keyword, ShowReqIdsNtype]);
