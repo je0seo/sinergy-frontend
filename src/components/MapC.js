@@ -17,7 +17,6 @@ import { register } from 'ol/proj/proj4';
 
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
-import { within } from 'ol/format/filter';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
@@ -158,12 +157,12 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     }
 
     const markerClickEventWith = (locaArray, layers) => {
+        console.log(layers)
         //feature 클릭 가능한 select 객체
         let selectSingleClick = new Select({
            condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
            layers: layers
         });
-
         map.addInteraction(selectSingleClick);
 
         // feature를 선택할 때 이벤트
@@ -171,7 +170,6 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             var selectedFeatures = e.selected;
 
             selectedFeatures.forEach(function(feature) {
-                console.log(feature)
                 if (feature.get('node_id')==locaArray[0]) {
                     feature.setStyle(clickedMarkerStyle(irumarkerS))
                     console.log('출발지 click: '+feature.getId());
@@ -189,7 +187,9 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     const poiMarkerClickEventWith = (keyword, layer) => {
         let selectBuildClick = new Select({
            condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
-           layers: layer
+           layers: function(layer) {
+                return layer === layer; // 선택 가능한 레이어 조건 설정
+           }
         });
         map.addInteraction(selectBuildClick);
         // feature를 선택할 때 이벤트
@@ -206,7 +206,6 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     }
 
     const createPoiMarkerLayer = (cqlFilter) => {
-        console.log("hello?")
         const poiSource = new VectorSource({ // feature들이 담겨있는 vector source
             format: new GeoJSON({
                 dataProjection: 'EPSG:5181'
@@ -226,12 +225,6 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             style: basicMarkerStyle(irumarker2),
             zIndex: 4
         });
-
-        if(poiSource.getFeatures()){
-            console.log('features exists');
-        } else{
-            console.log('nothing');
-        }
 
         return poiMarkerLayer;
     }
@@ -315,7 +308,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             //let buildingMarkerExists = false;
             if (keyword) {
                 let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
-                let poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
+                const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
                 poiMarkerClickEventWith(keyword,poiMarkerLayer);
             }
