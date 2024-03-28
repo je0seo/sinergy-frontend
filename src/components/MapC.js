@@ -51,6 +51,130 @@ const vworldSatelliteLayer = new TileLayer({
     //preload: Infinity,
 });
 
+const UOSbasemapTile = new TileLayer({
+    title: 'UOS Base Map',
+    visible: true,
+    source: new TileWMS({
+        url: 'http://localhost:8080/geoserver/gp/wms',
+        params: { 'LAYERS': 'gp:basemap' },
+        serverType: 'geoserver',
+    }),
+});
+
+const UOSorthoTile = new TileLayer({
+        title: 'UOS Road',
+        visible: true,
+        source: new TileWMS({
+            url: 'http://localhost:8080/geoserver/gp/wms',
+            params: { 'LAYERS': 'gp:uos_orthomosaic' },
+            serverType: 'geoserver',
+        }),
+        zIndex: 1
+    });
+
+const basicMarkerStyle = (irumarker) => { //출발지 스타일
+    return new Style({
+        image: new Icon({
+            src: irumarker,
+            scale: 0.1, // 이미지의 크기
+            opacity: 1, // 이미지의 투명도
+            rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부
+            rotation: 0 // 이미지의 초기 회전 각도
+        })
+    });
+};
+
+const clickedMarkerStyle = (irumarker) => {
+  return new Style({
+      image: new Icon({
+          src: irumarker, // 이미지 파일의 경로를 설정합니다.
+          scale: 0.1, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
+          opacity: 0.7, // 이미지의 투명도를 조절합니다.
+          rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부를 설정합니다.
+          rotation: 0 // 이미지의 초기 회전 각도를 설정합니다.
+      })
+  });
+};
+
+const makelocaArrayFromNodes = (pathData, locaArray) => {
+    pathData.forEach((path, index) => {
+        const listOfNodeId = path.map(n => n.node); // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
+        locaArray.push(listOfNodeId[0]);
+        if (index === pathData.length - 1) {
+            locaArray.push(listOfNodeId[listOfNodeId.length - 1]);
+        }
+    });
+    return locaArray;
+}
+
+const setMarkerSrcOf = (locaArray,index) => {
+    if (index === 0) { // 출발지
+        return irumarkerS;
+    } else if (index === locaArray.length - 1) { //도착지
+        return irumarkerE;
+    } else {
+        return irumarker2; // 경유지
+    }
+}
+
+const markerClickEventWith = (locaArray, selectClick) => {
+    // feature를 선택할 때 이벤트
+    selectClick.on('select', function(e) {
+        var selectedFeatures = e.selected;
+
+        selectedFeatures.forEach(function(feature) {
+            if (feature.get('node_id')==locaArray[0]) {
+                feature.setStyle(clickedMarkerStyle(irumarkerS))
+                console.log('출발지 click: '+feature.getId());
+            } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
+                feature.setStyle(clickedMarkerStyle(irumarkerE))
+                console.log('도착지 click: '+feature.getId());
+            } else {
+                feature.setStyle(clickedMarkerStyle(irumarker2))
+                console.log('경유지 click: '+feature.getId());
+            }
+        });
+    });
+}
+
+const poiMarkerClickEventWith = (keyword, selectClick) => {
+    // feature를 선택할 때 이벤트
+    selectClick.on('select', function(e) {
+        var selectedFeatures = e.selected;
+
+        selectedFeatures.forEach(function(feature) {
+            if (feature.get('bg_name') === keyword) {
+                feature.setStyle(clickedMarkerStyle(irumarker2))
+                console.log(keyword + ' click')
+            }
+        });
+    });
+}
+
+const createPoiMarkerLayer = (cqlFilter) => {
+    const poiSource = new VectorSource({ // feature들이 담겨있는 vector source
+        format: new GeoJSON({
+            dataProjection: 'EPSG:5181'
+        }),
+        url: function(extent) {
+            return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+cqlFilter;
+        },
+        serverType: 'geoserver'
+    });
+
+    // poiLayer -> poiMarkerLayer (이름 변경)
+    const poiMarkerLayer = new VectorLayer({
+        title: 'POI',
+        visible: true,
+        source: poiSource,
+        style: basicMarkerStyle(irumarker2),
+        zIndex: 4
+    });
+
+    return poiMarkerLayer;
+}
+
 const showBuildingInfo = async (keyword) => {
     const req = {keyword};
     try {
@@ -72,16 +196,6 @@ const printBuildingInfo = (data) => {
     console.log(data.rows[0].lounge_count)
     console.log(data.rows[0].total_floor)
     console.log(data.rows[0].type)
-                //<img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'2px', width:'19px'}}/>
-                //<button onClick={handleI()}>층별 안내 더보기</button>
-//    return (
-//            //<img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
-//            <div className="info">
-//                <body>
-//                    <p>단락 1</p>
-//                </body>
-//            </div>
-//        );
 }
 
 
@@ -89,44 +203,8 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
 
-    const UOSorthoTile = new TileLayer({
-        title: 'UOS Road',
-        visible: true,
-        source: new TileWMS({
-            url: 'http://localhost:8080/geoserver/gp/wms',
-            params: { 'LAYERS': 'gp:uos_orthomosaic' },
-            serverType: 'geoserver',
-        }),
-        zIndex: 1
-    });
-
-    const basicMarkerStyle = (irumarker) => { //출발지 스타일
-        return new Style({
-            image: new Icon({
-                src: irumarker,
-                scale: 0.1, // 이미지의 크기
-                opacity: 1, // 이미지의 투명도
-                rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부
-                rotation: 0 // 이미지의 초기 회전 각도
-            })
-        });
-    };
-
-    const clickedMarkerStyle = (irumarker) => {
-      return new Style({
-          image: new Icon({
-              src: irumarker, // 이미지 파일의 경로를 설정합니다.
-              scale: 0.1, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
-              opacity: 0.7, // 이미지의 투명도를 조절합니다.
-              rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부를 설정합니다.
-              rotation: 0 // 이미지의 초기 회전 각도를 설정합니다.
-          })
-      });
-    };
-
     const createShortestPathLayer = (pathData) => {
         pathData.forEach((path, index) => {
-            console.log(path);
             const listOfEdgeId = path.map(e => e.edge);
             const crsFilter = makeCrsFilter(listOfEdgeId);
             // makeShortestPathLayer // 경로 지도레이어
@@ -142,26 +220,6 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             });
             map.addLayer(shortestPathLayer);
         })
-    }
-    const makelocaArrayFromNodes = (pathData, locaArray) => {
-        pathData.forEach((path, index) => {
-            const listOfNodeId = path.map(n => n.node); // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
-            locaArray.push(listOfNodeId[0]);
-            if (index === pathData.length - 1) {
-                locaArray.push(listOfNodeId[listOfNodeId.length - 1]);
-            }
-        });
-        return locaArray;
-    }
-
-    const setMarkerSrcOf = (locaArray,index) => {
-        if (index === 0) { // 출발지
-            return irumarkerS;
-        } else if (index === locaArray.length - 1) { //도착지
-            return irumarkerE;
-        } else {
-            return irumarker2; // 경유지
-        }
     }
 
     const createNAddNodeLayersFrom = (locaArray) => {
@@ -189,94 +247,9 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
         });
         return nodeLayers;
     }
-
-    const markerClickEventWith = (locaArray, layers) => {
-        console.log(layers)
-        //feature 클릭 가능한 select 객체
-        let selectSingleClick = new Select({
-           condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
-           layers: layers
-        });
-        map.addInteraction(selectSingleClick);
-
-        // feature를 선택할 때 이벤트
-        selectSingleClick.on('select', function(e) {
-            var selectedFeatures = e.selected;
-
-            selectedFeatures.forEach(function(feature) {
-                if (feature.get('node_id')==locaArray[0]) {
-                    feature.setStyle(clickedMarkerStyle(irumarkerS))
-                    console.log('출발지 click: '+feature.getId());
-                } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
-                    feature.setStyle(clickedMarkerStyle(irumarkerE))
-                    console.log('도착지 click: '+feature.getId());
-                } else {
-                    feature.setStyle(clickedMarkerStyle(irumarker2))
-                    console.log('경유지 click: '+feature.getId());
-                }
-            });
-        });
-    }
-
-    const poiMarkerClickEventWith = (keyword, layer) => {
-        let selectBuildClick = new Select({
-           condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
-           layers: function(layer) {
-                return layer === layer; // 선택 가능한 레이어 조건 설정
-           }
-        });
-        map.addInteraction(selectBuildClick);
-        // feature를 선택할 때 이벤트
-        selectBuildClick.on('select', function(e) {
-            var selectedFeatures = e.selected;
-
-            selectedFeatures.forEach(function(feature) {
-                if (feature.get('bg_name') === keyword) {
-                    feature.setStyle(clickedMarkerStyle(irumarker2))
-                    console.log(keyword + ' click')
-                }
-            });
-        });
-    }
-
-    const createPoiMarkerLayer = (cqlFilter) => {
-        const poiSource = new VectorSource({ // feature들이 담겨있는 vector source
-            format: new GeoJSON({
-                dataProjection: 'EPSG:5181'
-            }),
-            url: function(extent) {
-                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                    '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+cqlFilter;
-            },
-            serverType: 'geoserver'
-        });
-
-        // poiLayer -> poiMarkerLayer (이름 변경)
-        const poiMarkerLayer = new VectorLayer({
-            title: 'POI',
-            visible: true,
-            source: poiSource,
-            style: basicMarkerStyle(irumarker2),
-            zIndex: 4
-        });
-
-        return poiMarkerLayer;
-    }
-
-
 		//추가부분
     proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
     register(proj4);
-
-    const UOSbasemapTile = new TileLayer({
-        title: 'UOS Base Map',
-        visible: true,
-        source: new TileWMS({
-            url: 'http://localhost:8080/geoserver/gp/wms',
-            params: { 'LAYERS': 'gp:basemap' },
-            serverType: 'geoserver',
-        }),
-    });
 
     useEffect(() => {
         const view = new View({
@@ -335,16 +308,25 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
-                markerClickEventWith(locaArray, createNAddNodeLayersFrom(locaArray)); // 노드 마커 클릭 이벤트
+                let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
+                   condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
+                   layers: createNAddNodeLayersFrom(locaArray)
+                });
+                map.addInteraction(selectSingleClick);
+                markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
             }
 
-
-            //let buildingMarkerExists = false;
             if (keyword) {
                 let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
                 const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
-                poiMarkerClickEventWith(keyword,poiMarkerLayer);
+
+                let selectBuildClick = new Select({
+                   condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
+                   layers: [poiMarkerLayer]
+                });
+                map.addInteraction(selectBuildClick);
+                poiMarkerClickEventWith(keyword,selectBuildClick);
 
                 showBuildingInfo(keyword);
             }
