@@ -22,9 +22,6 @@ import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumaker2.png';
 
-import axios from 'axios';
-import {NODE_BACKEND_URL} from "../constants/urls";
-
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
 const osmLayer = new TileLayer({
@@ -175,30 +172,6 @@ const createPoiMarkerLayer = (cqlFilter) => {
     return poiMarkerLayer;
 }
 
-const showBuildingInfo = async (keyword) => {
-    const req = {keyword};
-    try {
-        var response = await axios.post(NODE_BACKEND_URL+'/showBuildingInfo', req, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        printBuildingInfo(response.data);
-    } catch (error) {
-      console.error('Error during Axios POST request', error);
-    }
-};
-
-const printBuildingInfo = (data) => {
-    console.log(data.rows[0].bg_name)
-    console.log(data.rows[0].bd_id)
-    console.log(data.rows[0].summary)
-    console.log(data.rows[0].lounge_count)
-    console.log(data.rows[0].total_floor)
-    console.log(data.rows[0].type)
-}
-
-
 const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
@@ -327,8 +300,6 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                 });
                 map.addInteraction(selectBuildClick);
                 poiMarkerClickEventWith(keyword,selectBuildClick);
-
-                showBuildingInfo(keyword);
             }
 
             if (ShowReqIdsNtype) {

@@ -76,6 +76,13 @@
   padding: 1px;
   justify-content: space-around;
 }
+/*info 창*/
+.info-page{
+  border: 3px solid #44EAC5;
+  background-color: #ffffff;
+  width: 350px;
+  margin: 10px;
+}
 /*pathfinder-page*/
 .pathfinder-page {
   flex: 1;

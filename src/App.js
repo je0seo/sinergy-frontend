@@ -13,7 +13,11 @@ import axios from 'axios';
 import {NODE_BACKEND_URL} from "./constants/urls";
 //
 
-const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange }) => {
+// Search.js
+//import {setBuildingInfo, searchBuildingInfo} from './components/Search';
+import Search from './components/Search';
+
+const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
     return (
         <header className='header'>
             <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
@@ -134,34 +138,6 @@ const usePathfinding = () => {
   };
 };
 
-// 건물 정보 조회
-const useFindingBuildingInfo = () => {
-    const [bdName, setBdName] = useState('');
-    const [bdId, setBdId] = useState(0);
-    const [bdSummary, setBdSummary] = useState('');
-    const [bdImage, setBdImage] = useState('');
-    const [totalFloors, setTotalFloors] = useState(0);
-    const [numberOfLounge, setNumberOfLounge] = useState(0);
-
-    const bdInfo = {bdName, bdId,bdSummary, totalFloors, numberOfLounge};
-
-    const response = handleBuildingInfoClick(bdInfo);
-}
-
-const handleBuildingInfoClick = async (wanted) => {
-    const requestData = wanted;
-    try {
-          var response = await axios.post(NODE_BACKEND_URL+'/findBuildingServer', requestData, {
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          });
-    } catch(error) {
-     console.error('Error during Axios POST request', error);
-    };
-    console.log(response)
-    return response;
-}
 
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -215,11 +191,6 @@ const App = () => {
         }
     };
 
-    // 건물 정보 조회
-//    const { bdName, bdId, bdSummary, bdImage, totalFloors, numberOfLounge }
-//    = findingBuildingInfo();
-    //console.log(useFindingBuildingInfo)
-
     return (
         <div className='container' >
             <div className="main-left-side">
@@ -227,7 +198,7 @@ const App = () => {
                     setKeyword(searchTerm);
                 }} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <div className='menu'>
-                  <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>home</button>
+                  <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
                   <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>3D</button>
                 </div>
@@ -252,11 +223,14 @@ const App = () => {
                     <a href="https://www.uos.ac.kr/main.do?epTicket=INV">
                         <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
                     </a>
-                    {showText4deco && (
+                    {showText4deco && keyword == '' && (
                         <div className="deco-text-style">
                             <p>서울시립대학교 어디가 궁금하세요?</p>
                         </div>
                     )}
+                    {keyword != '' && <div className='info-page'>
+                          <Search keyword = {keyword} />
+                    </div>}
                 </div>}
                 {activeTab === '길찾기' && (
                 <div>
