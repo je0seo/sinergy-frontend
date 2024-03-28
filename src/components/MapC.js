@@ -51,6 +51,40 @@ const vworldSatelliteLayer = new TileLayer({
     //preload: Infinity,
 });
 
+const showBuildingInfo = async (keyword) => {
+    const req = {keyword};
+    try {
+        var response = await axios.post(NODE_BACKEND_URL+'/showBuildingInfo', req, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        printBuildingInfo(response.data);
+    } catch (error) {
+      console.error('Error during Axios POST request', error);
+    }
+};
+
+const printBuildingInfo = (data) => {
+    console.log(data.rows[0].bg_name)
+    console.log(data.rows[0].bd_id)
+    console.log(data.rows[0].summary)
+    console.log(data.rows[0].lounge_count)
+    console.log(data.rows[0].total_floor)
+    console.log(data.rows[0].type)
+                //<img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'2px', width:'19px'}}/>
+                //<button onClick={handleI()}>층별 안내 더보기</button>
+//    return (
+//            //<img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
+//            <div className="info">
+//                <body>
+//                    <p>단락 1</p>
+//                </body>
+//            </div>
+//        );
+}
+
+
 const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
@@ -311,6 +345,8 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                 const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
                 poiMarkerClickEventWith(keyword,poiMarkerLayer);
+
+                showBuildingInfo(keyword);
             }
 
             if (ShowReqIdsNtype) {
