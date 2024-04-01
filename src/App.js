@@ -12,9 +12,6 @@ import legend from './components/images/legend.png';
 import axios from 'axios';
 import {NODE_BACKEND_URL} from "./constants/urls";
 //
-
-// Search.js
-//import {setBuildingInfo, searchBuildingInfo} from './components/Search';
 import Search from './components/Search';
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
@@ -145,6 +142,7 @@ const App = () => {
     const [activeTab, setActiveTab] = useState('');
     const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
     const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
+    const [markerClicked, setMarkerClicked] = useState(false);
 
     const handleShowReq = async (ReqType) => {
         const Ids = await showReq(ReqType);
@@ -286,7 +284,9 @@ const App = () => {
             </div>
             <div className='main-right-side'>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype}/>}
-                {activeTab === '길찾기' && <Map width='100%' height='100vh' keyword={keyword} pathData={pathData} />}
+                {activeTab === '길찾기'
+                && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
+                /*markerClicked={markerClicked} setMarkerClicked={setMarkerClicked}*/ />}
             </div>
         </div>
     );
