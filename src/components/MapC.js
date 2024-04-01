@@ -114,25 +114,7 @@ const setMarkerSrcOf = (locaArray,index) => {
     }
 }
 
-const markerClickEventWith = (locaArray, selectClick) => {
-    // feature를 선택할 때 이벤트
-    selectClick.on('select', function(e) {
-        var selectedFeatures = e.selected;
 
-        selectedFeatures.forEach(function(feature) {
-            if (feature.get('node_id')==locaArray[0]) {
-                feature.setStyle(clickedMarkerStyle(irumarkerS))
-                console.log('출발지 click: '+feature.getId());
-            } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
-                feature.setStyle(clickedMarkerStyle(irumarkerE))
-                console.log('도착지 click: '+feature.getId());
-            } else {
-                feature.setStyle(clickedMarkerStyle(irumarker2))
-                console.log('경유지 click: '+feature.getId());
-            }
-        });
-    });
-}
 
 const poiMarkerClickEventWith = (keyword, selectClick) => {
     // feature를 선택할 때 이벤트
@@ -172,7 +154,7 @@ const createPoiMarkerLayer = (cqlFilter) => {
     return poiMarkerLayer;
 }
 
-const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
+const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
 
@@ -220,6 +202,45 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
         });
         return nodeLayers;
     }
+    const markerClickEventWith = (locaArray, selectClick) => {
+        // feature를 선택할 때 이벤트
+        selectClick.on('select', function(e) {
+            var selectedFeatures = e.selected;
+
+            selectedFeatures.forEach(function(feature) {
+
+                if (feature.get('node_id')==locaArray[0]) {
+                    feature.setStyle(clickedMarkerStyle(irumarkerS))
+                    console.log('출발지 click: '+feature.getId());
+                    //setMarkerClicked(false);
+                } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
+                    feature.setStyle(clickedMarkerStyle(irumarkerE))
+                    console.log('도착지 click: '+feature.getId());
+                } else {
+                    feature.setStyle(clickedMarkerStyle(irumarker2))
+                    console.log('경유지 click: '+feature.getId());
+                }
+                setKeyword(feature.get('bulid_name'));
+            });
+            /*else { // false
+                console.log('클릭 후 markerClicked ' + markerClicked)
+
+                selectedFeatures.forEach(function(feature) {
+                    setKeyword(feature.get('bulid_name'));
+                    if (feature.get('node_id')==locaArray[0]) {
+                        feature.setStyle(basicMarkerStyle(irumarkerS))
+                        setMarkerClicked(true);
+                    } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
+                        feature.setStyle(basicMarkerStyle(irumarkerE))
+                        setMarkerClicked(true);
+                    } else {
+                        feature.setStyle(basicMarkerStyle(irumarker2))
+                        setMarkerClicked(true);
+                    }
+                });
+            }*/
+        });
+    }
 		//추가부분
     proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
     register(proj4);
@@ -248,6 +269,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
 
     useEffect(() => {
         if (map) {
+            console.log('-------rendering------')
             const layerExists = map.getLayers();
             // 배경지도 옵션 설정
             if (layerExists) {
@@ -276,7 +298,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-              
+
                 console.log(locaArray);
             }
             // 출발, 도착, 경유 노드 표시
@@ -342,7 +364,7 @@ const MapC = ({ pathData, width, height, keyword, ShowReqIdsNtype }) => {
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, ShowReqIdsNtype]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype]);
 
     return (
         <div>
