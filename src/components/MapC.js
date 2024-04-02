@@ -259,7 +259,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                     feature.setStyle(clickedMarkerStyle(irumarker2))
                     console.log('경유지 click: '+feature.getId());
                 }
-                setKeyword(feature.get('bulid_name'));
+                //setKeyword(feature.get('bulid_name'));
             });
             /*else { // false
                 console.log('클릭 후 markerClicked ' + markerClicked)

@@ -10,9 +10,9 @@ const searchBuildingInfo = async (keyword, setBuildingInfo, setResultExistence) 
                 'Content-Type': 'application/json',
             },
         });
-
         if (response.data.rowCount > 0) {
             setBuildingInfo(response.data);
+            setResultExistence(true);
         }
         else {
             setResultExistence(false);
