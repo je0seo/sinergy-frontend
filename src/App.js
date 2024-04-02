@@ -57,16 +57,16 @@ const usePathfinding = () => {
     setShowShortestPathText(true);
     setShowText4deco(false);
     const shortestPath = data.shortestPath;
-    console.log("data.userReqNum:", data.userReqNum);
+    //console.log("data.userReqNum:", data.userReqNum);
     if (data.userReqNum.length === 1 && data.userReqNum[0] === 0){
         setStartEndNormalCheckMessage("출발지 오류입니다. 다시한번 확인해주세요");
         setPathData(null);
-        console.log("출발지 오류입니다. 다시한번 확인해주세요");
+        //console.log("출발지 오류입니다. 다시한번 확인해주세요");
     }
     if (data.userReqNum.length === 2 && data.userReqNum[0] === 0 && data.userReqNum[1] === 0){
         setStartEndNormalCheckMessage("도착지 오류입니다. 다시한번 확인해주세요");
         setPathData(null);
-        console.log("도착지 오류입니다. 다시한번 확인해주세요");
+        //console.log("도착지 오류입니다. 다시한번 확인해주세요");
     }
     if (shortestPath) {
       setPathData(shortestPath);
@@ -85,7 +85,7 @@ const usePathfinding = () => {
       } else if(end===""){
           alert("도착지가 입력되지 않았습니다. 다시한번 확인해주세요")
       } else{
-          console.log('중간점검용:', requestData);
+          //console.log('중간점검용:', requestData);
           try {
           var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
               headers: {

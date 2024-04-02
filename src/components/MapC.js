@@ -1,3 +1,4 @@
+//MapC.js
 import { useEffect, useState } from 'react';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
@@ -166,6 +167,11 @@ const createUrl4WFS = (ShowReqIdsNtype) => {
                   '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
                   +ShowReqIdsNtype.Ids + ')';
     }
+    else if (ShowReqIdsNtype.type == 'atm' || ShowReqIdsNtype.type == 'bench' || ShowReqIdsNtype.type == 'bicycle' || ShowReqIdsNtype.type == 'smoking'){
+        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+            '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
+            +ShowReqIdsNtype.Ids +')';
+    }
 }
 
 const createShowLayer = (ShowReqIdsNtype) => {
@@ -177,6 +183,7 @@ const createShowLayer = (ShowReqIdsNtype) => {
                     dataProjection: 'EPSG:5181'
                 }),
                 url: function (extent) {
+                    //확인
                     return createUrl4WFS(ShowReqIdsNtype)
                 },
                 serverType: 'geoserver'
@@ -331,7 +338,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
 
-                console.log(locaArray);
+                //console.log(locaArray);
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
@@ -360,7 +367,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
-
                 const popUp = new Overlay({
                     element: document.getElementById('popup'),
                     positioning: 'center-center',
