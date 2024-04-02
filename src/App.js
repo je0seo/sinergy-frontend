@@ -46,17 +46,26 @@ const usePathfinding = () => {
   const [end, setEnd] = useState('');
   const [stopovers, setStopovers] = useState([]);
   const [showShortestPathText, setShowShortestPathText] = useState(false);
+  const [StartEndNormalCheckMessage, setStartEndNormalCheckMessage] = useState('');
   const [totalDistance, setTotalDistance] = useState(0);
   const [pathData, setPathData] = useState(null);
   const [showText4deco, setShowText4deco] = useState(true);
 
   const handlePathResult = (data) => {
-    console.log(data.minAggCost);
     const calculatedTotalDistance = data.minAggCost;
     setTotalDistance(calculatedTotalDistance);
     setShowShortestPathText(true);
     setShowText4deco(false);
     const shortestPath = data.shortestPath;
+    console.log("data.userReqNum:", data.userReqNum);
+    if (data.userReqNum.length === 1 && data.userReqNum[0] === 0){
+        setStartEndNormalCheckMessage("출발지 오류입니다. 다시한번 확인해주세요");
+        console.log("출발지 오류입니다. 다시한번 확인해주세요");
+    }
+    if (data.userReqNum.length === 2 && data.userReqNum[0] === 0 && data.userReqNum[1] === 0){
+        setStartEndNormalCheckMessage("도착지 오류입니다. 다시한번 확인해주세요");
+        console.log("도착지 오류입니다. 다시한번 확인해주세요");
+    }
     if (shortestPath) {
       setPathData(shortestPath);
     }
@@ -106,6 +115,7 @@ const usePathfinding = () => {
     setEnd('');
     setStopovers([]);
     setShowShortestPathText(false);
+    setStartEndNormalCheckMessage('');
     setShowText4deco(true);
     setTotalDistance(0);
     setPathData(null);
@@ -117,6 +127,7 @@ const usePathfinding = () => {
     end,
     stopovers,
     showShortestPathText,
+    StartEndNormalCheckMessage,
     showText4deco,
     totalDistance,
     pathData,
@@ -125,6 +136,7 @@ const usePathfinding = () => {
     setEnd,
     setStopovers,
     setShowShortestPathText,
+    setStartEndNormalCheckMessage,
     setShowText4deco,
     setTotalDistance,
     setPathData,
@@ -162,6 +174,7 @@ const App = () => {
       end,
       stopovers,
       showShortestPathText,
+      StartEndNormalCheckMessage,
       showText4deco,
       totalDistance,
       pathData,
@@ -268,14 +281,14 @@ const App = () => {
                             </div>
                         </div>
                     )}
-                    {showShortestPathText && totalDistance !== null && totalDistance === 0 && (
+                    {showShortestPathText && StartEndNormalCheckMessage=='' && totalDistance !== null && totalDistance === 0 && (
                         <div className="shortest-path-text">
                             조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요.
                         </div>
                     )}
-                    {showShortestPathText && (!pathData || totalDistance === null || (totalDistance > 0 && !pathData.length)) && (
+                    {showShortestPathText && (StartEndNormalCheckMessage!=='') && (
                         <div className="shortest-path-text">
-                            입력지 오류입니다. 입력지를 다시한번 확인해주세요
+                            {StartEndNormalCheckMessage}
                         </div>
                     )}
                   </div>
