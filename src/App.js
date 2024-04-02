@@ -60,10 +60,12 @@ const usePathfinding = () => {
     console.log("data.userReqNum:", data.userReqNum);
     if (data.userReqNum.length === 1 && data.userReqNum[0] === 0){
         setStartEndNormalCheckMessage("출발지 오류입니다. 다시한번 확인해주세요");
+        setPathData(null);
         console.log("출발지 오류입니다. 다시한번 확인해주세요");
     }
     if (data.userReqNum.length === 2 && data.userReqNum[0] === 0 && data.userReqNum[1] === 0){
         setStartEndNormalCheckMessage("도착지 오류입니다. 다시한번 확인해주세요");
+        setPathData(null);
         console.log("도착지 오류입니다. 다시한번 확인해주세요");
     }
     if (shortestPath) {
@@ -295,12 +297,12 @@ const App = () => {
                             </div>
                         </div>
                     )}
-                    {showShortestPathText && StartEndNormalCheckMessage=='' && totalDistance !== null && totalDistance === 0 && (
+                    {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
                         <div className="shortest-path-text">
                             조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요.
                         </div>
                     )}
-                    {showShortestPathText && (StartEndNormalCheckMessage!=='') && (
+                    {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
                         <div className="shortest-path-text">
                             {StartEndNormalCheckMessage}
                         </div>
