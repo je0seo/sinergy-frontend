@@ -11,8 +11,9 @@ const searchBuildingInfo = async (keyword, setBuildingInfo, setResultExistence) 
             },
         });
 
-        if (response.data.rowCount > 0)
+        if (response.data.rowCount > 0) {
             setBuildingInfo(response.data);
+        }
         else {
             setResultExistence(false);
         }
@@ -31,6 +32,9 @@ const useSearch = ({keyword}) => {
     const [type, setType] = useState('');
     const [resultExistence, setResultExistence] = useState(true);
 
+    const importImage = () => {
+
+    }
     const setBuildingInfo = (data) => {
         setBgName(data.rows[0].bg_name)
         setBgId(data.rows[0].bd_id)
@@ -38,6 +42,8 @@ const useSearch = ({keyword}) => {
         setLoungeCnt(data.rows[0].lounge_count)
         setTotalFloors(data.rows[0].total_floor)
         setType(data.rows[0].type)
+
+        //setBgImage(data.rows[0].image_url)
     }
 
     useEffect(() => {
@@ -53,6 +59,7 @@ const useSearch = ({keyword}) => {
         )
     return (
         <div>
+            {bgImage && <img id="bg-image" src={bgImage} alt="Building Image" />}
             <p> 이름 : {bgName} </p>
             <p> 소개글 : {bgSummary} </p>
             <p> 분류 : {type} </p>

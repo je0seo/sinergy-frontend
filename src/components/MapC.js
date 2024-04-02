@@ -16,7 +16,8 @@ import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 
 import Select from 'ol/interaction/Select';
-import { click } from 'ol/events/condition';
+import { click, pointerMove } from 'ol/events/condition';
+import Overlay from 'ol/Overlay';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
@@ -154,9 +155,40 @@ const createPoiMarkerLayer = (cqlFilter) => {
     return poiMarkerLayer;
 }
 
+const createUrl4WFS = (ShowReqIdsNtype) => {
+    if (ShowReqIdsNtype.type === 'facilities'|| ShowReqIdsNtype.type === 'bump' || ShowReqIdsNtype.type === 'bol'){
+        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                  '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
+                  +ShowReqIdsNtype.Ids +')';
+    }
+    else if (ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope'){
+        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                  '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
+                  +ShowReqIdsNtype.Ids + ')';
+    }
+}
+
+const createShowLayer = (ShowReqIdsNtype) => {
+    const showLayer = new VectorLayer({
+            title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
+            visible: true,
+            source: new VectorSource({
+                format: new GeoJSON({
+                    dataProjection: 'EPSG:5181'
+                }),
+                url: function (extent) {
+                    return createUrl4WFS(ShowReqIdsNtype)
+                },
+                serverType: 'geoserver'
+            }),
+            zIndex: 5
+    });
+    return showLayer
+}
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
+    const [popupContent, setPopupContent] = useState('');
 
     const createShortestPathLayer = (pathData) => {
         pathData.forEach((path, index) => {
@@ -324,47 +356,76 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 poiMarkerClickEventWith(keyword,selectBuildClick);
             }
 
-            if (ShowReqIdsNtype) {
-                if (ShowReqIdsNtype.type === 'facilities'|| ShowReqIdsNtype.type === 'bump' || ShowReqIdsNtype.type === 'bol'){
-                    const ShowLayer = new VectorLayer({
-                        title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
-                        visible: true,
-                        source: new VectorSource({
-                            format: new GeoJSON({
-                                dataProjection: 'EPSG:5181'
-                            }),
-                            url: function (extent) {
-                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                                    '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('+ShowReqIdsNtype.Ids +')';
-                            },
-                            serverType: 'geoserver'
-                        }),
-                        zIndex: 5
-                    });
-                    map.addLayer(ShowLayer);
-                }
-                else if (ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope'){
-                    const ShowLayer = new VectorLayer({
-                        title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
-                        visible: true,
-                        source: new VectorSource({
-                            format: new GeoJSON({
-                                dataProjection: 'EPSG:5181'
-                            }),
-                            url: function (extent) {
-                                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                                    '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in (' +
-                                    ShowReqIdsNtype.Ids + ')';
-                            },
-                            serverType: 'geoserver'
-                        }),
-                        zIndex: 5
-                    });
-                    map.addLayer(ShowLayer);
+            if (ShowReqIdsNtype){
+                if (ShowReqIdsNtype.type) {
+                    const showLayer = createShowLayer(ShowReqIdsNtype)
+                    map.addLayer(showLayer);
+
+                const popUp = new Overlay({
+                    element: document.getElementById('popup'),
+                    positioning: 'center-center',
+                    //autoPan: true,
+                    //autoPanAnimation: {
+                    //    duration: 250
+                    //}
+                });
+                map.addOverlay(popUp)
+
+                /*const popupCloser = document.getElementById('popup-closer');
+                popupCloser.onclick = () => {
+                  popUp.setPosition(undefined);
+                  popupCloser.blur();
+                  return false;
+                };*/
+                const select4Popup = new Select({
+                   condition: pointerMove,
+                   layers: [showLayer],
+                   hitTolerance: 2
+                });
+                map.addInteraction(select4Popup)
+
+                select4Popup.on('select', (event) => {
+                    const features = event.selected;
+                    if (features.length > 0) {
+                      const properties = features[0].getProperties();
+                      console.log(popUp)
+                      //console.log(popUp)
+                      //console.log(document.getElementById('popup'));
+                      const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>');
+                      setPopupContent(info);
+                    } else {
+                      setPopupContent('');
+                    }
+                });
+
+                map.on('singleclick', (evt) => {
+                    const coordinate = evt.coordinate;
+                    let container = document.getElementById('tmp');
+
+                    var overlay = new Overlay({
+                        element: container
+                    })
+                    map.addOverlay(overlay);
+                    overlay.setPosition(coordinate);
+
+                    let content = document.createElement('div');
+                    container.appendChild(content);
+                    //content.innerHTML = '<span>' + '한글(KOR)입니다.' + '</span>';
+                    //document.getElementById('popup').style.display = 'block';
+                    //const popup = map.getOverlays().getArray()[0];
+                    //popUp.setPosition(coordinate);
+                    //document.getElementById('popup-content').innerHTML = popupContent;
+                });
+
+                map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
+
+                /*return () => {
+                    map.removeInteraction(select4Popup);
+                }*/
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, popupContent]);
 
     return (
         <div>
@@ -376,6 +437,15 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
+            <div>
+                <div id="tmp"></div>
+            </div>
+            <div>
+                <div id="popup" className="ol-popup">
+                  <a href="#" id="popup-closer" className="ol-popup-closer"></a>
+                  <div id="popup-content"></div>
+                </div>
+            </div>
         </div>
     );
 };
