@@ -153,6 +153,7 @@ const App = () => {
     const [keyword, setKeyword] = useState('');
     const [activeTab, setActiveTab] = useState('');
     const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
+    const [showFacilitiesMenu, setShowFacilitiesMenu] = useState( false);
     const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
     const [markerClicked, setMarkerClicked] = useState(false);
 
@@ -166,7 +167,9 @@ const App = () => {
     const handleToggleObstacleMenu = () => {
         setShowObstacleMenu(!showObstacleMenu);
     };
-
+    const handleToggleFacilitiesMenu = () =>{
+        setShowFacilitiesMenu(!showFacilitiesMenu);
+    }
     //길찾기
     const {
       features,
@@ -216,7 +219,18 @@ const App = () => {
 
                 {activeTab === '' && <div className='home-left'>
                     <div>
-                        <button className='showingBtn' onClick={() => handleShowReq('facilities')}>편의시설 보기</button>
+                        {!showFacilitiesMenu && (
+                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>편의시설 보기</button>
+                        )}
+                        {showFacilitiesMenu && ( // showFacilitiesMenu 상태에 따라 보이게 설정
+                            <div className='showingObstacleBtns'>
+                                <button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> {/* 버튼 토글 기능 추가 */}
+                                <button className='showingBtn' onClick={() => handleShowReq('atm')}>ATM</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bench')}>벤치</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bicycle')}>따릉이 대여소</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('smoking')}>흡연부스</button>
+                            </div>
+                        )}
                         {!showObstacleMenu && (
                             <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
                         )}
