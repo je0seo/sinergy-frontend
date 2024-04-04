@@ -192,6 +192,16 @@ const createShowLayer = (ShowReqIdsNtype) => {
     });
     return showLayer
 }
+
+let popupContainer = document.createElement('div');
+let content = document.createElement('div');
+popupContainer.appendChild(content);
+
+const popupOverlay = new Overlay({
+    element: popupContainer,
+    positioning: 'center-center',
+});
+
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
@@ -362,72 +372,54 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 map.addInteraction(selectBuildClick);
                 poiMarkerClickEventWith(keyword,selectBuildClick);
             }
+            /*const popupCloser = document.getElementById('popup-closer');
+                            popupCloser.onclick = () => {
+                              popUp.setPosition(undefined);
+                              popupCloser.blur();
+                              return false;
+                            };*/
+
 
             if (ShowReqIdsNtype){
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
-                const popUp = new Overlay({
-                    element: document.getElementById('popup'),
-                    positioning: 'center-center',
-                    //autoPan: true,
-                    //autoPanAnimation: {
-                    //    duration: 250
-                    //}
-                });
-                map.addOverlay(popUp)
 
-                /*const popupCloser = document.getElementById('popup-closer');
-                popupCloser.onclick = () => {
-                  popUp.setPosition(undefined);
-                  popupCloser.blur();
-                  return false;
-                };*/
-                const select4Popup = new Select({
-                   condition: pointerMove,
-                   layers: [showLayer],
-                   hitTolerance: 2
-                });
-                map.addInteraction(select4Popup)
+                    const select4Popup = new Select({
+                    condition: click,
+                    layers: [showLayer],
+                    hitTolerance: 20
+                    });
+                    map.addInteraction(select4Popup)
 
-                select4Popup.on('select', (event) => {
-                    const features = event.selected;
-                    if (features.length > 0) {
-                      const properties = features[0].getProperties();
-                      console.log(popUp)
-                      //console.log(popUp)
-                      //console.log(document.getElementById('popup'));
-                      const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>');
-                      setPopupContent(info);
-                    } else {
-                      setPopupContent('');
+                    select4Popup.on('select', (event) => {
+                        const features = event.selected;
+                        const feature = features[0];
+                        // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
+                        const geom = feature.getGeometry();
+                        const [ minX, minY, maxX, maxY ] = geom.getExtent();
+                        const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ]
+                        popupOverlay.setPosition(coordinate);
+
+                        const properties = feature.getProperties();
+                        const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>');
+                        setPopupContent(info);
+                        content.innerHTML = info;
+
+                        map.addOverlay(popupOverlay)
+                        popupContainer.style.display = 'block';
+                        popupContainer.style.background = 'white';
+                        popupContainer.style.width = '200px';
+                    });
+                    console.log('popupContent')
+                    console.log(popupContent)
+
+                    map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
+
+                    return () => {
+                        map.removeLayer(showLayer)
+                        map.removeInteraction(select4Popup);
                     }
-                });
-
-                map.on('singleclick', (evt) => {
-                    const coordinate = evt.coordinate;
-                    let container = document.getElementById('tmp');
-
-                    var overlay = new Overlay({
-                        element: container
-                    })
-                    map.addOverlay(overlay);
-                    overlay.setPosition(coordinate);
-
-                    let content = document.createElement('div');
-                    container.appendChild(content);
-                    //content.innerHTML = '<span>' + '한글(KOR)입니다.' + '</span>';
-                    //document.getElementById('popup').style.display = 'block';
-                    //const popup = map.getOverlays().getArray()[0];
-                    //popUp.setPosition(coordinate);
-                    //document.getElementById('popup-content').innerHTML = popupContent;
-                });
-
-                map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
-
-                /*return () => {
-                    map.removeInteraction(select4Popup);
-                }*/
                 }
             }
         }
@@ -443,15 +435,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            <div>
-                <div id="tmp"></div>
-            </div>
-            <div>
-                <div id="popup" className="ol-popup">
-                  <a href="#" id="popup-closer" className="ol-popup-closer"></a>
-                  <div id="popup-content"></div>
-                </div>
-            </div>
         </div>
     );
 };
