@@ -13,6 +13,18 @@ import axios from 'axios';
 import {NODE_BACKEND_URL} from "./constants/urls";
 //
 import Search from './components/Search';
+//
+import facilitiesIcon from './components/images/icons/facilitiesIcon.png';
+import bumpIcon from './components/images/icons/bumpIcon.png';
+import bolIcon from './components/images/icons/bolIcon.png';
+import unpavedIcon from './components/images/icons/unpavedIcon.png';
+import stairsIcon from './components/images/icons/stairsIcon.png';
+import slopeIcon from './components/images/icons/slopeIcon.png';
+import benchIcon from './components/images/icons/benchIcon.png';
+import atmIcon from './components/images/icons/atmIcon.png';
+import bicycleIcon from './components/images/icons/bicycleIcon.png';
+import smokingIcon from './components/images/icons/smokingIcon.png';
+
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
     return (
@@ -222,15 +234,32 @@ const App = () => {
                 {activeTab === '' && <div className='home-left'>
                     <div>
                         {!showFacilitiesMenu && (
-                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>편의시설 보기</button>
+                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>
+                                <div>
+                                    <img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> {/* 이미지 크기 조절 */}
+                                    편의시설 보기
+                                </div>
+                            </button>
                         )}
                         {showFacilitiesMenu && ( // showFacilitiesMenu 상태에 따라 보이게 설정
-                            <div className='showingObstacleBtns'>
-                                <button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> {/* 버튼 토글 기능 추가 */}
-                                <button className='showingBtn' onClick={() => handleShowReq('atm')}>ATM</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bench')}>벤치</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bicycle')}>따릉이 대여소</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('smoking')}>흡연부스</button>
+                            <div className='showingFacilitiesBtns'>
+                                <button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('atm')}>
+                                    <img src={atmIcon} alt="ATM Icon" className="iconImage" />
+                                    ATM
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bench')}>
+                                    <img src={benchIcon} alt="Bench Icon" className="iconImage" />
+                                    벤치
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bicycle')}>
+                                    <img src={bicycleIcon} alt="Bicycle Icon" className="iconImage" />
+                                    따릉이 대여소
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('smoking')}>
+                                    <img src={smokingIcon} alt="Smoking Icon" className="iconImage" />
+                                    흡연부스
+                                </button>
                             </div>
                         )}
                         {!showObstacleMenu && (
@@ -238,12 +267,27 @@ const App = () => {
                         )}
                         {showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정
                             <div className='showingObstacleBtns'>
-                                <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button> {/* 버튼 토글 기능 추가 */}
-                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}>비포장도로 보기</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}>계단 보기</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('slope')}>경사로 보기</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bump')}>도로턱 보기</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bol')}>볼라드 보기</button>
+                                <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}>
+                                    <img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />
+                                    비포장도로 보기
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}>
+                                    <img src={stairsIcon} alt="Stairs Icon" className="iconImage" />
+                                    계단 보기
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('slope')}>
+                                    <img src={slopeIcon} alt="Slope Icon" className="iconImage" />
+                                    경사로 보기
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bump')}>
+                                    <img src={bumpIcon} alt="Bump Icon" className="iconImage" />
+                                    도로턱 보기
+                                </button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bol')}>
+                                    <img src={bolIcon} alt="Bollard Icon" className="iconImage" />
+                                    볼라드 보기
+                                </button>
                             </div>
                         )}
                     </div>
