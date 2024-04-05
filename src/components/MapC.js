@@ -1,5 +1,5 @@
 //MapC.js
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import Map from 'ol/Map';
@@ -19,6 +19,7 @@ import { register } from 'ol/proj/proj4';
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
 import Overlay from 'ol/Overlay';
+import './MapC.css';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
@@ -116,8 +117,6 @@ const setMarkerSrcOf = (locaArray,index) => {
     }
 }
 
-
-
 const poiMarkerClickEventWith = (keyword, selectClick) => {
     // feature를 선택할 때 이벤트
     selectClick.on('select', function(e) {
@@ -193,19 +192,11 @@ const createShowLayer = (ShowReqIdsNtype) => {
     return showLayer
 }
 
-let popupContainer = document.createElement('div');
-let content = document.createElement('div');
-popupContainer.appendChild(content);
-
-const popupOverlay = new Overlay({
-    element: popupContainer,
-    positioning: 'center-center',
-});
-
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
     const [popupContent, setPopupContent] = useState('');
+    const popupContainerRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
         pathData.forEach((path, index) => {
@@ -290,6 +281,12 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }*/
         });
     }
+     const deletePopup = () =>{
+        const popupCloser = document.getElementById('popup-closer');
+        map.getOverlays().getArray()[0].setPosition(undefined);
+        popupCloser.blur();
+        return false;
+    }
 		//추가부분
     proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
     register(proj4);
@@ -372,18 +369,22 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 map.addInteraction(selectBuildClick);
                 poiMarkerClickEventWith(keyword,selectBuildClick);
             }
-            /*const popupCloser = document.getElementById('popup-closer');
-                            popupCloser.onclick = () => {
-                              popUp.setPosition(undefined);
-                              popupCloser.blur();
-                              return false;
-                            };*/
 
-
+            if (!popupContainerRef.current) {
+                console.log("놉")
+                return;
+            }
             if (ShowReqIdsNtype){
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
+
+                    let content = document.getElementById('popup-content');
+
+                    const popupOverlay = new Overlay({
+                        element: popupContainerRef.current,
+                        positioning: 'center-center',
+                    });
 
                     const select4Popup = new Select({
                     condition: click,
@@ -399,31 +400,34 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                         const geom = feature.getGeometry();
                         const [ minX, minY, maxX, maxY ] = geom.getExtent();
                         const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ]
+                        //const coordinate = geom.getCoordinates()
                         popupOverlay.setPosition(coordinate);
 
                         const properties = feature.getProperties();
+                        console.log(properties)
                         const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>');
                         setPopupContent(info);
                         content.innerHTML = info;
 
                         map.addOverlay(popupOverlay)
-                        popupContainer.style.display = 'block';
-                        popupContainer.style.background = 'white';
-                        popupContainer.style.width = '200px';
+
+                        console.log('popupContainer')
+                        console.log(popupContainerRef.current)
                     });
-                    console.log('popupContent')
-                    console.log(popupContent)
+//                    console.log('popupContent')
+//                    console.log(popupContent)
 
                     map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
                     return () => {
                         map.removeLayer(showLayer)
                         map.removeInteraction(select4Popup);
+                        map.removeOverlay(popupOverlay)
                     }
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, popupContent]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype]);
 
     return (
         <div>
@@ -435,6 +439,11 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
+            <div ref={popupContainerRef} id="popup" className="ol-popup">
+              <button id="popup-closer" className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
+              <div id="popup-content">
+              </div>
+            </div>
         </div>
     );
 };
