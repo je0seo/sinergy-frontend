@@ -185,7 +185,7 @@ const createPoiMarkerLayer = (cqlFilter) => {
         title: 'POI',
         visible: true,
         source: poiSource,
-        style: basicMarkerStyle(irumarker2),
+
         zIndex: 4
     });
 
@@ -396,7 +396,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }
 
             if (keyword) {
-                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%' or nickname like '%"
+                +keyword+"%' or eng_name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+
                 const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
 
@@ -405,7 +407,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                    layers: [poiMarkerLayer]
                 });
                 map.addInteraction(selectBuildClick);
-                poiMarkerClickEventWith(keyword,selectBuildClick);
+//                poiMarkerClickEventWith(keyword,selectBuildClick);
             }
 
             if (ShowReqIdsNtype){
@@ -418,6 +420,11 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                     const popupOverlay = new Overlay({
                         element: popupContainerRef.current,
                         positioning: 'bottom-left',
+                        autoPan: {
+                            animation: {
+                                duration: 250
+                            }
+                        }
                     });
 
                     const select4Popup = new Select({
@@ -431,6 +438,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                         const features = event.selected;
                         const feature = features[0];
 
+                        console.log(feature)
                         feature.setStyle(showMarkerStyle(ShowReqIdsNtype.type)); // 1. 클릭 시 스타일 바꾸기
 
                         // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
