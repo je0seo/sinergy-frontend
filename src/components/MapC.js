@@ -399,8 +399,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }
 
             if (keyword) {
-                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%' or nickname like '%"
-                +keyword+"%' or eng_name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'" + "or nickname like '%"+keyword+"%'" + "or eng_name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
 
                 const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
