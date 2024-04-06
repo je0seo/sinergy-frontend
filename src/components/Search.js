@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {NODE_BACKEND_URL} from "../constants/urls";
+import './MapC.css';
 
 const searchBuildingInfo = async (keyword, setBuildingInfo, setResultExistence) => {
     const req = {keyword};
@@ -56,12 +57,14 @@ const useSearch = ({keyword}) => {
             </div>
         )
     return (
-        <div>
-            {bgImage && <img id="bg-image" src={bgImage} alt="Building Image" style={{width: '250px',display: 'block',margin: '0 auto'}}/>}
-            <h3> {bgName}({engName}) </h3>
-            [ {type} | {(type === '건물') && (<> No.{bgId}</>)} | <>총 {totalFloors}층</> ]
-            {loungeCnt && <>라운지 수 : {loungeCnt}</>}
-            <p> {bgSummary} </p>
+        <div style={{margin: '0 auto'}}>
+            {bgImage && <img className="bg-image" src={bgImage} alt="Building Image" style={{width: '350px',height: '250px',display: 'block',margin: '0 auto'}}/>}
+            <div className="info-content">
+                <h3 style={{margin: '0 auto', backgroundColor: '#44EAC5'}}> {bgName}({engName}) </h3>
+                <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} | {(type === '건물') && (<> No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
+                {loungeCnt && <>라운지 수 : {loungeCnt}</>}
+                <p style={{marginTop: '5px', marginBottom: '0px'}}> {bgSummary} </p>
+            </div>
         </div>
     );
 }
