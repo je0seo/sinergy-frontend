@@ -179,4 +179,14 @@
 .showingObstacleBtns {
   display: flex;
   flex-direction: column;
+  border-style: dotted;
+}
+.showingFacilitiesBtns {
+  display: flex;
+  flex-direction: column;
+  border-style: dotted;
+}
+.iconImage {
+  width: 15px;
+  height: 15px;
 }

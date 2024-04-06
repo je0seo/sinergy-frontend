@@ -25,6 +25,17 @@ import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumaker2.png';
 
+import facilitiesIcon from './images/icons/facilitiesIcon.png';
+import bumpIcon from './images/icons/bumpIcon.png';
+import bolIcon from './images/icons/bolIcon.png';
+import unpavedIcon from './images/icons/unpavedIcon.png';
+import stairsIcon from './images/icons/stairsIcon.png';
+import slopeIcon from './images/icons/slopeIcon.png';
+import benchIcon from './images/icons/benchIcon.png';
+import atmIcon from './images/icons/atmIcon.png';
+import bicycleIcon from './images/icons/bicycleIcon.png';
+import smokingIcon from './images/icons/smokingIcon.png';
+
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
 const osmLayer = new TileLayer({
@@ -95,6 +106,32 @@ const clickedMarkerStyle = (irumarker) => {
       })
   });
 };
+
+const ShowMarkerStyle = (markertype) => {
+    let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
+
+    if (markertype === 'facilities') { markerimg = facilitiesIcon; }
+    else if (markertype === 'bump') { markerimg = bumpIcon; }
+    else if (markertype === 'bol') { markerimg = bolIcon; }
+    else if (markertype === 'unpaved') { markerimg = unpavedIcon; }
+    else if (markertype === 'stairs') { markerimg = stairsIcon; }
+    else if (markertype === 'slope') { markerimg = slopeIcon; }
+    else if (markertype === 'bench') { markerimg = benchIcon; } // 변수명 수정
+    else if (markertype === 'atm') { markerimg = atmIcon; }
+    else if (markertype === 'bicycle') { markerimg = bicycleIcon; }
+    else if (markertype === 'smoking') { markerimg = smokingIcon; }
+    return new Style({
+        image: new Icon({
+            src: markerimg,
+            scale: 0.07,
+            opacity: 0.7,
+            rotateWithView: false,
+            rotation: 0
+        })
+    });
+};
+
+
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
@@ -182,12 +219,12 @@ const createShowLayer = (ShowReqIdsNtype) => {
                     dataProjection: 'EPSG:5181'
                 }),
                 url: function (extent) {
-                    //확인
                     return createUrl4WFS(ShowReqIdsNtype)
                 },
                 serverType: 'geoserver'
             }),
-            zIndex: 5
+            zIndex: 5,
+            style: ShowMarkerStyle(ShowReqIdsNtype.type),
     });
     return showLayer
 }
@@ -195,8 +232,8 @@ const createShowLayer = (ShowReqIdsNtype) => {
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
-    const [popupContent, setPopupContent] = useState('');
     const popupContainerRef = useRef(null);
+    const popupContentRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
         pathData.forEach((path, index) => {
@@ -370,16 +407,13 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 poiMarkerClickEventWith(keyword,selectBuildClick);
             }
 
-            if (!popupContainerRef.current) {
-                console.log("놉")
-                return;
-            }
+            if (!popupContainerRef.current) return;
             if (ShowReqIdsNtype){
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
 
-                    let content = document.getElementById('popup-content');
+                    const content = popupContentRef.current;
 
                     const popupOverlay = new Overlay({
                         element: popupContainerRef.current,
@@ -406,7 +440,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                         const properties = feature.getProperties();
                         console.log(properties)
                         const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>');
-                        setPopupContent(info);
                         content.innerHTML = info;
 
                         map.addOverlay(popupOverlay)
@@ -414,9 +447,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                         console.log('popupContainer')
                         console.log(popupContainerRef.current)
                     });
-//                    console.log('popupContent')
-//                    console.log(popupContent)
-
                     map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
                     return () => {
@@ -439,9 +469,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            <div ref={popupContainerRef} id="popup" className="ol-popup">
+            <div ref={popupContainerRef} className="ol-popup">
               <button id="popup-closer" className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
-              <div id="popup-content">
+              <div ref={popupContentRef} className="ol-popup-content">
               </div>
             </div>
         </div>
