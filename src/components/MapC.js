@@ -406,8 +406,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 });
                 map.addInteraction(selectBuildClick);
                 poiMarkerClickEventWith(keyword,selectBuildClick);
-                console.log('keyword')
-                console.log(popupContainerRef.current)
             }
 
             if (ShowReqIdsNtype){

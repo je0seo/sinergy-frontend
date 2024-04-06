@@ -24,6 +24,7 @@ const searchBuildingInfo = async (keyword, setBuildingInfo, setResultExistence) 
 
 const useSearch = ({keyword}) => {
     const [bgName, setBgName] = useState('');
+    const [engName, setEngName] = useState('');
     const [bgId, setBgId] = useState(0);
     const [bgSummary, setBgSummary] = useState('');
     const [bgImage, setBgImage] = useState('');
@@ -34,6 +35,7 @@ const useSearch = ({keyword}) => {
 
     const setBuildingInfo = (data) => {
         setBgName(data.rows[0].bg_name)
+        setEngName(data.rows[0].eng_name)
         setBgId(data.rows[0].bd_id)
         setBgSummary(data.rows[0].summary)
         setLoungeCnt(data.rows[0].lounge_count)
@@ -56,12 +58,10 @@ const useSearch = ({keyword}) => {
     return (
         <div>
             {bgImage && <img id="bg-image" src={bgImage} alt="Building Image" style={{width: '250px',display: 'block',margin: '0 auto'}}/>}
-            <p> 이름 : {bgName} </p>
-            <p> 소개글 : {bgSummary} </p>
-            <p> 분류 : {type} </p>
-            <p> 건물 번호 : {bgId} </p>
-            <p> 층 수 : {totalFloors} </p>
-            <p> 라운지 수 : {loungeCnt} </p>
+            <h3> {bgName}({engName}) </h3>
+            [ {type} | {(type === '건물') && (<> No.{bgId}</>)} | <>총 {totalFloors}층</> ]
+            {loungeCnt && <>라운지 수 : {loungeCnt}</>}
+            <p> {bgSummary} </p>
         </div>
     );
 }
