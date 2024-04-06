@@ -107,7 +107,7 @@ const clickedMarkerStyle = (irumarker) => {
   });
 };
 
-const ShowMarkerStyle = (markertype) => {
+const showMarkerStyle = (markertype) => {
     let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
 
     if (markertype === 'facilities') { markerimg = facilitiesIcon; }
@@ -219,13 +219,12 @@ const createShowLayer = (ShowReqIdsNtype) => {
                     dataProjection: 'EPSG:5181'
                 }),
                 url: function (extent) {
-                    //확인
                     return createUrl4WFS(ShowReqIdsNtype)
                 },
                 serverType: 'geoserver'
             }),
             zIndex: 5,
-            style: ShowMarkerStyle(ShowReqIdsNtype.type),
+            style: showMarkerStyle(ShowReqIdsNtype.type),
     });
     return showLayer
 }
@@ -233,8 +232,9 @@ const createShowLayer = (ShowReqIdsNtype) => {
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
-    const [popupContent, setPopupContent] = useState('');
     const popupContainerRef = useRef(null);
+    const popupContentRef = useRef(null);
+    const popupCloserRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
         pathData.forEach((path, index) => {
@@ -320,7 +320,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
         });
     }
      const deletePopup = () =>{
-        const popupCloser = document.getElementById('popup-closer');
+        const popupCloser = popupCloserRef.current;
         map.getOverlays().getArray()[0].setPosition(undefined);
         popupCloser.blur();
         return false;
@@ -407,18 +407,17 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 map.addInteraction(selectBuildClick);
                 poiMarkerClickEventWith(keyword,selectBuildClick);
             }
-          
-            if (!popupContainerRef.current) return;
+
             if (ShowReqIdsNtype){
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
 
-                    let content = document.getElementById('popup-content');
+                    const content = popupContentRef.current;
 
                     const popupOverlay = new Overlay({
                         element: popupContainerRef.current,
-                        positioning: 'center-center',
+                        positioning: 'bottom-left',
                     });
 
                     const select4Popup = new Select({
@@ -431,27 +430,27 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                     select4Popup.on('select', (event) => {
                         const features = event.selected;
                         const feature = features[0];
+
+                        feature.setStyle(showMarkerStyle(ShowReqIdsNtype.type)); // 1. 클릭 시 스타일 바꾸기
+
                         // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
                         const geom = feature.getGeometry();
                         const [ minX, minY, maxX, maxY ] = geom.getExtent();
-                        const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ]
+                        const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
                         //const coordinate = geom.getCoordinates()
-                        popupOverlay.setPosition(coordinate);
+                        console.log(coordinate)
+                        popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
 
                         const properties = feature.getProperties();
                         console.log(properties)
-                        const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>');
-                        setPopupContent(info);
-                        content.innerHTML = info;
+                        const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>'); // 정보 가공
+                        content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
 
-                        map.addOverlay(popupOverlay)
+                        map.addOverlay(popupOverlay) // 5. 팝업 띄우기
 
                         console.log('popupContainer')
                         console.log(popupContainerRef.current)
                     });
-//                    console.log('popupContent')
-//                    console.log(popupContent)
-
                     map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
                     return () => {
@@ -474,11 +473,12 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            <div ref={popupContainerRef} id="popup" className="ol-popup">
-              <button id="popup-closer" className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
-              <div id="popup-content">
+            {ShowReqIdsNtype && ShowReqIdsNtype.type && (<div ref={popupContainerRef} className="ol-popup">
+              <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
+              <div ref={popupContentRef} className="ol-popup-content">
               </div>
             </div>
+            )}
         </div>
     );
 };

@@ -356,7 +356,7 @@ const App = () => {
                 {activeTab === '3D' && <ThreeDContent />}
             </div>
             <div className='main-right-side'>
-                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype} popupContent/>}
+                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
                 /*markerClicked={markerClicked} setMarkerClicked={setMarkerClicked}*/ />}
