@@ -320,8 +320,11 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
         });
     }
      const deletePopup = () =>{
+        console.log('click')
         const popupCloser = popupCloserRef.current;
+        console.log(map.getOverlays().getArray()[0].getPosition())
         map.getOverlays().getArray()[0].setPosition(undefined);
+        console.log(map.getOverlays().getArray()[0].getPosition())
         popupCloser.blur();
         return false;
     }
@@ -396,8 +399,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }
 
             if (keyword) {
-                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%' or nickname like '%"
-                +keyword+"%' or eng_name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'" + "or nickname like '%"+keyword+"%'" + "or eng_name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
 
                 const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
@@ -438,26 +440,25 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                         const features = event.selected;
                         const feature = features[0];
 
-                        console.log(feature)
-                        feature.setStyle(showMarkerStyle(ShowReqIdsNtype.type)); // 1. 클릭 시 스타일 바꾸기
+                        if (feature){
+                            feature.setStyle(showMarkerStyle(ShowReqIdsNtype.type)); // 1. 클릭 시 스타일 바꾸기
 
-                        // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
-                        const geom = feature.getGeometry();
-                        const [ minX, minY, maxX, maxY ] = geom.getExtent();
-                        const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
-                        //const coordinate = geom.getCoordinates()
-                        console.log(coordinate)
-                        popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
+                            // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
+                            const geom = feature.getGeometry();
+                            const [ minX, minY, maxX, maxY ] = geom.getExtent();
+                            const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
+                            //const coordinate = geom.getCoordinates()
+                            popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
 
-                        const properties = feature.getProperties();
-                        console.log(properties)
-                        const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>'); // 정보 가공
-                        content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
+                            const properties = feature.getProperties();
+                            console.log(properties)
+                            const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>'); // 정보 가공
+                            content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
 
-                        map.addOverlay(popupOverlay) // 5. 팝업 띄우기
-
-                        console.log('popupContainer')
-                        console.log(popupContainerRef.current)
+                            map.addOverlay(popupOverlay) // 5. 팝업 띄우기
+                        }
+//                        console.log('popupContainer')
+//                        console.log(popupContainerRef.current)
                     });
                     map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
