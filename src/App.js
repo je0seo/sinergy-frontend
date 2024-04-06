@@ -241,7 +241,7 @@ const App = () => {
                                 </div>
                             </button>
                         )}
-                        {showFacilitiesMenu && ( // showFacilitiesMenu 상태에 따라 보이게 설정
+                        {showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
                                 <button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button>
                                 <button className='showingBtn' onClick={() => handleShowReq('atm')}>
@@ -299,7 +299,7 @@ const App = () => {
                             <p>서울시립대학교 어디가 궁금하세요?</p>
                         </div>
                     )}
-                    {keyword != '' && <div className='info-page'>
+                    {keyword != '' && !showFacilitiesMenu && !showObstacleMenu && <div className='info-page'>
                           <Search keyword = {keyword} />
                     </div>}
                 </div>}
