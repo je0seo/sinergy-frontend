@@ -185,7 +185,7 @@ const createPoiMarkerLayer = (cqlFilter) => {
         title: 'POI',
         visible: true,
         source: poiSource,
-        style: basicMarkerStyle(irumarker2),
+
         zIndex: 4
     });
 
@@ -396,7 +396,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }
 
             if (keyword) {
-                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%' or nickname like '%"
+                +keyword+"%' or eng_name like '%"+keyword+"%'"); // Replace 'desiredName' with the name you want to filter by
+
                 const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
                 map.addLayer(poiMarkerLayer)
 
@@ -405,7 +407,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                    layers: [poiMarkerLayer]
                 });
                 map.addInteraction(selectBuildClick);
-                poiMarkerClickEventWith(keyword,selectBuildClick);
+//                poiMarkerClickEventWith(keyword,selectBuildClick);
             }
 
             if (ShowReqIdsNtype){
