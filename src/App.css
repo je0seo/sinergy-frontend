@@ -80,11 +80,11 @@
 .info-page{
   border: 3px solid #44EAC5;
   background-color: #ffffff;
-  width: 350px;
-  margin: 10px;
-  padding-bottom: 20px;
-  padding-left: 5px;
-  padding-right: 5px;
+  margin: 0px 10px 0px 10px;
+
+  border-radius: 7px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 /*pathfinder-page*/
 .pathfinder-page {
