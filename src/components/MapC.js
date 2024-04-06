@@ -406,9 +406,10 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 });
                 map.addInteraction(selectBuildClick);
                 poiMarkerClickEventWith(keyword,selectBuildClick);
+                console.log('keyword')
+                console.log(popupContainerRef.current)
             }
 
-            if (!popupContainerRef.current) return;
             if (ShowReqIdsNtype){
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
@@ -474,11 +475,12 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            <div ref={popupContainerRef} className="ol-popup">
+            {ShowReqIdsNtype && ShowReqIdsNtype.type && (<div ref={popupContainerRef} className="ol-popup">
               <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
               <div ref={popupContentRef} className="ol-popup-content">
               </div>
             </div>
+            )}
         </div>
     );
 };
