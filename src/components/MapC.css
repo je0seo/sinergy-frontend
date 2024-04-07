@@ -4,9 +4,8 @@
     border-radius: 10px;
     width: 200px;
     border: 2px solid black;
-    padding-left: 8px;
-    padding-bottom: 5px;
-    opacity: 0.85
+    opacity: 0.85;
+    padding: 0px 0px 3px 0px;
 }
 
 .ol-popup-closer {
@@ -18,4 +17,8 @@
 
 .info-content {
     background-color: #fff8dc;
+}
+
+.ol-popup-content {
+    align-items: center;
 }

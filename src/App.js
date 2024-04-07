@@ -172,8 +172,8 @@ const App = () => {
     const [markerClicked, setMarkerClicked] = useState(false);
 
     const handleShowReq = async (ReqType) => {
-        const Ids = await showReq(ReqType);
-        setShowReqIdsNtype({ type: ReqType, Ids });
+        const data = await showReq(ReqType);
+        setShowReqIdsNtype({ type: ReqType, data });
     };
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -212,8 +212,7 @@ const App = () => {
             const response = await axios.post(NODE_BACKEND_URL + '/ShowReq', { Req }, {
                 headers: {'Content-Type': 'application/json'},
             });
-            //console.log(response.data.Ids);
-            return response.data.Ids
+            return response.data
         } catch (error) {
             console.error('Error during Axios POST request while Showing Request Maker', error);
         }
