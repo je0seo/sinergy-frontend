@@ -196,17 +196,17 @@ const createUrl4WFS = (ShowReqIdsNtype) => {
     if (ShowReqIdsNtype.type === 'facilities'|| ShowReqIdsNtype.type === 'bump' || ShowReqIdsNtype.type === 'bol'){
         return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
                   '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
-                  +ShowReqIdsNtype.Ids +')';
+                  +ShowReqIdsNtype.data.ids +')';
     }
     else if (ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope'){
         return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
                   '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
-                  +ShowReqIdsNtype.Ids + ')';
+                  +ShowReqIdsNtype.data.ids + ')';
     }
     else if (ShowReqIdsNtype.type == 'atm' || ShowReqIdsNtype.type == 'bench' || ShowReqIdsNtype.type == 'bicycle' || ShowReqIdsNtype.type == 'smoking'){
         return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
             '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
-            +ShowReqIdsNtype.Ids +')';
+            +ShowReqIdsNtype.data.ids +')';
     }
 }
 
@@ -370,7 +370,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                         map.getLayers().clear();
                         map.addLayer(vworldSatelliteLayer);
                         map.addLayer(UOSorthoTile);
-                        console.log('항공');
                         break;
                     default:
                         map.getLayers().clear();
@@ -385,8 +384,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-
-                //console.log(locaArray);
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
