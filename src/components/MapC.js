@@ -232,6 +232,8 @@ const createShowLayer = (ShowReqIdsNtype) => {
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
+    const [popupImage, setPopupImage] = useState('');
+    const [popupContent, setPopupContent] = useState('');
     const popupContainerRef = useRef(null);
     const popupContentRef = useRef(null);
     const popupCloserRef = useRef(null);
@@ -448,15 +450,13 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                             //const coordinate = geom.getCoordinates()
                             popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
 
-                            const properties = feature.getProperties();
-                            console.log(properties)
-                            const info = Object.keys(properties).map(key => `${key}: ${properties[key]}`).join('<br>'); // 정보 가공
-                            content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
+                            const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('node_id'));
+                            setPopupImage(ShowReqIdsNtype.data.images[idIdx]);
+                            setPopupContent(ShowReqIdsNtype.data.info[idIdx]);
+                            //content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
 
                             map.addOverlay(popupOverlay) // 5. 팝업 띄우기
                         }
-//                        console.log('popupContainer')
-//                        console.log(popupContainerRef.current)
                     });
                     map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
@@ -482,7 +482,11 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             <div id="map" style={{ width, height }}></div>
             {ShowReqIdsNtype && ShowReqIdsNtype.type && (<div ref={popupContainerRef} className="ol-popup">
               <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
+              {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
+                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이</>}
+                {ShowReqIdsNtype.type === 'bol' && <>볼라드 넓이</>}
+                <> {popupContent} </>
               </div>
             </div>
             )}
