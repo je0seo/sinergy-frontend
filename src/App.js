@@ -84,6 +84,9 @@ const usePathfinding = () => {
       setPathData(shortestPath);
     }
   };
+  const PathObstacleShow = async () => {
+      console.log("길찾기 결과 내 장애물을 표출합니다.")
+  }
   const handleFindPathClick = async () => {
     try {
       const requestData = {
@@ -155,6 +158,7 @@ const usePathfinding = () => {
     setTotalDistance,
     setPathData,
     handleFindPathClick,
+    PathObstacleShow,
     addStopover,
     handleStopoverChange,
     handleInputReset,
@@ -199,6 +203,7 @@ const App = () => {
       setStart,
       setEnd,
       handleFindPathClick,
+      PathObstacleShow,
       addStopover,
       handleStopoverChange,
       handleInputReset,
@@ -338,6 +343,7 @@ const App = () => {
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
                                 <img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />
                             </div>
+                            <button className="button-style" onClick={PathObstacleShow}>경로 내 장애물 표시</button>
                         </div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
