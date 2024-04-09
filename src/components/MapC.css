@@ -1,0 +1,24 @@
+.ol-popup {
+    display: 'block';
+    background-color: #ffffff;
+    border-radius: 10px;
+    width: 200px;
+    border: 2px solid black;
+    opacity: 0.85;
+    padding: 0px 0px 3px 0px;
+}
+
+.ol-popup-closer {
+    background: red;
+    border-radius: 5px;
+    margin-left: 170px;
+    margin-top: 3px;
+}
+
+.info-content {
+    background-color: #fff8dc;
+}
+
+.ol-popup-content {
+    align-items: center;
+}

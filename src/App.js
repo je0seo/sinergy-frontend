@@ -12,8 +12,38 @@ import legend from './components/images/legend.png';
 import axios from 'axios';
 import {NODE_BACKEND_URL} from "./constants/urls";
 //
+import Search from './components/Search';
+//
+import bumpIcon from './components/images/icons/bumpIcon.png';
+import bolIcon from './components/images/icons/bolIcon.png';
+import unpavedIcon from './components/images/icons/unpavedIcon.png';
+import stairsIcon from './components/images/icons/stairsIcon.png';
+import slopeIcon from './components/images/icons/slopeIcon.png';
+import facilitiesIcon from './components/images/icons/facilitiesIcon.png';
+import benchIcon from './components/images/icons/benchIcon.png';
+import atmIcon from './components/images/icons/atmIcon.png';
+import bicycleIcon from './components/images/icons/bicycleIcon.png';
+import smokingIcon from './components/images/icons/smokingIcon.png';
+import storeIcon from './components/images/icons/storeIcon.png';
+import cafeIcon from './components/images/icons/cafeIcon.png';
+import postOfficeIcon from './components/images/icons/postOfficeIcon.png';
+import healthServiceIcon from './components/images/icons/healthServiceIcon.png';
+import cafeteriaIcon from './components/images/icons/cafeteriaIcon.png';
+import printIcon from './components/images/icons/printIcon.png';
+import gymIcon from './components/images/icons/gymIcon.png';
+import tennisIcon from './components/images/icons/tennisIcon.png';
+import basketballIcon from './components/images/icons/basketballIcon.png';
+import breakRoomIcon from './components/images/icons/breakRoomIcon.png';
+import loungeIcon from './components/images/icons/loungeIcon.png';
+import seminarRoomIcon from './components/images/icons/seminarRoomIcon.png';
+import sBicycleIcon from './components/images/icons/sBicycleIcon.png';
+import vendingMachineIcon from './components/images/icons/vendingMachineIcon.png';
+import libraryIcon from './components/images/icons/libraryIcon.png';
 
-const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange }) => {
+
+
+
+const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
     return (
         <header className='header'>
             <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
@@ -39,27 +69,41 @@ const usePathfinding = () => {
     bump: false,
     bol: false,
   };
+
   const [features, setFeatures] = useState(initialFeaturesState);
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [stopovers, setStopovers] = useState([]);
   const [showShortestPathText, setShowShortestPathText] = useState(false);
+  const [StartEndNormalCheckMessage, setStartEndNormalCheckMessage] = useState('');
   const [totalDistance, setTotalDistance] = useState(0);
   const [pathData, setPathData] = useState(null);
   const [showText4deco, setShowText4deco] = useState(true);
 
   const handlePathResult = (data) => {
-    console.log(data.minAggCost);
     const calculatedTotalDistance = data.minAggCost;
     setTotalDistance(calculatedTotalDistance);
     setShowShortestPathText(true);
-    setShowText4deco(false)
+    setShowText4deco(false);
     const shortestPath = data.shortestPath;
+    //console.log("data.userReqNum:", data.userReqNum);
+    if (data.userReqNum.length === 1 && data.userReqNum[0] === 0){
+        setStartEndNormalCheckMessage("출발지 오류입니다. 다시한번 확인해주세요");
+        setPathData(null);
+        //console.log("출발지 오류입니다. 다시한번 확인해주세요");
+    }
+    if (data.userReqNum.length === 2 && data.userReqNum[0] === 0 && data.userReqNum[1] === 0){
+        setStartEndNormalCheckMessage("도착지 오류입니다. 다시한번 확인해주세요");
+        setPathData(null);
+        //console.log("도착지 오류입니다. 다시한번 확인해주세요");
+    }
     if (shortestPath) {
       setPathData(shortestPath);
     }
   };
-
+  const PathObstacleShow = async () => {
+      console.log("길찾기 결과 내 장애물을 표출합니다.")
+  }
   const handleFindPathClick = async () => {
     try {
       const requestData = {
@@ -73,7 +117,7 @@ const usePathfinding = () => {
       } else if(end===""){
           alert("도착지가 입력되지 않았습니다. 다시한번 확인해주세요")
       } else{
-          console.log('중간점검용:', requestData);
+          //console.log('중간점검용:', requestData);
           try {
           var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
               headers: {
@@ -105,6 +149,7 @@ const usePathfinding = () => {
     setEnd('');
     setStopovers([]);
     setShowShortestPathText(false);
+    setStartEndNormalCheckMessage('');
     setShowText4deco(true);
     setTotalDistance(0);
     setPathData(null);
@@ -116,6 +161,7 @@ const usePathfinding = () => {
     end,
     stopovers,
     showShortestPathText,
+    StartEndNormalCheckMessage,
     showText4deco,
     totalDistance,
     pathData,
@@ -124,24 +170,41 @@ const usePathfinding = () => {
     setEnd,
     setStopovers,
     setShowShortestPathText,
+    setStartEndNormalCheckMessage,
     setShowText4deco,
     setTotalDistance,
     setPathData,
     handleFindPathClick,
+    PathObstacleShow,
     addStopover,
     handleStopoverChange,
     handleInputReset,
   };
 };
 
+
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [keyword, setKeyword] = useState('');
     const [activeTab, setActiveTab] = useState('');
+    const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
+    const [showFacilitiesMenu, setShowFacilitiesMenu] = useState( false);
+    const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
+    const [markerClicked, setMarkerClicked] = useState(false);
 
+    const handleShowReq = async (ReqType) => {
+        const data = await showReq(ReqType);
+        setShowReqIdsNtype({ type: ReqType, data });
+    };
     const handleTabChange = (tab) => {
         setActiveTab(tab);
     };
+    const handleToggleObstacleMenu = () => {
+        setShowObstacleMenu(!showObstacleMenu);
+    };
+    const handleToggleFacilitiesMenu = () =>{
+        setShowFacilitiesMenu(!showFacilitiesMenu);
+    }
     //길찾기
     const {
       features,
@@ -149,18 +212,15 @@ const App = () => {
       end,
       stopovers,
       showShortestPathText,
+      StartEndNormalCheckMessage,
       showText4deco,
       totalDistance,
       pathData,
       setFeatures,
       setStart,
       setEnd,
-      setStopovers,
-      setShowShortestPathText,
-      setShowText4deco,
-      setTotalDistance,
-      setPathData,
       handleFindPathClick,
+      PathObstacleShow,
       addStopover,
       handleStopoverChange,
       handleInputReset,
@@ -168,6 +228,16 @@ const App = () => {
   
     const toggleFeature = (feature) => {
       setFeatures({ ...features, [feature]: !features[feature] });
+    };
+    const showReq = async (Req) => {
+        try {
+            const response = await axios.post(NODE_BACKEND_URL + '/ShowReq', { Req }, {
+                headers: {'Content-Type': 'application/json'},
+            });
+            return response.data
+        } catch (error) {
+            console.error('Error during Axios POST request while Showing Request Maker', error);
+        }
     };
 
     return (
@@ -177,19 +247,70 @@ const App = () => {
                     setKeyword(searchTerm);
                 }} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <div className='menu'>
-                  <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>home</button>
+                  <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
                   <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>3D</button>
                 </div>
+
                 {activeTab === '' && <div className='home-left'>
-                    <a href="https://www.uos.ac.kr/main.do?epTicket=INV">
+                    <div>
+                        {/*
+                        {!showFacilitiesMenu && (
+                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>
+                                <div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div>
+                            </button>
+                        )}
+                        */}
+                        {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
+                            <div className='showingFacilitiesBtns'>
+                                {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
+                                {/*<button className='showingBtn' onClick={() => handleShowReq('facilities')}><div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div></button> */}
+                                <button className='showingFacBtn' onClick={() => handleShowReq('Sbicycle')}><img src={sBicycleIcon} alt="S-Bicycle Icon" className="iconImage" />따릉이 대여소</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('bicycle')}><img src={bicycleIcon} alt="Bicycle Icon" className="iconImage" />자전거 거치대</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('bench')}><img src={benchIcon} alt="Bench Icon" className="iconImage" />{/* 이미지 크기 조절 */}벤치</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('smoking')}><img src={smokingIcon} alt="Smoking Icon" className="iconImage" />흡연구역</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('store')}><img src={storeIcon} alt="Store Icon" className="iconImage" />편의점</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('cafe')}><img src={cafeIcon} alt="Cafe Icon" className="iconImage" />카페</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('atm')}><img src={atmIcon} alt="ATM Icon" className="iconImage" />은행/ATM</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('postoffice')}><img src={postOfficeIcon} alt="Post Office Icon" className="iconImage" />우체국</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('healthservice')}><img src={healthServiceIcon} alt="Health Service Icon" className="iconImage" />보건소</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('cafeteria')}><img src={cafeteriaIcon} alt="Cafeteria Icon" className="iconImage" />학생식당</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('print')}><img src={printIcon} alt="Print Icon" className="iconImage" />복사실</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('gym')}><img src={gymIcon} alt="Gym Icon" className="iconImage" />헬스장</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('tennis')}><img src={tennisIcon} alt="Tennis Icon" className="iconImage" />테니스장</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={basketballIcon} alt="Basketball Icon" className="iconImage" />농구장</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('breakroom')}><img src={breakRoomIcon} alt="Break Room Icon" className="iconImage" />휴게실</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('lounge')}><img src={loungeIcon} alt="Lounge Icon" className="iconImage" />학생라운지</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('seminarroom')}><img src={seminarRoomIcon} alt="Seminar Room Icon" className="iconImage" />세미나실</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('vendingMachine')}><img src={vendingMachineIcon} alt="vendingMachineIcon" className="iconImage" />자판기</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('library')}><img src={libraryIcon} alt="libraryIcon" className="iconImage" />도서관</button>
+                            </div>
+                        )}
+                        {/* {!showObstacleMenu && (
+                            <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
+                        )}*/}
+                        {/*{showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정*/}
+                            <div className='showingObstacleBtns'>
+                                {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
+                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}><img src={stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
+                            </div>
+                        {/*)}*/}
+                    </div>
+                    {/*<a href="https://www.uos.ac.kr/main.do?epTicket=INV">
                         <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
-                    </a>
-                    {showText4deco && (
+                    </a>*/}
+                    {showText4deco && keyword == '' && (
                         <div className="deco-text-style">
                             <p>서울시립대학교 어디가 궁금하세요?</p>
                         </div>
                     )}
+                    {keyword != '' && <div className='info-page'> {/* && !showFacilitiesMenu && !showObstacleMenu */}
+                          <Search keyword = {keyword} />
+                    </div>}
                 </div>}
                 {activeTab === '길찾기' && (
                 <div>
@@ -227,16 +348,17 @@ const App = () => {
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
                                 <img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />
                             </div>
+                            <button className="button-style" onClick={PathObstacleShow}>경로 내 장애물 표시</button>
                         </div>
                     )}
-                    {showShortestPathText && totalDistance !== null && totalDistance === 0 && (
+                    {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
                         <div className="shortest-path-text">
                             조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요.
                         </div>
                     )}
-                    {showShortestPathText && (!pathData || totalDistance === null || (totalDistance > 0 && !pathData.length)) && (
+                    {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
                         <div className="shortest-path-text">
-                            입력지 오류입니다. 입력지를 다시한번 확인해주세요
+                            {StartEndNormalCheckMessage}
                         </div>
                     )}
                   </div>
@@ -244,8 +366,10 @@ const App = () => {
                 {activeTab === '3D' && <ThreeDContent />}
             </div>
             <div className='main-right-side'>
-                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} />}
-                {activeTab === '길찾기' && <Map width='100%' height='100vh' keyword={keyword} pathData={pathData} />}
+                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype}/>}
+                {activeTab === '길찾기'
+                && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
+                /*markerClicked={markerClicked} setMarkerClicked={setMarkerClicked}*/ />}
             </div>
         </div>
     );
