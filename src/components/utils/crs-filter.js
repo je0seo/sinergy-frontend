@@ -1,6 +1,7 @@
 export const makeCrsFilter = (ls) => {
-   return {'CQL_FILTER': 'id in ('+ls.filter(e => e !== '-1').join(',')+')'}
+    return 'id in (' + ls.filter(e => e !== '-1').join(',') + ')';
 }
+
 export const ShowReqFilter = (requestData) => {
       if (requestData.Req === 'facilities') {
          return {'CQL_FILTER': 'node_att in (8)'}
