@@ -181,13 +181,15 @@
 }
 .showingObstacleBtns {
   display: flex;
-  flex-direction: column;
-  border-style: dotted;
+  margin-top: 5px;
+  /*flex-direction: column;*/
+  border-style: solid;
+  justify-content: space-between
 }
 .showingFacBtn {
   margin: 5px;
   height: 35px;
-  width: calc(25% - 10px); /* 4개의 버튼이 한 행에 오도록 너비 설정 */
+  /*width: calc(25% - 10px);  /*4개의 버튼이 한 행에 오도록 너비 설정 */
   font-size: 13.8px;
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
@@ -200,7 +202,7 @@
   background-color: #44EAC5;
 }
 .showingFacilitiesBtns {
-  border-style: dotted;
+  border-style: solid;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

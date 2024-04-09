@@ -152,8 +152,8 @@ const showMarkerStyle = (markertype) => {
     return new Style({
         image: new Icon({
             src: markerimg,
-            scale: 0.07,
-            opacity: 0.7,
+            scale: 0.03,
+            opacity: 1,
             rotateWithView: false,
             rotation: 0
         })
