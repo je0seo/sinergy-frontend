@@ -14,6 +14,10 @@ import {NODE_BACKEND_URL} from "./constants/urls";
 //
 import Search from './components/Search';
 //
+import irumarkerS from './components/images/IrumakerS.png';
+import irumarkerE from './components/images/IrumakerE.png';
+import irumarker2 from './components/images/Irumaker2.png';
+//
 import bumpIcon from './components/images/icons/bumpIcon.png';
 import bolIcon from './components/images/icons/bolIcon.png';
 import unpavedIcon from './components/images/icons/unpavedIcon.png';
@@ -323,13 +327,22 @@ const App = () => {
                       <button className={`option-button ${features.bol ? 'selected-button' : ''}`} style={{ marginRight: '5px' }} onClick={() => toggleFeature('bol')} >볼라드 제외</button>
                     </div>
                     <div className="input-row">
-                        <input className='pf-input-style' type="text" placeholder="출발지를 입력하세요" value={start} onChange={(e) => setStart(e.target.value)} />
-                          <div className="stopover-textboxes">
+                        <div>
+                            <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
+                            <input className='pf-input-style' type="text" placeholder="출발지를 입력하세요" value={start} onChange={(e) => setStart(e.target.value)} />
+                        </div>
+                            <div className="stopover-textboxes">
                               {stopovers.map((stopover, index) => (
-                                  <input className='pf-input-style' key={index} type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
+                                  <div>
+                                      <img src={irumarker2} alt="stopover irumarker" className="irumarkerImage"/>
+                                      <input className='pf-input-style' key={index} type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
+                                  </div>
                               ))}
                           </div>
-                        <input className='pf-input-style'type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
+                        <div>
+                            <img src={irumarkerE} alt="end irumarker" className="irumarkerImage"/>
+                            <input className='pf-input-style'type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
+                        </div>
                     </div>
                     <div className="button-row">
                       <button className="button-style" onClick={handleInputReset}>다시 입력</button>

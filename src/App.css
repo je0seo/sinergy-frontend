@@ -128,10 +128,15 @@
 }
 .pf-input-style{ /* 출발,도착,경유지 입력창 */
   height: 30px;
-  width: 96%;
-  margin: 2px;
-  margin-left: 5px;
-  margin-right: 5px;
+  width: 90%;
+  margin: 0px;
+  margin-left: 0px;
+  margin-right: 2px;
+}
+.irumarkerImage {
+  height: 35px;
+  overflow: hidden;
+  width: auto;
 }
 .button-row {
   display: flex;
