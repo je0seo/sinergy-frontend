@@ -184,11 +184,28 @@
   flex-direction: column;
   border-style: dotted;
 }
-.showingFacilitiesBtns {
-  display: flex;
-  flex-direction: column;
-  border-style: dotted;
+.showingFacBtn {
+  margin: 5px;
+  height: 35px;
+  width: calc(25% - 10px); /* 4개의 버튼이 한 행에 오도록 너비 설정 */
+  font-size: 13.8px;
+  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
+  border-width: 1px; /* 버튼의 테두리 두께 */
+  border-style: solid;
+  background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
+  transition: background-color 0.1s ease;
 }
+
+.showingFacBtn:hover {
+  background-color: #44EAC5;
+}
+.showingFacilitiesBtns {
+  border-style: dotted;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 .iconImage {
   width: 15px;
   height: 15px;

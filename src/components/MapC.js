@@ -25,16 +25,30 @@ import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumaker2.png';
 
-import facilitiesIcon from './images/icons/facilitiesIcon.png';
 import bumpIcon from './images/icons/bumpIcon.png';
 import bolIcon from './images/icons/bolIcon.png';
 import unpavedIcon from './images/icons/unpavedIcon.png';
 import stairsIcon from './images/icons/stairsIcon.png';
 import slopeIcon from './images/icons/slopeIcon.png';
+import facilitiesIcon from './images/icons/facilitiesIcon.png';
 import benchIcon from './images/icons/benchIcon.png';
 import atmIcon from './images/icons/atmIcon.png';
 import bicycleIcon from './images/icons/bicycleIcon.png';
 import smokingIcon from './images/icons/smokingIcon.png';
+import storeIcon from './images/icons/storeIcon.png';
+import cafeIcon from './images/icons/cafeIcon.png';
+import postOfficeIcon from './images/icons/postOfficeIcon.png';
+import healthServiceIcon from './images/icons/healthServiceIcon.png';
+import cafeteriaIcon from './images/icons/cafeteriaIcon.png';
+import printIcon from './images/icons/printIcon.png';
+import gymIcon from './images/icons/gymIcon.png';
+import tennisIcon from './images/icons/tennisIcon.png';
+import basketballIcon from './images/icons/basketballIcon.png';
+import breakRoomIcon from './images/icons/breakRoomIcon.png';
+import loungeIcon from './images/icons/loungeIcon.png';
+import seminarRoomIcon from './images/icons/seminarRoomIcon.png';
+import sBicycleIcon from './images/icons/sBicycleIcon.png';
+
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
@@ -109,17 +123,32 @@ const clickedMarkerStyle = (irumarker) => {
 
 const showMarkerStyle = (markertype) => {
     let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
-
-    if (markertype === 'facilities') { markerimg = facilitiesIcon; }
-    else if (markertype === 'bump') { markerimg = bumpIcon; }
-    else if (markertype === 'bol') { markerimg = bolIcon; }
-    else if (markertype === 'unpaved') { markerimg = unpavedIcon; }
-    else if (markertype === 'stairs') { markerimg = stairsIcon; }
-    else if (markertype === 'slope') { markerimg = slopeIcon; }
-    else if (markertype === 'bench') { markerimg = benchIcon; } // 변수명 수정
-    else if (markertype === 'atm') { markerimg = atmIcon; }
-    else if (markertype === 'bicycle') { markerimg = bicycleIcon; }
-    else if (markertype === 'smoking') { markerimg = smokingIcon; }
+    switch (markertype) {
+        case 'facilities': markerimg = facilitiesIcon; break;
+        case 'bench': markerimg = benchIcon; break;
+        case 'atm': markerimg = atmIcon; break;
+        case 'bicycle': markerimg = bicycleIcon; break;
+        case 'smoking': markerimg = smokingIcon; break;
+        case 'store': markerimg = storeIcon; break;
+        case 'cafe': markerimg = cafeIcon; break;
+        case 'postoffice': markerimg = postOfficeIcon; break;
+        case 'healthservice': markerimg = healthServiceIcon; break;
+        case 'cafeteria': markerimg = cafeteriaIcon; break;
+        case 'print': markerimg = printIcon; break;
+        case 'gym': markerimg = gymIcon; break;
+        case 'tennis': markerimg = tennisIcon; break;
+        case 'basketball': markerimg = basketballIcon; break;
+        case 'breakroom': markerimg = breakRoomIcon; break;
+        case 'lounge': markerimg = loungeIcon; break;
+        case 'seminarroom': markerimg = seminarRoomIcon; break;
+        case 'Sbicycle': markerimg = sBicycleIcon; break;
+        case 'bump': markerimg = bumpIcon; break;
+        case 'bol': markerimg = bolIcon; break;
+        case 'unpaved': markerimg = unpavedIcon; break;
+        case 'stairs': markerimg = stairsIcon; break;
+        case 'slope': markerimg = slopeIcon; break;
+        default: /* 처리되지 않은 경우 기본값 설정 */ break;
+    }
     return new Style({
         image: new Icon({
             src: markerimg,
@@ -130,6 +159,7 @@ const showMarkerStyle = (markertype) => {
         })
     });
 };
+
 
 
 
@@ -203,7 +233,7 @@ const createUrl4WFS = (ShowReqIdsNtype) => {
                   '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
                   +ShowReqIdsNtype.data.ids + ')';
     }
-    else if (ShowReqIdsNtype.type == 'atm' || ShowReqIdsNtype.type == 'bench' || ShowReqIdsNtype.type == 'bicycle' || ShowReqIdsNtype.type == 'smoking'){
+    else {
         return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
             '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
             +ShowReqIdsNtype.data.ids +')';
