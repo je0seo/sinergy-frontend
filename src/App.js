@@ -14,16 +14,31 @@ import {NODE_BACKEND_URL} from "./constants/urls";
 //
 import Search from './components/Search';
 //
-import facilitiesIcon from './components/images/icons/facilitiesIcon.png';
 import bumpIcon from './components/images/icons/bumpIcon.png';
 import bolIcon from './components/images/icons/bolIcon.png';
 import unpavedIcon from './components/images/icons/unpavedIcon.png';
 import stairsIcon from './components/images/icons/stairsIcon.png';
 import slopeIcon from './components/images/icons/slopeIcon.png';
+import facilitiesIcon from './components/images/icons/facilitiesIcon.png';
 import benchIcon from './components/images/icons/benchIcon.png';
 import atmIcon from './components/images/icons/atmIcon.png';
 import bicycleIcon from './components/images/icons/bicycleIcon.png';
 import smokingIcon from './components/images/icons/smokingIcon.png';
+import storeIcon from './components/images/icons/storeIcon.png';
+import cafeIcon from './components/images/icons/cafeIcon.png';
+import postOfficeIcon from './components/images/icons/postOfficeIcon.png';
+import healthServiceIcon from './components/images/icons/healthServiceIcon.png';
+import cafeteriaIcon from './components/images/icons/cafeteriaIcon.png';
+import printIcon from './components/images/icons/printIcon.png';
+import gymIcon from './components/images/icons/gymIcon.png';
+import tennisIcon from './components/images/icons/tennisIcon.png';
+import basketballIcon from './components/images/icons/basketballIcon.png';
+import breakRoomIcon from './components/images/icons/breakRoomIcon.png';
+import loungeIcon from './components/images/icons/loungeIcon.png';
+import seminarRoomIcon from './components/images/icons/seminarRoomIcon.png';
+import sBicycleIcon from './components/images/icons/sBicycleIcon.png';
+
+
 
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
@@ -237,73 +252,59 @@ const App = () => {
 
                 {activeTab === '' && <div className='home-left'>
                     <div>
+                        {/*
                         {!showFacilitiesMenu && (
                             <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>
-                                <div>
-                                    <img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> {/* 이미지 크기 조절 */}
-                                    편의시설 보기
-                                </div>
+                                <div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div>
                             </button>
                         )}
-                        {showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
+                        */}
+                        {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
-                                <button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('atm')}>
-                                    <img src={atmIcon} alt="ATM Icon" className="iconImage" />
-                                    ATM
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bench')}>
-                                    <img src={benchIcon} alt="Bench Icon" className="iconImage" />
-                                    벤치
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bicycle')}>
-                                    <img src={bicycleIcon} alt="Bicycle Icon" className="iconImage" />
-                                    따릉이 대여소
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('smoking')}>
-                                    <img src={smokingIcon} alt="Smoking Icon" className="iconImage" />
-                                    흡연부스
-                                </button>
+                                {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
+                                {/*<button className='showingBtn' onClick={() => handleShowReq('facilities')}><div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div></button> */}
+                                <button className='showingFacBtn' onClick={() => handleShowReq('Sbicycle')}><img src={sBicycleIcon} alt="S-Bicycle Icon" className="iconImage" />따릉이 대여소</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('bicycle')}><img src={bicycleIcon} alt="Bicycle Icon" className="iconImage" />자전거 거치대</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('bench')}><img src={benchIcon} alt="Bench Icon" className="iconImage" />{/* 이미지 크기 조절 */}벤치</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('smoking')}><img src={smokingIcon} alt="Smoking Icon" className="iconImage" />흡연구역</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('store')}><img src={storeIcon} alt="Store Icon" className="iconImage" />편의점</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('cafe')}><img src={cafeIcon} alt="Cafe Icon" className="iconImage" />카페</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('atm')}><img src={atmIcon} alt="ATM Icon" className="iconImage" />은행/ATM</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('postoffice')}><img src={postOfficeIcon} alt="Post Office Icon" className="iconImage" />우체국</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('healthservice')}><img src={healthServiceIcon} alt="Health Service Icon" className="iconImage" />보건소</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('cafeteria')}><img src={cafeteriaIcon} alt="Cafeteria Icon" className="iconImage" />학생식당</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('print')}><img src={printIcon} alt="Print Icon" className="iconImage" />복사실</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('gym')}><img src={gymIcon} alt="Gym Icon" className="iconImage" />헬스장</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('tennis')}><img src={tennisIcon} alt="Tennis Icon" className="iconImage" />테니스장</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={basketballIcon} alt="Basketball Icon" className="iconImage" />농구장</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('breakroom')}><img src={breakRoomIcon} alt="Break Room Icon" className="iconImage" />휴게실</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('lounge')}><img src={loungeIcon} alt="Lounge Icon" className="iconImage" />학생라운지</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('seminarroom')}><img src={seminarRoomIcon} alt="Seminar Room Icon" className="iconImage" />세미나실</button>
                             </div>
                         )}
-                        {!showObstacleMenu && (
+                        {/* {!showObstacleMenu && (
                             <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
-                        )}
-                        {showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정
+                        )}*/}
+                        {/*{showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정*/}
                             <div className='showingObstacleBtns'>
-                                <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}>
-                                    <img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />
-                                    비포장도로 보기
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}>
-                                    <img src={stairsIcon} alt="Stairs Icon" className="iconImage" />
-                                    계단 보기
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('slope')}>
-                                    <img src={slopeIcon} alt="Slope Icon" className="iconImage" />
-                                    경사로 보기
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bump')}>
-                                    <img src={bumpIcon} alt="Bump Icon" className="iconImage" />
-                                    도로턱 보기
-                                </button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bol')}>
-                                    <img src={bolIcon} alt="Bollard Icon" className="iconImage" />
-                                    볼라드 보기
-                                </button>
+                                {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
+                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}><img src={stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
                             </div>
-                        )}
+                        {/*)}*/}
                     </div>
-                    <a href="https://www.uos.ac.kr/main.do?epTicket=INV">
+                    {/*<a href="https://www.uos.ac.kr/main.do?epTicket=INV">
                         <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
-                    </a>
+                    </a>*/}
                     {showText4deco && keyword == '' && (
                         <div className="deco-text-style">
                             <p>서울시립대학교 어디가 궁금하세요?</p>
                         </div>
                     )}
-                    {keyword != '' && !showFacilitiesMenu && !showObstacleMenu && <div className='info-page'>
+                    {keyword != '' && <div className='info-page'> {/* && !showFacilitiesMenu && !showObstacleMenu */}
                           <Search keyword = {keyword} />
                     </div>}
                 </div>}
