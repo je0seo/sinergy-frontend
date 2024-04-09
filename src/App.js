@@ -37,6 +37,8 @@ import breakRoomIcon from './components/images/icons/breakRoomIcon.png';
 import loungeIcon from './components/images/icons/loungeIcon.png';
 import seminarRoomIcon from './components/images/icons/seminarRoomIcon.png';
 import sBicycleIcon from './components/images/icons/sBicycleIcon.png';
+import vendingMachineIcon from './components/images/icons/vendingMachineIcon.png';
+import libraryIcon from './components/images/icons/libraryIcon.png';
 
 
 
@@ -280,6 +282,8 @@ const App = () => {
                                 <button className='showingFacBtn' onClick={() => handleShowReq('breakroom')}><img src={breakRoomIcon} alt="Break Room Icon" className="iconImage" />휴게실</button>
                                 <button className='showingFacBtn' onClick={() => handleShowReq('lounge')}><img src={loungeIcon} alt="Lounge Icon" className="iconImage" />학생라운지</button>
                                 <button className='showingFacBtn' onClick={() => handleShowReq('seminarroom')}><img src={seminarRoomIcon} alt="Seminar Room Icon" className="iconImage" />세미나실</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('vendingMachine')}><img src={vendingMachineIcon} alt="vendingMachineIcon" className="iconImage" />자판기</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('library')}><img src={libraryIcon} alt="libraryIcon" className="iconImage" />도서관</button>
                             </div>
                         )}
                         {/* {!showObstacleMenu && (
