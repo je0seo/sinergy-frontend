@@ -289,22 +289,34 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
     const popupCloserRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
+        console.log("pathData:", pathData);
+        const colorPalette = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta'];
+
         pathData.forEach((path, index) => {
             const listOfEdgeId = path.map(e => e.edge);
+            console.log("listOfEdgeId:", listOfEdgeId);
             const crsFilter = makeCrsFilter(listOfEdgeId);
-            // makeShortestPathLayer // 경로 지도레이어
-            const shortestPathLayer = new TileLayer({
+            console.log("crsFilter:", crsFilter);
+            const shortestPathLayer = new VectorLayer({
                 title: `UOS Shortest Path ${index + 1}`,
-                source: new TileWMS({
-                    url: 'http://localhost:8080/geoserver/gp/wms',
-                    params: { 'LAYERS': 'gp:link', ...crsFilter },
-                    serverType: 'geoserver',
-                    visible: true,
-                    }),
+                source: new VectorSource({
+                    format: new GeoJSON(),
+                    url: 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                        '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+crsFilter
+                }),
+                style: new Style({
+                    stroke: new Stroke({
+                        color: colorPalette[index % colorPalette.length],
+                        width: 2
+                    })
+                }),
                 zIndex: 2
             });
+
             map.addLayer(shortestPathLayer);
-        })
+        });
+
+
     }
 
     const createNAddNodeLayersFrom = (locaArray) => {
