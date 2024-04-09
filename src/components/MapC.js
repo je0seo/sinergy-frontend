@@ -16,6 +16,7 @@ import {Circle, Fill, Stroke, Style, Icon} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 
+
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
 import Overlay from 'ol/Overlay';
@@ -48,6 +49,8 @@ import breakRoomIcon from './images/icons/breakRoomIcon.png';
 import loungeIcon from './images/icons/loungeIcon.png';
 import seminarRoomIcon from './images/icons/seminarRoomIcon.png';
 import sBicycleIcon from './images/icons/sBicycleIcon.png';
+import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
+import libraryIcon from './images/icons/libraryIcon.png';
 
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
@@ -142,11 +145,31 @@ const showMarkerStyle = (markertype) => {
         case 'lounge': markerimg = loungeIcon; break;
         case 'seminarroom': markerimg = seminarRoomIcon; break;
         case 'Sbicycle': markerimg = sBicycleIcon; break;
+        case 'library': markerimg = libraryIcon; break;
+        case 'vendingMachine': markerimg = vendingMachineIcon; break;
         case 'bump': markerimg = bumpIcon; break;
         case 'bol': markerimg = bolIcon; break;
-        case 'unpaved': markerimg = unpavedIcon; break;
-        case 'stairs': markerimg = stairsIcon; break;
-        case 'slope': markerimg = slopeIcon; break;
+        case 'unpaved':
+            return new Style({
+                stroke: new Stroke({
+                    color: '#711B6B', // 선의 색상
+                    width: 2.5 // 선의 두께
+                })
+            });
+        case 'stairs':
+            return new Style({
+                stroke: new Stroke({
+                    color: '#D03C36', // 선의 색상
+                    width: 2.5 // 선의 두께
+                })
+            });
+        case 'slope':
+            return new Style({
+                stroke: new Stroke({
+                    color: '#FC3083', // 선의 색상
+                    width: 2.5 // 선의 두께
+                })
+            });
         default: /* 처리되지 않은 경우 기본값 설정 */ break;
     }
     return new Style({
@@ -159,9 +182,6 @@ const showMarkerStyle = (markertype) => {
         })
     });
 };
-
-
-
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
