@@ -76,16 +76,6 @@
   padding: 1px;
   justify-content: space-around;
 }
-/*info 창*/
-.info-page{
-  border: 3px solid #44EAC5;
-  background-color: #ffffff;
-  margin: 0px 10px 0px 10px;
-
-  border-radius: 7px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
 /*pathfinder-page*/
 .pathfinder-page {
   flex: 1;
@@ -165,50 +155,4 @@
 .deco-text-style{
   font-size:20px;
   align-items: center;
-}
-.showingBtn{
-  margin: 5px;
-  height:35px;
-  font-size: 13.8px;
-  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid;
-  background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
-  transition: background-color 0.1s ease;
-}
-.showingBtn:hover {
-  background-color: #44EAC5; /* 마우스 호버 시 배경색 변경 */
-}
-.showingObstacleBtns {
-  display: flex;
-  margin-top: 5px;
-  /*flex-direction: column;*/
-  border-style: solid;
-  justify-content: space-between
-}
-.showingFacBtn {
-  margin: 5px;
-  height: 35px;
-  /*width: calc(25% - 10px);  /*4개의 버튼이 한 행에 오도록 너비 설정 */
-  font-size: 13.8px;
-  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid;
-  background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
-  transition: background-color 0.1s ease;
-}
-
-.showingFacBtn:hover {
-  background-color: #44EAC5;
-}
-.showingFacilitiesBtns {
-  border-style: solid;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.iconImage {
-  width: 15px;
-  height: 15px;
 }
