@@ -515,7 +515,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                             const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('id'));
                             setPopupImage(ShowReqIdsNtype.data.images[idIdx]);
                             setPopupContent(ShowReqIdsNtype.data.info[idIdx]);
-                            //content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
 
                             map.addOverlay(popupOverlay) // 5. 팝업 띄우기
                         }
@@ -549,7 +548,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
                 {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이[cm]</>}
                 {ShowReqIdsNtype.type === 'bol' && <>볼라드 간격[cm]</>}
-                <> {popupContent} </>
+                <div dangerouslySetInnerHTML={{__html: popupContent}} />
               </div>
             </div>
             )}
