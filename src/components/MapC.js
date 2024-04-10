@@ -512,10 +512,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                             //const coordinate = geom.getCoordinates()
                             popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
 
-                            const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('node_id'));
+                            const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('id'));
                             setPopupImage(ShowReqIdsNtype.data.images[idIdx]);
                             setPopupContent(ShowReqIdsNtype.data.info[idIdx]);
-                            //content.innerHTML = info; // 4. 정보 HTML 형식으로 입력
 
                             map.addOverlay(popupOverlay) // 5. 팝업 띄우기
                         }
@@ -546,9 +545,10 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
               <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
               {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
-                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이</>}
-                {ShowReqIdsNtype.type === 'bol' && <>볼라드 넓이</>}
-                <> {popupContent} </>
+                {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
+                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이[cm]</>}
+                {ShowReqIdsNtype.type === 'bol' && <>볼라드 간격[cm]</>}
+                <div dangerouslySetInnerHTML={{__html: popupContent}} />
               </div>
             </div>
             )}
