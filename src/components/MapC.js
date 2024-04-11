@@ -185,13 +185,21 @@ const showMarkerStyle = (markertype) => {
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
-        const listOfNodeId = path.map(n => n.node); // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
+        const listOfNodeId = path.map(n => n.node) // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
         locaArray.push(listOfNodeId[0]);
         if (index === pathData.length - 1) {
             locaArray.push(listOfNodeId[listOfNodeId.length - 1]);
         }
     });
     return locaArray;
+}
+
+const getIdsOnPath = (pathData) => {
+    let listOfNodeId = [];
+    pathData.forEach((path, index) => {
+        listOfNodeId = path.map(n => n.node)
+    });
+    return listOfNodeId
 }
 
 const setMarkerSrcOf = (locaArray,index) => {
@@ -243,21 +251,18 @@ const createPoiMarkerLayer = (cqlFilter) => {
 }
 
 const createUrl4WFS = (ShowReqIdsNtype) => {
-    if (ShowReqIdsNtype.type === 'facilities'|| ShowReqIdsNtype.type === 'bump' || ShowReqIdsNtype.type === 'bol'){
-        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                  '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
-                  +ShowReqIdsNtype.data.ids +')';
-    }
-    else if (ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope'){
-        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+     switch (ShowReqIdsNtype.type) {
+         case 'unpaved':
+         case 'stairs':
+         case 'slope':
+             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
                   '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
                   +ShowReqIdsNtype.data.ids + ')';
-    }
-    else {
-        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-            '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
-            +ShowReqIdsNtype.data.ids +')';
-    }
+         default:
+             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                 '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
+                 +ShowReqIdsNtype.data.ids +')';
+     }
 }
 
 const createShowLayer = (ShowReqIdsNtype) => {
@@ -279,7 +284,30 @@ const createShowLayer = (ShowReqIdsNtype) => {
     return showLayer
 }
 
-const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /*markerClicked, setMarkerClicked*/ }) => {
+const createObsLayerWith = (obsType, pathNodeIds) => {
+    let obsSource = new VectorSource({
+        format: new GeoJSON({
+            dataProjection: 'EPSG:5181'
+        }),
+        url: function (extent) {
+            return  'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                              '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
+                              +obsType.data.ids +') and node_id in (' +pathNodeIds + ')';
+        },
+        serverType: 'geoserver'
+    })
+    console.log(obsSource.getFeatures())
+    const obsLayer = new VectorLayer({
+        title: `ShowObsOnPath Layer`,
+        visible: true,
+        source: obsSource,
+        zIndex: 6,
+        style: showMarkerStyle(obsType.type),
+    });
+    return obsLayer
+}
+
+const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
     const [popupImage, setPopupImage] = useState('');
@@ -294,9 +322,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
 
         pathData.forEach((path, index) => {
             const listOfEdgeId = path.map(e => e.edge);
-            console.log("listOfEdgeId:", listOfEdgeId);
+            //console.log("listOfEdgeId:", listOfEdgeId);
             const crsFilter = makeCrsFilter(listOfEdgeId);
-            console.log("crsFilter:", crsFilter);
+            //console.log("crsFilter:", crsFilter);
             const shortestPathLayer = new VectorLayer({
                 title: `UOS Shortest Path ${index + 1}`,
                 source: new VectorSource({
@@ -383,7 +411,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }*/
         });
     }
-     const deletePopup = () =>{
+    const deletePopup = () =>{
         console.log('click')
         const popupCloser = popupCloserRef.current;
         console.log(map.getOverlays().getArray()[0].getPosition())
@@ -443,11 +471,15 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
             }
 
             var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
+            let pathNodeIds = [];
 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
+
+                pathNodeIds = getIdsOnPath(pathData)
+                console.log('pathNodeIds', pathNodeIds)
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
@@ -457,6 +489,24 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 });
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
+
+                if (bump.type) {
+                    const obsLayer = createObsLayerWith(bump, pathNodeIds)
+                    map. addLayer(obsLayer)
+
+                    return () => {
+                        map.removeLayer(obsLayer)
+                    }
+                }
+
+                if (bol.type) {
+                    const obsLayer = createObsLayerWith(bol, pathNodeIds)
+                    map. addLayer(obsLayer)
+
+                    return () => {
+                        map.removeLayer(obsLayer)
+                    }
+                }
             }
 
             if (keyword) {
@@ -471,7 +521,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                    layers: [poiMarkerLayer]
                 });
                 map.addInteraction(selectBuildClick);
-//                poiMarkerClickEventWith(keyword,selectBuildClick);
+               // poiMarkerClickEventWith(keyword,selectBuildClick);
             }
 
             if (ShowReqIdsNtype){
@@ -512,7 +562,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                             //const coordinate = geom.getCoordinates()
                             popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
 
-                            const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('id'));
+                            const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('node_id'));
                             setPopupImage(ShowReqIdsNtype.data.images[idIdx]);
                             setPopupContent(ShowReqIdsNtype.data.info[idIdx]);
 
@@ -529,7 +579,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump]);
 
     return (
         <div>
@@ -546,8 +596,8 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, /
               {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
                 {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
-                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이[cm]</>}
-                {ShowReqIdsNtype.type === 'bol' && <>볼라드 간격[cm]</>}
+                {ShowReqIdsNtype.type === 'bump' || bump && <>도로턱 높이[cm]</>}
+                {ShowReqIdsNtype.type === 'bol' || bol && <>볼라드 간격[cm]</>}
                 <div dangerouslySetInnerHTML={{__html: popupContent}} />
               </div>
             </div>
