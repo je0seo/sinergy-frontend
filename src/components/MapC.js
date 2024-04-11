@@ -343,8 +343,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
 
             map.addLayer(shortestPathLayer);
         });
-
-
     }
 
     const createNAddNodeLayersFrom = (locaArray) => {
@@ -410,6 +408,21 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 });
             }*/
         });
+    }
+    const setPopupOf = (feature, Type) => {
+        let id = ''
+        switch (Type.type) {
+            case 'unpaved':
+            case 'stairs':
+            case 'slope':
+                id = 'id'
+                break;
+            default:
+                id = 'node_id'
+        }
+        let idIdx = Type.data.ids.indexOf(feature.get(id));
+        setPopupImage(Type.data.images[idIdx]);
+        setPopupContent(Type.data.info[idIdx]);
     }
     const deletePopup = () =>{
         console.log('click')
@@ -562,9 +575,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                             //const coordinate = geom.getCoordinates()
                             popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
 
-                            const idIdx = ShowReqIdsNtype.data.ids.indexOf(feature.get('node_id'));
-                            setPopupImage(ShowReqIdsNtype.data.images[idIdx]);
-                            setPopupContent(ShowReqIdsNtype.data.info[idIdx]);
+                            setPopupOf(feature, ShowReqIdsNtype)
 
                             map.addOverlay(popupOverlay) // 5. 팝업 띄우기
                         }
@@ -596,8 +607,8 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
               {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
                 {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
-                {ShowReqIdsNtype.type === 'bump' || bump && <>도로턱 높이[cm]</>}
-                {ShowReqIdsNtype.type === 'bol' || bol && <>볼라드 간격[cm]</>}
+                {(ShowReqIdsNtype.type === 'bump' || bump) && <>도로턱 높이[cm]</>}
+                {(ShowReqIdsNtype.type === 'bol' || bol) && <>볼라드 간격[cm]</>}
                 <div dangerouslySetInnerHTML={{__html: popupContent}} />
               </div>
             </div>
