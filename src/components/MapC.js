@@ -296,7 +296,6 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
         },
         serverType: 'geoserver'
     })
-    console.log(obsSource.getFeatures())
     const obsLayer = new VectorLayer({
         title: `ShowObsOnPath Layer`,
         visible: true,
@@ -507,8 +506,38 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     const obsLayer = createObsLayerWith(bump, pathNodeIds)
                     map. addLayer(obsLayer)
 
+                    const popupOverlay = new Overlay({
+                        element: popupContainerRef.current,
+                        positioning: 'bottom-left',
+                        autoPan: {
+                            animation: {
+                                duration: 250
+                            }
+                        }
+                    });
+
+                    const select4Popup = new Select({
+                        condition: click,
+                        layers: [obsLayer],
+                        hitTolerance: 20
+                    });
+                    map.addInteraction(select4Popup)
+
+                    select4Popup.on('select', (event) => {
+                        const features = event.selected;
+                        const feature = features[0];
+                        if (feature){
+                            feature.setStyle(showMarkerStyle(bump.type)); // 1. 클릭 시 스타일 바꾸기
+                            popupOverlay.setPosition(feature.getGeometry().getCoordinates()); // 2. 피처 좌표에 팝업 띄우기
+                            setPopupOf(feature, bump) // 3. 팝업 콘텐츠 세팅
+                            map.addOverlay(popupOverlay) // 4. 팝업 가시화
+                        }
+                    });
+
                     return () => {
                         map.removeLayer(obsLayer)
+                        map.removeInteraction(select4Popup);
+                        map.removeOverlay(popupOverlay)
                     }
                 }
 
@@ -541,8 +570,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 if (ShowReqIdsNtype.type) {
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
-
-                    const content = popupContentRef.current;
 
                     const popupOverlay = new Overlay({
                         element: popupContainerRef.current,
@@ -590,7 +617,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bol, bump]);
 
     return (
         <div>
@@ -602,7 +629,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            {ShowReqIdsNtype && ShowReqIdsNtype.type && (<div ref={popupContainerRef} className="ol-popup">
+            {ShowReqIdsNtype && ShowReqIdsNtype.type && (bump.type || bol.type) && (<div ref={popupContainerRef} className="ol-popup">
               <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
               {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
