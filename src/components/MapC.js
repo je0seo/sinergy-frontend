@@ -265,6 +265,14 @@ const createUrl4WFS = (ShowReqIdsNtype) => {
      }
 }
 
+const url4AllLinkObs = (pathNodeIds) => {
+    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+           '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
+           + 'node1 IN (' +pathNodeIds + ')'
+           + ' AND (link_att IN (4,5) OR (grad_deg >= 3.18 AND link_att NEQ 5))'
+
+}
+
 const createShowLayer = (ShowReqIdsNtype) => {
     const showLayer = new VectorLayer({
             title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
@@ -296,7 +304,7 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
         },
         serverType: 'geoserver'
     })
-    console.log(obsSource.getFeatures())
+    //console.log(obsSource.getFeatures())
     const obsLayer = new VectorLayer({
         title: `ShowObsOnPath Layer`,
         visible: true,
@@ -307,7 +315,41 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
     return obsLayer
 }
 
-const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump /*markerClicked, setMarkerClicked*/ }) => {
+const fetchFeatures = (url) => {
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => data.totalFeatures); // 반환된 피처 수 반환
+}
+// 피처 수를 확인하고 레이어를 생성하는 함수
+const createLayerIfNeeded = (url) => {
+    return fetchFeatures(url)
+        .then(featureCount => {
+            if (featureCount > 0) {
+                const layer = new VectorLayer({
+                    title: `ShowReqIds Layer`,
+                    visible: true,
+                    source: new VectorSource({
+                        format: new GeoJSON({
+                            dataProjection: 'EPSG:5181'
+                        }),
+                        url: url,
+                        serverType: 'geoserver'
+                    }),
+                    zIndex: 6,
+                    style: showMarkerStyle('unpaved')
+                });
+                return layer; // 레이어 반환
+            } else {
+                return null; // 피처가 없을 경우 null 반환
+            }
+        })
+        .catch(error => {
+            console.error('에러 발생: ', error);
+            throw error; // 에러를 다시 던져서 상위 함수에서 처리하도록 함
+        });
+}
+
+const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump, showLinkObs /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
     const [popupImage, setPopupImage] = useState('');
@@ -317,7 +359,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
     const popupCloserRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
-        console.log("pathData:", pathData);
+        //console.log("pathData:", pathData);
         const colorPalette = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
@@ -491,8 +533,8 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
 
-                pathNodeIds = getIdsOnPath(pathData)
-                console.log('pathNodeIds', pathNodeIds)
+                pathNodeIds = getIdsOnPath(pathData).map(Number);
+                //console.log('pathNodeIds', pathNodeIds)
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
@@ -507,18 +549,31 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     const obsLayer = createObsLayerWith(bump, pathNodeIds)
                     map. addLayer(obsLayer)
 
-                    return () => {
+                    /*return () => {
                         map.removeLayer(obsLayer)
-                    }
+                    }*/
                 }
-
                 if (bol.type) {
                     const obsLayer = createObsLayerWith(bol, pathNodeIds)
                     map. addLayer(obsLayer)
 
-                    return () => {
+                    /*return () => {
                         map.removeLayer(obsLayer)
-                    }
+                    }*/
+                }
+
+                if (showLinkObs) {
+                    const url = url4AllLinkObs(pathNodeIds)
+                    createLayerIfNeeded(url)
+                        .then(linkObsLayer => {
+                            // linkObsLayer가 존재하면 map에 레이어 추가
+                            if (linkObsLayer) {
+                                map.addLayer(linkObsLayer);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('에러 발생: ', error);
+                        });
                 }
             }
 
@@ -590,7 +645,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump, bol, showLinkObs]);
 
     return (
         <div>

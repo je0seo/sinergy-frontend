@@ -83,7 +83,6 @@ const usePathfinding = () => {
   const [totalDistance, setTotalDistance] = useState(0);
   const [pathData, setPathData] = useState(null);
   const [showText4deco, setShowText4deco] = useState(true);
-  //const [showPathObstacle, setShowPathObstacle] = useState(false)
 
   const handlePathResult = (data) => {
     const calculatedTotalDistance = data.minAggCost;
@@ -106,11 +105,7 @@ const usePathfinding = () => {
       setPathData(shortestPath);
     }
   };
-  const PathObstacleShow = async () => {
-      console.log("길찾기 결과 내 장애물을 표출합니다.")
-      //setShowPathObstacle(true);
-      //handleShowReq('')
-  }
+
   const handleFindPathClick = async () => {
     try {
       const requestData = {
@@ -160,7 +155,6 @@ const usePathfinding = () => {
     setShowText4deco(true);
     setTotalDistance(0);
     setPathData(null);
-    //setShowPathObstacle(false)
   };
 
   return {
@@ -183,9 +177,6 @@ const usePathfinding = () => {
     setTotalDistance,
     setPathData,
     handleFindPathClick,
-    //showPathObstacle,
-    //setShowPathObstacle,
-    PathObstacleShow,
     addStopover,
     handleStopoverChange,
     handleInputReset,
@@ -197,11 +188,12 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [keyword, setKeyword] = useState('');
     const [activeTab, setActiveTab] = useState('');
-    const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
+    //const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
     const [showFacilitiesMenu, setShowFacilitiesMenu] = useState( false);
     const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
     const [bol, setBol] = useState({})
     const [bump, setBump] = useState({})
+    const [showObsOnPath, setShowObsOnPath] = useState(false)
     //const [markerClicked, setMarkerClicked] = useState(false);
 
     const handleShowObsOnPath = async() => {
@@ -209,10 +201,12 @@ const App = () => {
         setBol({type: 'bol', data})
         data = await showReq('bump');
         setBump({type: 'bump', data})
+        setShowObsOnPath(true);
     }
     const initialObsState = () => {
         setBol({})
         setBump({})
+        setShowObsOnPath(false)
     }
 
     const handleShowReq = async (ReqType) => {
@@ -222,9 +216,9 @@ const App = () => {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
     };
-    const handleToggleObstacleMenu = () => {
+    /*const handleToggleObstacleMenu = () => {
         setShowObstacleMenu(!showObstacleMenu);
-    };
+    };*/
     const handleToggleFacilitiesMenu = () =>{
         setShowFacilitiesMenu(!showFacilitiesMenu);
     }
@@ -243,9 +237,6 @@ const App = () => {
       setStart,
       setEnd,
       handleFindPathClick,
-      //showPathObstacle,
-      //setShowPathObstacle,
-      PathObstacleShow,
       addStopover,
       handleStopoverChange,
       handleInputReset,
@@ -403,7 +394,7 @@ const App = () => {
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
-                bol = {bol} bump = {bump}
+                bol = {bol} bump = {bump} showLinkObs = {showObsOnPath}
                 /*markerClicked={markerClicked} setMarkerClicked={setMarkerClicked}*/ />}
             </div>
         </div>
