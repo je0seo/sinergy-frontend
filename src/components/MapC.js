@@ -194,12 +194,21 @@ const makelocaArrayFromNodes = (pathData, locaArray) => {
     return locaArray;
 }
 
-const getIdsOnPath = (pathData) => {
+const getNodeIdsOnPath = (pathData) => {
     let listOfNodeId = [];
     pathData.forEach((path, index) => {
         listOfNodeId = path.map(n => n.node)
     });
     return listOfNodeId
+}
+
+const getEdgeIdsOnPath = (pathData) => {
+    let listOfEdgeId = [];
+    pathData.forEach((path, index) => {
+        listOfEdgeId = path.map(e => e.edge);
+    });
+    listOfEdgeId.pop()
+    return listOfEdgeId
 }
 
 const setMarkerSrcOf = (locaArray,index) => {
@@ -265,10 +274,11 @@ const createUrl4WFS = (ShowReqIdsNtype) => {
      }
 }
 
-const url4AllLinkObs = (pathNodeIds) => {
+const url4AllLinkObs = (edgeIds) => {
+    const crsFilter = makeCrsFilter(edgeIds);
     return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
            '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
-           + 'node1 IN (' +pathNodeIds + ')'
+           + crsFilter
            + ' AND (link_att IN (4,5) OR (grad_deg >= 3.18 AND link_att NEQ 5))'
 
 }
@@ -526,14 +536,12 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
             }
 
             var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
-            let pathNodeIds = [];
 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
 
-                pathNodeIds = getIdsOnPath(pathData).map(Number);
                 //console.log('pathNodeIds', pathNodeIds)
             }
             // 출발, 도착, 경유 노드 표시
@@ -544,6 +552,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 });
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
+
+                let pathNodeIds = getNodeIdsOnPath(pathData).map(Number);
+                let pathEdgeIds = getEdgeIdsOnPath(pathData).map(Number);
 
                 if (bump.type) {
                     const obsLayer = createObsLayerWith(bump, pathNodeIds)
@@ -579,7 +590,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 }
 
                 if (showLinkObs) {
-                    const url = url4AllLinkObs(pathNodeIds)
+                    const url = url4AllLinkObs(pathEdgeIds)
                     createLayerIfNeeded(url)
                         .then(linkObsLayer => {
                             // linkObsLayer가 존재하면 map에 레이어 추가
