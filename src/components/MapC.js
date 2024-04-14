@@ -566,6 +566,16 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     const obsLayer = createObsLayerWith(bump, pathNodeIds)
                     map. addLayer(obsLayer)
 
+                    const popupOverlay = new Overlay({
+                        element: popupContainerRef.current,
+                        positioning: 'bottom-left',
+                        autoPan: {
+                            animation: {
+                                duration: 250
+                            }
+                        }
+                    });
+
                     const select4Popup = new Select({
                         condition: click,
                         layers: [obsLayer]
@@ -576,9 +586,11 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                         const features = event.selected;
                         const feature = features[0];
                         if (feature){
-                            //popupOverlay.setPosition(feature.getGeometry().getCoordinates()); // 2. 피처 좌표에 팝업 띄우기
+                            const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
+                            const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
+                            popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
                             setPopupOf(feature, bump) // 3. 팝업 콘텐츠 세팅
-                            //map.addOverlay(popupOverlay) // 4. 팝업 가시화
+                            map.addOverlay(popupOverlay) // 4. 팝업 가시화
                         }
                     });
                 }
@@ -595,6 +607,17 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                             if (linkObsLayer) {
                                 map.addLayer(linkObsLayer);
                             }
+
+                            const popupOverlay = new Overlay({
+                                element: popupContainerRef.current,
+                                positioning: 'bottom-left',
+                                autoPan: {
+                                    animation: {
+                                        duration: 250
+                                    }
+                                }
+                            });
+
                             const select4Popup = new Select({
                                 condition: click,
                                 layers: [linkObsLayer],
@@ -612,7 +635,15 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                                              width: 7
                                          })
                                      })
-                                     feature.setStyle(clickedStyle)
+                                     feature.setStyle(clickedStyle)  //1. 클릭 시 스타일 바꾸기
+
+                                     const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
+                                     const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
+                                     popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
+
+                                     setPopupImage(feature.get('image_lobs'))
+                                     setPopupContent('경사도[degree] <br>'+feature.get('slopel'))
+                                     map.addOverlay(popupOverlay) // 4. 팝업 가시화
                                 }
                             });
                         })
@@ -699,13 +730,15 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            {ShowReqIdsNtype && ShowReqIdsNtype.type && (<div ref={popupContainerRef} className="ol-popup">
+            {((bump && bump.type) || (ShowReqIdsNtype && ShowReqIdsNtype.type)) && (<div ref={popupContainerRef} className="ol-popup">
               <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
               {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
+                {!bump && (<div>
                 {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
-                {(ShowReqIdsNtype.type === 'bump' || bump) && <>도로턱 높이[cm]</>}
-                {(ShowReqIdsNtype.type === 'bol' || bol) && <>볼라드 간격[cm]</>}
+                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이[cm]</>}
+                {ShowReqIdsNtype.type === 'bol' && <>볼라드 간격[cm]</>}
+                </div>)}
                 <div dangerouslySetInnerHTML={{__html: popupContent}} />
               </div>
             </div>
