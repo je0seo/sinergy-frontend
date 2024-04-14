@@ -534,6 +534,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                         break;
                 }
             }
+            map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
             var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
 
@@ -660,7 +661,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                             map.addOverlay(popupOverlay) // 5. 팝업 띄우기
                         }
                     });
-                    map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
                     return () => {
                         map.removeLayer(showLayer)
