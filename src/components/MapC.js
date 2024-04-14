@@ -548,7 +548,23 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 if (bump.type) {
                     const obsLayer = createObsLayerWith(bump, pathNodeIds)
                     map. addLayer(obsLayer)
+                    const select4Popup = new Select({
+                        condition: click,
+                        layers: [obsLayer]
+                        //hitTolerance: 20
+                    });
+                    map.addInteraction(select4Popup)
 
+                    select4Popup.on('select', (event) => {
+                        const features = event.selected;
+                        const feature = features[0];
+                        if (feature){
+                            //feature.setStyle(showMarkerStyle(bump.type)); // 1. 클릭 시 스타일 바꾸기
+                            //popupOverlay.setPosition(feature.getGeometry().getCoordinates()); // 2. 피처 좌표에 팝업 띄우기
+                            setPopupOf(feature, bump) // 3. 팝업 콘텐츠 세팅
+                            //map.addOverlay(popupOverlay) // 4. 팝업 가시화
+                        }
+                    });
                     /*return () => {
                         map.removeLayer(obsLayer)
                     }*/
@@ -597,8 +613,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
 
-                    const content = popupContentRef.current;
-
                     const popupOverlay = new Overlay({
                         element: popupContainerRef.current,
                         positioning: 'bottom-left',
@@ -610,9 +624,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     });
 
                     const select4Popup = new Select({
-                    condition: click,
-                    layers: [showLayer],
-                    hitTolerance: 20
+                        condition: click,
+                        layers: [showLayer],
+                        hitTolerance: 20
                     });
                     map.addInteraction(select4Popup)
 
