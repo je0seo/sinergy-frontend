@@ -153,7 +153,7 @@ const showMarkerStyle = (markertype) => {
             return new Style({
                 stroke: new Stroke({
                     color: '#711B6B', // 선의 색상
-                    width: 2.5 // 선의 두께
+                    width: 4 // 선의 두께
                 })
             });
         case 'stairs':
@@ -194,12 +194,21 @@ const makelocaArrayFromNodes = (pathData, locaArray) => {
     return locaArray;
 }
 
-const getIdsOnPath = (pathData) => {
+const getNodeIdsOnPath = (pathData) => {
     let listOfNodeId = [];
     pathData.forEach((path, index) => {
         listOfNodeId = path.map(n => n.node)
     });
     return listOfNodeId
+}
+
+const getEdgeIdsOnPath = (pathData) => {
+    let listOfEdgeId = [];
+    pathData.forEach((path, index) => {
+        listOfEdgeId = path.map(e => e.edge);
+    });
+    listOfEdgeId.pop()
+    return listOfEdgeId
 }
 
 const setMarkerSrcOf = (locaArray,index) => {
@@ -265,6 +274,15 @@ const createUrl4WFS = (ShowReqIdsNtype) => {
      }
 }
 
+const url4AllLinkObs = (edgeIds) => {
+    const crsFilter = makeCrsFilter(edgeIds);
+    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+           '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
+           + crsFilter
+           + ' AND (link_att IN (4,5) OR (grad_deg >= 3.18 AND link_att NEQ 5))'
+
+}
+
 const createShowLayer = (ShowReqIdsNtype) => {
     const showLayer = new VectorLayer({
             title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
@@ -296,7 +314,7 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
         },
         serverType: 'geoserver'
     })
-    console.log(obsSource.getFeatures())
+    //console.log(obsSource.getFeatures())
     const obsLayer = new VectorLayer({
         title: `ShowObsOnPath Layer`,
         visible: true,
@@ -307,7 +325,46 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
     return obsLayer
 }
 
-const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump /*markerClicked, setMarkerClicked*/ }) => {
+const fetchFeatures = (url) => {
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => data.totalFeatures); // 반환된 피처 수 반환
+}
+// 피처 수를 확인하고 레이어를 생성하는 함수
+const createLayerIfNeeded = (url) => {
+    return fetchFeatures(url)
+        .then(featureCount => {
+            if (featureCount > 0) {
+                const layer = new VectorLayer({
+                    title: `ShowReqIds Layer`,
+                    visible: true,
+                    source: new VectorSource({
+                        format: new GeoJSON({
+                            dataProjection: 'EPSG:5181'
+                        }),
+                        url: url,
+                        serverType: 'geoserver'
+                    }),
+                    zIndex: 6,
+                    style: showMarkerStyle('unpaved')/*new Style({
+                        stroke: new Stroke({
+                            color: 'rgba(255, 255, 255, 0.1)',
+                            width: 3
+                        })*/
+                    //})
+                });
+                return layer; // 레이어 반환
+            } else {
+                return null; // 피처가 없을 경우 null 반환
+            }
+        })
+        .catch(error => {
+            console.error('에러 발생: ', error);
+            throw error; // 에러를 다시 던져서 상위 함수에서 처리하도록 함
+        });
+}
+
+const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump, showLinkObs /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
     const [layerState, setLayerState] = useState('base-osm');
     const [popupImage, setPopupImage] = useState('');
@@ -484,17 +541,16 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                         break;
                 }
             }
+            map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
             var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
-            let pathNodeIds = [];
 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
 
-                pathNodeIds = getIdsOnPath(pathData)
-                console.log('pathNodeIds', pathNodeIds)
+                //console.log('pathNodeIds', pathNodeIds)
             }
             // 출발, 도착, 경유 노드 표시
             if (locaArray && locaArray.length >= 2) {
@@ -505,22 +561,97 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
 
+                let pathNodeIds = getNodeIdsOnPath(pathData).map(Number);
+                let pathEdgeIds = getEdgeIdsOnPath(pathData).map(Number);
+
                 if (bump.type) {
                     const obsLayer = createObsLayerWith(bump, pathNodeIds)
                     map. addLayer(obsLayer)
 
-                    return () => {
-                        map.removeLayer(obsLayer)
-                    }
-                }
+                    const popupOverlay = new Overlay({
+                        element: popupContainerRef.current,
+                        positioning: 'bottom-left',
+                        autoPan: {
+                            animation: {
+                                duration: 250
+                            }
+                        }
+                    });
 
+                    const select4Popup = new Select({
+                        condition: click,
+                        layers: [obsLayer]
+                    });
+                    map.addInteraction(select4Popup)
+
+                    select4Popup.on('select', (event) => {
+                        const features = event.selected;
+                        const feature = features[0];
+                        if (feature){
+                            const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
+                            const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
+                            popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
+                            setPopupOf(feature, bump) // 3. 팝업 콘텐츠 세팅
+                            map.addOverlay(popupOverlay) // 4. 팝업 가시화
+                        }
+                    });
+                }
                 if (bol.type) {
                     const obsLayer = createObsLayerWith(bol, pathNodeIds)
                     map. addLayer(obsLayer)
+                }
 
-                    return () => {
-                        map.removeLayer(obsLayer)
-                    }
+                if (showLinkObs) {
+                    const url = url4AllLinkObs(pathEdgeIds)
+                    createLayerIfNeeded(url)
+                        .then(linkObsLayer => {
+                            // linkObsLayer가 존재하면 map에 레이어 추가
+                            if (linkObsLayer) {
+                                map.addLayer(linkObsLayer);
+                            }
+
+                            const popupOverlay = new Overlay({
+                                element: popupContainerRef.current,
+                                positioning: 'bottom-left',
+                                autoPan: {
+                                    animation: {
+                                        duration: 250
+                                    }
+                                }
+                            });
+
+                            const select4Popup = new Select({
+                                condition: click,
+                                layers: [linkObsLayer],
+                                hitTolerance: 20
+                            });
+                            map.addInteraction(select4Popup)
+
+                            select4Popup.on('select', (event) => {
+                                const features = event.selected;
+                                const feature = features[0];
+                                if (feature){
+                                     const clickedStyle = new Style({
+                                         stroke: new Stroke({
+                                             color: 'rgba(255, 255, 255, 1)',
+                                             width: 7
+                                         })
+                                     })
+                                     feature.setStyle(clickedStyle)  //1. 클릭 시 스타일 바꾸기
+
+                                     const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
+                                     const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
+                                     popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
+
+                                     setPopupImage(feature.get('image_lobs'))
+                                     setPopupContent('경사도[degree] <br>'+feature.get('slopel'))
+                                     map.addOverlay(popupOverlay) // 4. 팝업 가시화
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error('에러 발생: ', error);
+                        });
                 }
             }
 
@@ -544,8 +675,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     const showLayer = createShowLayer(ShowReqIdsNtype)
                     map.addLayer(showLayer);
 
-                    const content = popupContentRef.current;
-
                     const popupOverlay = new Overlay({
                         element: popupContainerRef.current,
                         positioning: 'bottom-left',
@@ -557,9 +686,9 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                     });
 
                     const select4Popup = new Select({
-                    condition: click,
-                    layers: [showLayer],
-                    hitTolerance: 20
+                        condition: click,
+                        layers: [showLayer],
+                        hitTolerance: 20
                     });
                     map.addInteraction(select4Popup)
 
@@ -582,7 +711,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                             map.addOverlay(popupOverlay) // 5. 팝업 띄우기
                         }
                     });
-                    map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
                     return () => {
                         map.removeLayer(showLayer)
@@ -592,7 +720,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 }
             }
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump]);
+    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump, bol, showLinkObs]);
 
     return (
         <div>
@@ -604,13 +732,15 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            {ShowReqIdsNtype && ShowReqIdsNtype.type && (<div ref={popupContainerRef} className="ol-popup">
+            {((bump && bump.type) || (ShowReqIdsNtype && ShowReqIdsNtype.type)) && (<div ref={popupContainerRef} className="ol-popup">
               <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
               {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
               <div ref={popupContentRef} className="ol-popup-content">
+                {!bump && (<div>
                 {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
-                {(ShowReqIdsNtype.type === 'bump' || bump) && <>도로턱 높이[cm]</>}
-                {(ShowReqIdsNtype.type === 'bol' || bol) && <>볼라드 간격[cm]</>}
+                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이[cm]</>}
+                {ShowReqIdsNtype.type === 'bol' && <>볼라드 간격[cm]</>}
+                </div>)}
                 <div dangerouslySetInnerHTML={{__html: popupContent}} />
               </div>
             </div>
