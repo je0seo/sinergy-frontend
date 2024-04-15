@@ -51,7 +51,7 @@ import seminarRoomIcon from './images/icons/seminarRoomIcon.png';
 import sBicycleIcon from './images/icons/sBicycleIcon.png';
 import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
 import libraryIcon from './images/icons/libraryIcon.png';
-
+import toiletIcon from './images/icons/toiletIcon.png';
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
@@ -147,6 +147,7 @@ const showMarkerStyle = (markertype) => {
         case 'Sbicycle': markerimg = sBicycleIcon; break;
         case 'library': markerimg = libraryIcon; break;
         case 'vendingMachine': markerimg = vendingMachineIcon; break;
+        case 'toilet': markerimg = toiletIcon; break;
         case 'bump': markerimg = bumpIcon; break;
         case 'bol': markerimg = bolIcon; break;
         case 'unpaved':
