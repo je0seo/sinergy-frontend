@@ -43,7 +43,7 @@ import seminarRoomIcon from './components/images/icons/seminarRoomIcon.png';
 import sBicycleIcon from './components/images/icons/sBicycleIcon.png';
 import vendingMachineIcon from './components/images/icons/vendingMachineIcon.png';
 import libraryIcon from './components/images/icons/libraryIcon.png';
-
+import toiletIcon from './components/images/icons/toiletIcon.png';
 
 
 
@@ -300,6 +300,7 @@ const App = () => {
                                 <button className='showingFacBtn' onClick={() => handleShowReq('seminarroom')}><img src={seminarRoomIcon} alt="Seminar Room Icon" className="iconImage" />세미나실</button>
                                 <button className='showingFacBtn' onClick={() => handleShowReq('vendingMachine')}><img src={vendingMachineIcon} alt="vendingMachineIcon" className="iconImage" />자판기</button>
                                 <button className='showingFacBtn' onClick={() => handleShowReq('library')}><img src={libraryIcon} alt="libraryIcon" className="iconImage" />도서관</button>
+                                <button className='showingFacBtn' onClick={() => handleShowReq('toilet')}><img src={toiletIcon} alt="toiletIcon" className="iconImage" />장애인 화장실</button>
                             </div>
                         )}
                         {/* {!showObstacleMenu && (
