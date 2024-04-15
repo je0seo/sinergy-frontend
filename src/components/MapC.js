@@ -374,14 +374,15 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
     const popupCloserRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
-        //console.log("pathData:", pathData);
-        const colorPalette = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta'];
+        console.log("pathData:", pathData);
+        const colorPalette = ['#FD5230', '#007AC5','#44EAC5', 'yellow', 'orange', 'purple', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
             const listOfEdgeId = path.map(e => e.edge);
-            //console.log("listOfEdgeId:", listOfEdgeId);
             const crsFilter = makeCrsFilter(listOfEdgeId);
-            //console.log("crsFilter:", crsFilter);
+
+            const colorIndex = (index === pathData.length - 1) ? 0 : index +1;
+
             const shortestPathLayer = new VectorLayer({
                 title: `UOS Shortest Path ${index + 1}`,
                 source: new VectorSource({
@@ -391,7 +392,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 }),
                 style: new Style({
                     stroke: new Stroke({
-                        color: colorPalette[index % colorPalette.length],
+                        color: colorPalette[colorIndex],
                         width: 2
                     })
                 }),
@@ -401,6 +402,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
             map.addLayer(shortestPathLayer);
         });
     }
+
 
     const createNAddNodeLayersFrom = (locaArray) => {
         let nodeLayers = [];
