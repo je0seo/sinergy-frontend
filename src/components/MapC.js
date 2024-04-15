@@ -153,7 +153,7 @@ const showMarkerStyle = (markertype) => {
             return new Style({
                 stroke: new Stroke({
                     color: '#711B6B', // 선의 색상
-                    width: 2.5 // 선의 두께
+                    width: 4 // 선의 두께
                 })
             });
         case 'stairs':
@@ -346,12 +346,12 @@ const createLayerIfNeeded = (url) => {
                         serverType: 'geoserver'
                     }),
                     zIndex: 6,
-                    style: new Style({
+                    style: showMarkerStyle('unpaved')/*new Style({
                         stroke: new Stroke({
                             color: 'rgba(255, 255, 255, 0.1)',
                             width: 3
-                        })
-                    })
+                        })*/
+                    //})
                 });
                 return layer; // 레이어 반환
             } else {
