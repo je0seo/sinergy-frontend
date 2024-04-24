@@ -367,7 +367,7 @@ const createLayerIfNeeded = (url) => {
 
 const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump, showLinkObs /*markerClicked, setMarkerClicked*/ }) => {
     const [map, setMap] = useState(null);
-    const [layerState, setLayerState] = useState('base-osm');
+    const [layerState, setLayerState] = useState('base-base');
     const [popupImage, setPopupImage] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const popupContainerRef = useRef(null);
