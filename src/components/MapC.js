@@ -15,7 +15,7 @@ import VectorLayer from "ol/layer/Vector";
 import {Circle, Fill, Stroke, Style, Icon} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
-import showMarkerStyle from './MarkerStyle'
+import {showMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';

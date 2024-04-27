@@ -27,7 +27,14 @@ import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
 import libraryIcon from './images/icons/libraryIcon.png';
 import toiletIcon from './images/icons/toiletIcon.png';
 
-const showMarkerStyle = (markertype) => {
+export const Icons = {
+    bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
+    bicycleIcon, smokingIcon, storeIcon, cafeIcon, postOfficeIcon, healthServiceIcon, cafeteriaIcon,
+    printIcon, gymIcon, tennisIcon, basketballIcon, breakRoomIcon, loungeIcon, seminarRoomIcon,
+    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon
+}
+
+export const showMarkerStyle = (markertype) => {
     let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
     switch (markertype) {
         case 'facilities': markerimg = facilitiesIcon; break;
@@ -86,4 +93,3 @@ const showMarkerStyle = (markertype) => {
         })
     });
 };
-export default showMarkerStyle;
