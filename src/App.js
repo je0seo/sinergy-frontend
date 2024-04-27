@@ -211,7 +211,7 @@ const App = () => {
         setShowObsOnPath(false)
     }
 
-    const HandleShowReq = async (ReqType) => {
+    const handleShowReq = async (ReqType) => {
         const data = await showReq(ReqType);
         setShowReqIdsNtype({ type: ReqType, data });
     };
@@ -283,7 +283,7 @@ const App = () => {
                     <div>
                         {/*
                         {!showFacilitiesMenu && (
-                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); HandleShowReq('facilities');}}>
+                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>
                                 <div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div>
                             </button>
                         )}
@@ -328,11 +328,11 @@ const App = () => {
                             <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---보행 장애물 위치 보기---</div>
                             <div className='showingObstacleBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
-                                <button className='showingBtn' onClick={() => HandleShowReq('unpaved')}><img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
-                                <button className='showingBtn' onClick={() => HandleShowReq('stairs')}><img src={stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
-                                <button className='showingBtn' onClick={() => HandleShowReq('slope')}><img src={slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
-                                <button className='showingBtn' onClick={() => HandleShowReq('bump')}><img src={bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
-                                <button className='showingBtn' onClick={() => HandleShowReq('bol')}><img src={bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}><img src={stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
+                                <button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
                             </div>
                         </div>
                         {/*)}*/}
