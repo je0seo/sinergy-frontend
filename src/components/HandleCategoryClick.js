@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {usePopup, PopupUIComponent} from './PopupC'
+import {PopupUIComponent} from './PopupC'
 import Map from 'ol/Map';
 
 import VectorSource from "ol/source/Vector";

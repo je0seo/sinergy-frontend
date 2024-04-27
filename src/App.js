@@ -170,7 +170,6 @@ const App = () => {
     const [bol, setBol] = useState({})
     const [bump, setBump] = useState({})
     const [showObsOnPath, setShowObsOnPath] = useState(false)
-    //const [markerClicked, setMarkerClicked] = useState(false);
 
     const handleShowObsOnPath = async() => {
         let data = await showReq('bol');
@@ -349,7 +348,7 @@ const App = () => {
                         </div>
                     </div>
                     <div className="button-row">
-                      <button className="button-style" onClick={handleInputReset}>다시 입력</button>
+                      <button className="button-style" onClick={() => {handleInputReset(); initialObsState();}}>다시 입력</button>
                       <button className="button-style" onClick={addStopover}>경유지 추가</button>
                       <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                     </div>
@@ -363,7 +362,7 @@ const App = () => {
                             <div className="shortest-path-text">
                                 [최단 경로 검색 결과]
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
-                                {/*<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />*/}
+                                {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
                             </div>
                             <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
                         </div>
@@ -386,11 +385,10 @@ const App = () => {
             <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
             <div className='main-right-side'>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} category ={showReqIdsNtype} />}
-                {/*activeTab === '' && showReqIdsNtype.type && <HandleCategoryClick category = {showReqIdsNtype} />*/}
+                {/*activeTab === '' && showReqIdsNtype.type && <handleCategoryClick category = {showReqIdsNtype} />*/}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
-                bol = {bol} bump = {bump} showLinkObs = {showObsOnPath}
-                /*markerClicked={markerClicked} setMarkerClicked={setMarkerClicked}*/ />}
+                bol = {bol} bump = {bump} showObs = {showObsOnPath}/>}
             </div>
         </div>
     );
