@@ -8,50 +8,24 @@ import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
 import { get as getProjection, fromLonLat } from 'ol/proj';
 import makeCrsFilter4node from "./utils/filter-for-node.js";
-import {makeCrsFilter, ShowReqFilter} from "./utils/crs-filter.js";
+import {makeCrsFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import {Circle, Fill, Stroke, Style, Icon} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
-
+import showMarkerStyle from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
 import Overlay from 'ol/Overlay';
-import './MapC.css';
+
+import HandleCategoryClick from './HandleCategoryClick';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumaker2.png';
-
-import bumpIcon from './images/icons/bumpIcon.png';
-import bolIcon from './images/icons/bolIcon.png';
-import unpavedIcon from './images/icons/unpavedIcon.png';
-import stairsIcon from './images/icons/stairsIcon.png';
-import slopeIcon from './images/icons/slopeIcon.png';
-import facilitiesIcon from './images/icons/facilitiesIcon.png';
-import benchIcon from './images/icons/benchIcon.png';
-import atmIcon from './images/icons/atmIcon.png';
-import bicycleIcon from './images/icons/bicycleIcon.png';
-import smokingIcon from './images/icons/smokingIcon.png';
-import storeIcon from './images/icons/storeIcon.png';
-import cafeIcon from './images/icons/cafeIcon.png';
-import postOfficeIcon from './images/icons/postOfficeIcon.png';
-import healthServiceIcon from './images/icons/healthServiceIcon.png';
-import cafeteriaIcon from './images/icons/cafeteriaIcon.png';
-import printIcon from './images/icons/printIcon.png';
-import gymIcon from './images/icons/gymIcon.png';
-import tennisIcon from './images/icons/tennisIcon.png';
-import basketballIcon from './images/icons/basketballIcon.png';
-import breakRoomIcon from './images/icons/breakRoomIcon.png';
-import loungeIcon from './images/icons/loungeIcon.png';
-import seminarRoomIcon from './images/icons/seminarRoomIcon.png';
-import sBicycleIcon from './images/icons/sBicycleIcon.png';
-import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
-import libraryIcon from './images/icons/libraryIcon.png';
-import toiletIcon from './images/icons/toiletIcon.png';
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
 
@@ -122,66 +96,6 @@ const clickedMarkerStyle = (irumarker) => {
           rotation: 0 // 이미지의 초기 회전 각도를 설정합니다.
       })
   });
-};
-
-const showMarkerStyle = (markertype) => {
-    let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
-    switch (markertype) {
-        case 'facilities': markerimg = facilitiesIcon; break;
-        case 'bench': markerimg = benchIcon; break;
-        case 'atm': markerimg = atmIcon; break;
-        case 'bicycle': markerimg = bicycleIcon; break;
-        case 'smoking': markerimg = smokingIcon; break;
-        case 'store': markerimg = storeIcon; break;
-        case 'cafe': markerimg = cafeIcon; break;
-        case 'postoffice': markerimg = postOfficeIcon; break;
-        case 'healthservice': markerimg = healthServiceIcon; break;
-        case 'cafeteria': markerimg = cafeteriaIcon; break;
-        case 'print': markerimg = printIcon; break;
-        case 'gym': markerimg = gymIcon; break;
-        case 'tennis': markerimg = tennisIcon; break;
-        case 'basketball': markerimg = basketballIcon; break;
-        case 'breakroom': markerimg = breakRoomIcon; break;
-        case 'lounge': markerimg = loungeIcon; break;
-        case 'seminarroom': markerimg = seminarRoomIcon; break;
-        case 'Sbicycle': markerimg = sBicycleIcon; break;
-        case 'library': markerimg = libraryIcon; break;
-        case 'vendingMachine': markerimg = vendingMachineIcon; break;
-        case 'toilet': markerimg = toiletIcon; break;
-        case 'bump': markerimg = bumpIcon; break;
-        case 'bol': markerimg = bolIcon; break;
-        case 'unpaved':
-            return new Style({
-                stroke: new Stroke({
-                    color: '#711B6B', // 선의 색상
-                    width: 4 // 선의 두께
-                })
-            });
-        case 'stairs':
-            return new Style({
-                stroke: new Stroke({
-                    color: '#D03C36', // 선의 색상
-                    width: 2.5 // 선의 두께
-                })
-            });
-        case 'slope':
-            return new Style({
-                stroke: new Stroke({
-                    color: '#FC3083', // 선의 색상
-                    width: 2.5 // 선의 두께
-                })
-            });
-        default: /* 처리되지 않은 경우 기본값 설정 */ break;
-    }
-    return new Style({
-        image: new Icon({
-            src: markerimg,
-            scale: 0.03,
-            opacity: 1,
-            rotateWithView: false,
-            rotation: 0
-        })
-    });
 };
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
@@ -260,47 +174,12 @@ const createPoiMarkerLayer = (cqlFilter) => {
     return poiMarkerLayer;
 }
 
-const createUrl4WFS = (ShowReqIdsNtype) => {
-     switch (ShowReqIdsNtype.type) {
-         case 'unpaved':
-         case 'stairs':
-         case 'slope':
-             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                  '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
-                  +ShowReqIdsNtype.data.ids + ')';
-         default:
-             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                 '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
-                 +ShowReqIdsNtype.data.ids +')';
-     }
-}
-
 const url4AllLinkObs = (edgeIds) => {
     const crsFilter = makeCrsFilter(edgeIds);
     return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
            '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
            + crsFilter
            + ' AND (link_att IN (4,5) OR (grad_deg >= 3.18 AND link_att NEQ 5))'
-
-}
-
-const createShowLayer = (ShowReqIdsNtype) => {
-    const showLayer = new VectorLayer({
-            title: `ShowReqIds Layer`, // 편의시설, 도로턱, 볼라드의 노드Id 배열을 가시화
-            visible: true,
-            source: new VectorSource({
-                format: new GeoJSON({
-                    dataProjection: 'EPSG:5181'
-                }),
-                url: function (extent) {
-                    return createUrl4WFS(ShowReqIdsNtype)
-                },
-                serverType: 'geoserver'
-            }),
-            zIndex: 5,
-            style: showMarkerStyle(ShowReqIdsNtype.type),
-    });
-    return showLayer
 }
 
 const createObsLayerWith = (obsType, pathNodeIds) => {
@@ -365,14 +244,80 @@ const createLayerIfNeeded = (url) => {
         });
 }
 
-const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, bol, bump, showLinkObs /*markerClicked, setMarkerClicked*/ }) => {
+const markerClickEventWith = (locaArray, selectClick) => {
+    // feature를 선택할 때 이벤트
+    selectClick.on('select', function(e) {
+        var selectedFeatures = e.selected;
+
+        selectedFeatures.forEach(function(feature) {
+
+            if (feature.get('node_id')==locaArray[0]) {
+                feature.setStyle(clickedMarkerStyle(irumarkerS))
+                console.log('출발지 click: '+feature.getId());
+                //setMarkerClicked(false);
+            } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
+                feature.setStyle(clickedMarkerStyle(irumarkerE))
+                console.log('도착지 click: '+feature.getId());
+            } else {
+                feature.setStyle(clickedMarkerStyle(irumarker2))
+                console.log('경유지 click: '+feature.getId());
+            }
+            //setKeyword(feature.get('bulid_name'));
+        });
+        /*else { // false
+            console.log('클릭 후 markerClicked ' + markerClicked)
+
+            selectedFeatures.forEach(function(feature) {
+                setKeyword(feature.get('bulid_name'));
+                if (feature.get('node_id')==locaArray[0]) {
+                    feature.setStyle(basicMarkerStyle(irumarkerS))
+                    setMarkerClicked(true);
+                } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
+                    feature.setStyle(basicMarkerStyle(irumarkerE))
+                    setMarkerClicked(true);
+                } else {
+                    feature.setStyle(basicMarkerStyle(irumarker2))
+                    setMarkerClicked(true);
+                }
+            });
+        }*/
+    });
+}
+
+export const useMap = () => {
     const [map, setMap] = useState(null);
+    //추가부분
+    proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
+    register(proj4);
+
+    useEffect(() => {
+        const view = new View({
+            //projection: getProjection('EPSG:5181'),
+            center: fromLonLat([127.0596, 37.5837]),
+            zoom: 17,
+            minZoom: 16,
+            maxZoom: 22,
+        });
+
+        const newMap = new Map({
+            layers: [osmLayer],
+            target: 'map',
+            view: view,
+        });
+
+        setMap(newMap);
+
+        return () => {
+            newMap.setTarget(null);
+        };
+    }, []);
+    return map;
+}
+
+
+export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showLinkObs, /*markerClicked, setMarkerClicked*/ category}) => {
+    const map = useMap();
     const [layerState, setLayerState] = useState('base-osm');
-    const [popupImage, setPopupImage] = useState('');
-    const [popupContent, setPopupContent] = useState('');
-    const popupContainerRef = useRef(null);
-    const popupContentRef = useRef(null);
-    const popupCloserRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
         console.log("pathData:", pathData);
@@ -404,7 +349,6 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
         });
     }
 
-
     const createNAddNodeLayersFrom = (locaArray) => {
         let nodeLayers = [];
         locaArray.forEach((nodeId, index) => {
@@ -430,94 +374,10 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
         });
         return nodeLayers;
     }
-    const markerClickEventWith = (locaArray, selectClick) => {
-        // feature를 선택할 때 이벤트
-        selectClick.on('select', function(e) {
-            var selectedFeatures = e.selected;
 
-            selectedFeatures.forEach(function(feature) {
-
-                if (feature.get('node_id')==locaArray[0]) {
-                    feature.setStyle(clickedMarkerStyle(irumarkerS))
-                    console.log('출발지 click: '+feature.getId());
-                    //setMarkerClicked(false);
-                } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
-                    feature.setStyle(clickedMarkerStyle(irumarkerE))
-                    console.log('도착지 click: '+feature.getId());
-                } else {
-                    feature.setStyle(clickedMarkerStyle(irumarker2))
-                    console.log('경유지 click: '+feature.getId());
-                }
-                //setKeyword(feature.get('bulid_name'));
-            });
-            /*else { // false
-                console.log('클릭 후 markerClicked ' + markerClicked)
-
-                selectedFeatures.forEach(function(feature) {
-                    setKeyword(feature.get('bulid_name'));
-                    if (feature.get('node_id')==locaArray[0]) {
-                        feature.setStyle(basicMarkerStyle(irumarkerS))
-                        setMarkerClicked(true);
-                    } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
-                        feature.setStyle(basicMarkerStyle(irumarkerE))
-                        setMarkerClicked(true);
-                    } else {
-                        feature.setStyle(basicMarkerStyle(irumarker2))
-                        setMarkerClicked(true);
-                    }
-                });
-            }*/
-        });
-    }
-    const setPopupOf = (feature, Type) => {
-        let id = ''
-        switch (Type.type) {
-            case 'unpaved':
-            case 'stairs':
-            case 'slope':
-                id = 'id'
-                break;
-            default:
-                id = 'node_id'
-        }
-        let idIdx = Type.data.ids.indexOf(feature.get(id));
-        setPopupImage(Type.data.images[idIdx]);
-        setPopupContent(Type.data.info[idIdx]);
-    }
-    const deletePopup = () =>{
-        console.log('click')
-        const popupCloser = popupCloserRef.current;
-        console.log(map.getOverlays().getArray()[0].getPosition())
-        map.getOverlays().getArray()[0].setPosition(undefined);
-        console.log(map.getOverlays().getArray()[0].getPosition())
-        popupCloser.blur();
-        return false;
-    }
-		//추가부분
-    proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
-    register(proj4);
-
-    useEffect(() => {
-        const view = new View({
-            //projection: getProjection('EPSG:5181'),
-            center: fromLonLat([127.0596, 37.5837]),
-            zoom: 17,
-            minZoom: 16,
-            maxZoom: 22,
-        });
-
-        const newMap = new Map({
-            layers: [osmLayer],
-            target: 'map',
-            view: view,
-        });
-
-        setMap(newMap);
-
-        return () => {
-            newMap.setTarget(null);
-        };
-    }, []);
+    //추가부분
+    //proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
+    //register(proj4);
 
     useEffect(() => {
         if (map) {
@@ -561,7 +421,8 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 });
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
-
+            }
+            /*if (locaArray && locaArray.length >= 2) {
                 let pathNodeIds = getNodeIdsOnPath(pathData).map(Number);
                 let pathEdgeIds = getEdgeIdsOnPath(pathData).map(Number);
 
@@ -654,74 +515,26 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                             console.error('에러 발생: ', error);
                         });
                 }
-            }
-
-            if (keyword) {
-                // Replace 'desiredName' with the name you want to filter by
-                let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'" + "or nickname like '"+keyword+"' or eng_name ILIKE '%"+keyword+"%'");
-
-                const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
-                map.addLayer(poiMarkerLayer)
-
-                let selectBuildClick = new Select({
-                   condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
-                   layers: [poiMarkerLayer]
-                });
-                map.addInteraction(selectBuildClick);
-               // poiMarkerClickEventWith(keyword,selectBuildClick);
-            }
-
-            if (ShowReqIdsNtype){
-                if (ShowReqIdsNtype.type) {
-                    const showLayer = createShowLayer(ShowReqIdsNtype)
-                    map.addLayer(showLayer);
-
-                    const popupOverlay = new Overlay({
-                        element: popupContainerRef.current,
-                        positioning: 'bottom-left',
-                        autoPan: {
-                            animation: {
-                                duration: 250
-                            }
-                        }
-                    });
-
-                    const select4Popup = new Select({
-                        condition: click,
-                        layers: [showLayer],
-                        hitTolerance: 20
-                    });
-                    map.addInteraction(select4Popup)
-
-                    select4Popup.on('select', (event) => {
-                        const features = event.selected;
-                        const feature = features[0];
-
-                        if (feature){
-                            feature.setStyle(showMarkerStyle(ShowReqIdsNtype.type)); // 1. 클릭 시 스타일 바꾸기
-
-                            // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
-                            const geom = feature.getGeometry();
-                            const [ minX, minY, maxX, maxY ] = geom.getExtent();
-                            const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
-                            //const coordinate = geom.getCoordinates()
-                            popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
-
-                            setPopupOf(feature, ShowReqIdsNtype)
-
-                            map.addOverlay(popupOverlay) // 5. 팝업 띄우기
-                        }
-                    });
-
-                    return () => {
-                        map.removeLayer(showLayer)
-                        map.removeInteraction(select4Popup);
-                        map.removeOverlay(popupOverlay)
-                    }
-                }
-            }
+            }*/
         }
-    }, [map, layerState, pathData, keyword, /*markerClicked, setMarkerClicked,*/ ShowReqIdsNtype, bump, bol, showLinkObs]);
+    }, [map, layerState, pathData,/*markerClicked, setMarkerClicked,*/ bump, bol, showLinkObs]);
+
+    useEffect(() => {
+        if (map && keyword) {
+            // Replace 'desiredName' with the name you want to filter by
+            let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'" + "or nickname like '"+keyword+"' or eng_name ILIKE '%"+keyword+"%'");
+
+            const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
+            map.addLayer(poiMarkerLayer)
+
+            let selectBuildClick = new Select({
+               condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
+               layers: [poiMarkerLayer]
+            });
+            map.addInteraction(selectBuildClick);
+           // poiMarkerClickEventWith(keyword,selectBuildClick); // 건물 마커 클릭 이벤트
+        }
+    }, [keyword])
 
     return (
         <div>
@@ -733,21 +546,7 @@ const MapC = ({ pathData, width, height, keyword, setKeyword, ShowReqIdsNtype, b
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            {((bump && bump.type) || (ShowReqIdsNtype && ShowReqIdsNtype.type)) && (<div ref={popupContainerRef} className="ol-popup">
-              <button ref={popupCloserRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>
-              {popupImage && <img src={popupImage} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
-              <div ref={popupContentRef} className="ol-popup-content">
-                {!bump && (<div>
-                {(ShowReqIdsNtype.type === 'unpaved' || ShowReqIdsNtype.type === 'stairs' || ShowReqIdsNtype.type === 'slope') && <>경사도[degree]</>}
-                {ShowReqIdsNtype.type === 'bump' && <>도로턱 높이[cm]</>}
-                {ShowReqIdsNtype.type === 'bol' && <>볼라드 간격[cm]</>}
-                </div>)}
-                <div dangerouslySetInnerHTML={{__html: popupContent}} />
-              </div>
-            </div>
-            )}
+            {category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
         </div>
     );
 };
-
-export default MapC;
