@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {usePopup, PopupUIComponent} from './PopupC'
+import {PopupUIComponent} from './PopupC'
 import Map from 'ol/Map';
 
 import VectorSource from "ol/source/Vector";
@@ -7,7 +7,7 @@ import VectorLayer from "ol/layer/Vector";
 import {GeoJSON} from "ol/format";
 
 import { Style } from "ol/style";
-import showMarkerStyle from './MarkerStyle'
+import {showMarkerStyle} from './MarkerStyle'
 
 const createUrl4WFS = (category) => {
      switch (category.type) {

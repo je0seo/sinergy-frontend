@@ -15,13 +15,14 @@ import VectorLayer from "ol/layer/Vector";
 import {Circle, Fill, Stroke, Style, Icon} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
-import showMarkerStyle from './MarkerStyle'
+import {basicMarkerStyle, clickedMarkerStyle, showMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
 import Overlay from 'ol/Overlay';
 
 import HandleCategoryClick from './HandleCategoryClick';
+import ShowObsOnPath from './ShowObsOnPath';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
@@ -74,29 +75,6 @@ const UOSorthoTile = new TileLayer({
         zIndex: 1
     });
 
-const basicMarkerStyle = (irumarker) => { //출발지 스타일
-    return new Style({
-        image: new Icon({
-            src: irumarker,
-            scale: 0.1, // 이미지의 크기
-            opacity: 1, // 이미지의 투명도
-            rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부
-            rotation: 0 // 이미지의 초기 회전 각도
-        })
-    });
-};
-
-const clickedMarkerStyle = (irumarker) => {
-  return new Style({
-      image: new Icon({
-          src: irumarker, // 이미지 파일의 경로를 설정합니다.
-          scale: 0.1, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
-          opacity: 0.7, // 이미지의 투명도를 조절합니다.
-          rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부를 설정합니다.
-          rotation: 0 // 이미지의 초기 회전 각도를 설정합니다.
-      })
-  });
-};
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
@@ -107,23 +85,6 @@ const makelocaArrayFromNodes = (pathData, locaArray) => {
         }
     });
     return locaArray;
-}
-
-const getNodeIdsOnPath = (pathData) => {
-    let listOfNodeId = [];
-    pathData.forEach((path, index) => {
-        listOfNodeId = path.map(n => n.node)
-    });
-    return listOfNodeId
-}
-
-const getEdgeIdsOnPath = (pathData) => {
-    let listOfEdgeId = [];
-    pathData.forEach((path, index) => {
-        listOfEdgeId = path.map(e => e.edge);
-    });
-    listOfEdgeId.pop()
-    return listOfEdgeId
 }
 
 const setMarkerSrcOf = (locaArray,index) => {
@@ -174,76 +135,6 @@ const createPoiMarkerLayer = (cqlFilter) => {
     return poiMarkerLayer;
 }
 
-const url4AllLinkObs = (edgeIds) => {
-    const crsFilter = makeCrsFilter(edgeIds);
-    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-           '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
-           + crsFilter
-           + ' AND (link_att IN (4,5) OR (grad_deg >= 3.18 AND link_att NEQ 5))'
-}
-
-const createObsLayerWith = (obsType, pathNodeIds) => {
-    let obsSource = new VectorSource({
-        format: new GeoJSON({
-            dataProjection: 'EPSG:5181'
-        }),
-        url: function (extent) {
-            return  'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                              '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
-                              +obsType.data.ids +') and node_id in (' +pathNodeIds + ')';
-        },
-        serverType: 'geoserver'
-    })
-    //console.log(obsSource.getFeatures())
-    const obsLayer = new VectorLayer({
-        title: `ShowObsOnPath Layer`,
-        visible: true,
-        source: obsSource,
-        zIndex: 6,
-        style: showMarkerStyle(obsType.type),
-    });
-    return obsLayer
-}
-
-const fetchFeatures = (url) => {
-    return fetch(url)
-        .then(response => response.json())
-        .then(data => data.totalFeatures); // 반환된 피처 수 반환
-}
-// 피처 수를 확인하고 레이어를 생성하는 함수
-const createLayerIfNeeded = (url) => {
-    return fetchFeatures(url)
-        .then(featureCount => {
-            if (featureCount > 0) {
-                const layer = new VectorLayer({
-                    title: `ShowReqIds Layer`,
-                    visible: true,
-                    source: new VectorSource({
-                        format: new GeoJSON({
-                            dataProjection: 'EPSG:5181'
-                        }),
-                        url: url,
-                        serverType: 'geoserver'
-                    }),
-                    zIndex: 6,
-                    style: showMarkerStyle('unpaved')/*new Style({
-                        stroke: new Stroke({
-                            color: 'rgba(255, 255, 255, 0.1)',
-                            width: 3
-                        })*/
-                    //})
-                });
-                return layer; // 레이어 반환
-            } else {
-                return null; // 피처가 없을 경우 null 반환
-            }
-        })
-        .catch(error => {
-            console.error('에러 발생: ', error);
-            throw error; // 에러를 다시 던져서 상위 함수에서 처리하도록 함
-        });
-}
-
 const markerClickEventWith = (locaArray, selectClick) => {
     // feature를 선택할 때 이벤트
     selectClick.on('select', function(e) {
@@ -262,25 +153,7 @@ const markerClickEventWith = (locaArray, selectClick) => {
                 feature.setStyle(clickedMarkerStyle(irumarker2))
                 console.log('경유지 click: '+feature.getId());
             }
-            //setKeyword(feature.get('bulid_name'));
         });
-        /*else { // false
-            console.log('클릭 후 markerClicked ' + markerClicked)
-
-            selectedFeatures.forEach(function(feature) {
-                setKeyword(feature.get('bulid_name'));
-                if (feature.get('node_id')==locaArray[0]) {
-                    feature.setStyle(basicMarkerStyle(irumarkerS))
-                    setMarkerClicked(true);
-                } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
-                    feature.setStyle(basicMarkerStyle(irumarkerE))
-                    setMarkerClicked(true);
-                } else {
-                    feature.setStyle(basicMarkerStyle(irumarker2))
-                    setMarkerClicked(true);
-                }
-            });
-        }*/
     });
 }
 
@@ -315,14 +188,10 @@ export const useMap = () => {
 }
 
 
-export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showLinkObs, /*markerClicked, setMarkerClicked*/ category}) => {
+export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showObs, category}) => {
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
-    const [popupImage, setPopupImage] = useState('');
-    const [popupContent, setPopupContent] = useState('');
-    const popupContainerRef = useRef(null);
-    const popupContentRef = useRef(null);
-    const popupCloserRef = useRef(null);
+    var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
 
     const createShortestPathLayer = (pathData) => {
         console.log("pathData:", pathData);
@@ -380,10 +249,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
         return nodeLayers;
     }
 
-    //추가부분
-    //proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
-    //register(proj4);
-
     useEffect(() => {
         if (map) {
             console.log('-------rendering------')
@@ -409,16 +274,12 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             }
             map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
-            var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
-
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-
-                //console.log('pathNodeIds', pathNodeIds)
             }
-            // 출발, 도착, 경유 노드 표시
+            // 출발, 도착, 경유 노드 마커 표시
             if (locaArray && locaArray.length >= 2) {
                 let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
                    condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
@@ -427,102 +288,8 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
             }
-            /*if (locaArray && locaArray.length >= 2) {
-                let pathNodeIds = getNodeIdsOnPath(pathData).map(Number);
-                let pathEdgeIds = getEdgeIdsOnPath(pathData).map(Number);
-
-                if (bump.type) {
-                    const obsLayer = createObsLayerWith(bump, pathNodeIds)
-                    map. addLayer(obsLayer)
-
-                    const popupOverlay = new Overlay({
-                        element: popupContainerRef.current,
-                        positioning: 'bottom-left',
-                        autoPan: {
-                            animation: {
-                                duration: 250
-                            }
-                        }
-                    });
-
-                    const select4Popup = new Select({
-                        condition: click,
-                        layers: [obsLayer]
-                    });
-                    map.addInteraction(select4Popup)
-
-                    select4Popup.on('select', (event) => {
-                        const features = event.selected;
-                        const feature = features[0];
-                        if (feature){
-                            const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
-                            const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
-                            popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
-                            setPopupOf(feature, bump) // 3. 팝업 콘텐츠 세팅
-                            map.addOverlay(popupOverlay) // 4. 팝업 가시화
-                        }
-                    });
-                }
-                if (bol.type) {
-                    const obsLayer = createObsLayerWith(bol, pathNodeIds)
-                    map. addLayer(obsLayer)
-                }
-
-                if (showLinkObs) {
-                    const url = url4AllLinkObs(pathEdgeIds)
-                    createLayerIfNeeded(url)
-                        .then(linkObsLayer => {
-                            // linkObsLayer가 존재하면 map에 레이어 추가
-                            if (linkObsLayer) {
-                                map.addLayer(linkObsLayer);
-                            }
-
-                            const popupOverlay = new Overlay({
-                                element: popupContainerRef.current,
-                                positioning: 'bottom-left',
-                                autoPan: {
-                                    animation: {
-                                        duration: 250
-                                    }
-                                }
-                            });
-
-                            const select4Popup = new Select({
-                                condition: click,
-                                layers: [linkObsLayer],
-                                hitTolerance: 20
-                            });
-                            map.addInteraction(select4Popup)
-
-                            select4Popup.on('select', (event) => {
-                                const features = event.selected;
-                                const feature = features[0];
-                                if (feature){
-                                     const clickedStyle = new Style({
-                                         stroke: new Stroke({
-                                             color: 'rgba(255, 255, 255, 1)',
-                                             width: 7
-                                         })
-                                     })
-                                     feature.setStyle(clickedStyle)  //1. 클릭 시 스타일 바꾸기
-
-                                     const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
-                                     const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
-                                     popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
-
-                                     setPopupImage(feature.get('image_lobs'))
-                                     setPopupContent('경사도[degree] <br>'+feature.get('slopel'))
-                                     map.addOverlay(popupOverlay) // 4. 팝업 가시화
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            console.error('에러 발생: ', error);
-                        });
-                }
-            }*/
         }
-    }, [map, layerState, pathData,/*markerClicked, setMarkerClicked,*/ bump, bol, showLinkObs]);
+    }, [map, layerState, pathData, showObs]);
 
     useEffect(() => {
         if (map && keyword) {
@@ -552,6 +319,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             </div>
             <div id="map" style={{ width, height }}></div>
             {category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
+            {showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} showObs={showObs}/>}
         </div>
     );
 };

@@ -27,7 +27,42 @@ import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
 import libraryIcon from './images/icons/libraryIcon.png';
 import toiletIcon from './images/icons/toiletIcon.png';
 
-const showMarkerStyle = (markertype) => {
+import irumarkerS from './images/IrumakerS.png';
+import irumarkerE from './images/IrumakerE.png';
+import irumarker2 from './images/Irumaker2.png';
+
+export const Icons = {
+    bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
+    bicycleIcon, smokingIcon, storeIcon, cafeIcon, postOfficeIcon, healthServiceIcon, cafeteriaIcon,
+    printIcon, gymIcon, tennisIcon, basketballIcon, breakRoomIcon, loungeIcon, seminarRoomIcon,
+    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon
+}
+
+export const basicMarkerStyle = (irumarker) => { //출발지 스타일
+    return new Style({
+        image: new Icon({
+            src: irumarker,
+            scale: 0.1, // 이미지의 크기
+            opacity: 1, // 이미지의 투명도
+            rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부
+            rotation: 0 // 이미지의 초기 회전 각도
+        })
+    });
+};
+
+export const clickedMarkerStyle = (irumarker) => {
+  return new Style({
+      image: new Icon({
+          src: irumarker, // 이미지 파일의 경로를 설정합니다.
+          scale: 0.1, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
+          opacity: 0.7, // 이미지의 투명도를 조절합니다.
+          rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부를 설정합니다.
+          rotation: 0 // 이미지의 초기 회전 각도를 설정합니다.
+      })
+  });
+};
+
+export const showMarkerStyle = (markertype) => {
     let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
     switch (markertype) {
         case 'facilities': markerimg = facilitiesIcon; break;
@@ -86,4 +121,3 @@ const showMarkerStyle = (markertype) => {
         })
     });
 };
-export default showMarkerStyle;

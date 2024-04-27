@@ -3,10 +3,10 @@ import Overlay from 'ol/Overlay';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 
-import showMarkerStyle from './MarkerStyle'
+import {showMarkerStyle} from './MarkerStyle'
 import './MapC.css';
 
-const setPopupSelect = (layer, map) => {
+export const setPopupSelect = (layer, map) => {
     const select = new Select({
         condition: click,
         layers: [layer],
