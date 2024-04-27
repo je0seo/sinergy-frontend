@@ -317,7 +317,12 @@ export const useMap = () => {
 
 export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showLinkObs, /*markerClicked, setMarkerClicked*/ category}) => {
     const map = useMap();
-    const [layerState, setLayerState] = useState('base-osm');
+    const [layerState, setLayerState] = useState('base-base');
+    const [popupImage, setPopupImage] = useState('');
+    const [popupContent, setPopupContent] = useState('');
+    const popupContainerRef = useRef(null);
+    const popupContentRef = useRef(null);
+    const popupCloserRef = useRef(null);
 
     const createShortestPathLayer = (pathData) => {
         console.log("pathData:", pathData);
