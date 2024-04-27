@@ -23,7 +23,7 @@ const searchBuildingInfo = async (keyword, setBuildingInfo, setResultExistence) 
     }
 };
 
-const useSearch = ({keyword}) => {
+const useSearch = (keyword) => {
     const [bgName, setBgName] = useState('');
     const [engName, setEngName] = useState('');
     const [bgId, setBgId] = useState(0);
@@ -50,6 +50,12 @@ const useSearch = ({keyword}) => {
         searchBuildingInfo(keyword, setBuildingInfo, setResultExistence)
     }, [keyword]) // SideEffect가 첫번째 렌더링 이후 한번 실행되고, 이후 특정 값의 업데이트를 감지했을 때마다 실행되어야 하는 경우
 
+    return {bgImage, bgName, engName, type, bgId, totalFloors, resultExistence, loungeCnt, bgSummary};
+}
+
+const SearchResultUIComponent = ({keyword}) => {
+    const {bgImage, bgName, engName, type, bgId, totalFloors, resultExistence, loungeCnt, bgSummary} = useSearch(keyword);
+
     if (resultExistence == false)
         return (
             <div>
@@ -69,4 +75,4 @@ const useSearch = ({keyword}) => {
     );
 }
 
-export default useSearch;
+export default SearchResultUIComponent;

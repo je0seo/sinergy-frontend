@@ -1,7 +1,7 @@
 // App.js
 import React, { useState } from 'react';
 import UOSLogo from './components/images/uosMark.png';
-import Map from './components/MapC';
+import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
 import fullKLogo from './components/images/fullKLogo.png';
 import SLogo from './components/images/SLogo.png';
@@ -13,6 +13,7 @@ import axios from 'axios';
 import {NODE_BACKEND_URL} from "./constants/urls";
 //
 import Search from './components/Search';
+//import HandleCategoryClick from './components/HandleCategoryClick';
 //
 import irumarkerS from './components/images/IrumakerS.png';
 import irumarkerE from './components/images/IrumakerE.png';
@@ -44,7 +45,6 @@ import sBicycleIcon from './components/images/icons/sBicycleIcon.png';
 import vendingMachineIcon from './components/images/icons/vendingMachineIcon.png';
 import libraryIcon from './components/images/icons/libraryIcon.png';
 import toiletIcon from './components/images/icons/toiletIcon.png';
-
 
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
@@ -211,7 +211,7 @@ const App = () => {
         setShowObsOnPath(false)
     }
 
-    const handleShowReq = async (ReqType) => {
+    const HandleShowReq = async (ReqType) => {
         const data = await showReq(ReqType);
         setShowReqIdsNtype({ type: ReqType, data });
     };
@@ -283,7 +283,7 @@ const App = () => {
                     <div>
                         {/*
                         {!showFacilitiesMenu && (
-                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>
+                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); HandleShowReq('facilities');}}>
                                 <div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div>
                             </button>
                         )}
@@ -328,11 +328,11 @@ const App = () => {
                             <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---보행 장애물 위치 보기---</div>
                             <div className='showingObstacleBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
-                                <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('stairs')}><img src={stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
-                                <button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
+                                <button className='showingBtn' onClick={() => HandleShowReq('unpaved')}><img src={unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
+                                <button className='showingBtn' onClick={() => HandleShowReq('stairs')}><img src={stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
+                                <button className='showingBtn' onClick={() => HandleShowReq('slope')}><img src={slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
+                                <button className='showingBtn' onClick={() => HandleShowReq('bump')}><img src={bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
+                                <button className='showingBtn' onClick={() => HandleShowReq('bol')}><img src={bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
                             </div>
                         </div>
                         {/*)}*/}
@@ -411,7 +411,8 @@ const App = () => {
             )}
             <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
             <div className='main-right-side'>
-                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} ShowReqIdsNtype={showReqIdsNtype}/>}
+                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} category ={showReqIdsNtype} />}
+                {/*activeTab === '' && showReqIdsNtype.type && <HandleCategoryClick category = {showReqIdsNtype} />*/}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
                 bol = {bol} bump = {bump} showLinkObs = {showObsOnPath}
