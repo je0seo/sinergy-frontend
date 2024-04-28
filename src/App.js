@@ -385,10 +385,8 @@ const App = () => {
             <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
             <div className='main-right-side'>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} category ={showReqIdsNtype} />}
-                {/*activeTab === '' && showReqIdsNtype.type && <handleCategoryClick category = {showReqIdsNtype} />*/}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' keyword={keyword} setKeyword={setKeyword} pathData={pathData}
-                bol = {bol} bump = {bump} showObs = {showObsOnPath}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath}/>}
             </div>
         </div>
     );
