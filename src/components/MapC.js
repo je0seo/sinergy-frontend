@@ -1,25 +1,24 @@
 //MapC.js
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
-import { get as getProjection, fromLonLat } from 'ol/proj';
+import { fromLonLat } from 'ol/proj';
 import makeCrsFilter4node from "./utils/filter-for-node.js";
 import {makeCrsFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
-import {Circle, Fill, Stroke, Style, Icon} from "ol/style";
+import {Circle, Fill, Stroke, Style} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
-import {basicMarkerStyle, clickedMarkerStyle, showMarkerStyle} from './MarkerStyle'
+import {basicMarkerStyle, clickedMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
-import Overlay from 'ol/Overlay';
 
 import HandleCategoryClick from './HandleCategoryClick';
 import ShowObsOnPath from './ShowObsOnPath';
@@ -157,7 +156,7 @@ const markerClickEventWith = (locaArray, selectClick) => {
     });
 }
 
-export const useMap = () => {
+export const useMap = () => { // 배경지도만 따로 분리
     const [map, setMap] = useState(null);
     //추가부분
     proj4.defs('EPSG:5181', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs');
@@ -291,8 +290,8 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
         }
     }, [map, layerState, pathData, showObs]);
 
-    useEffect(() => {
-        if (map && keyword) {
+    useEffect(() => { // 건물 | 하늘못 | 운동시설 검색 시
+            if (map && keyword) {
             // Replace 'desiredName' with the name you want to filter by
             let cqlFilter = encodeURIComponent("name like '%"+keyword+"%'" + "or nickname like '"+keyword+"' or eng_name ILIKE '%"+keyword+"%'");
 
