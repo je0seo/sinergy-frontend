@@ -66,7 +66,7 @@ const SearchResultUIComponent = ({keyword}) => {
         <div style={{margin: '0 auto'}}>
             {bgImage && <img className="bg-image" src={bgImage} alt="Building Image" style={{width: '350px',height: '250px',display: 'block',margin: '0 auto'}}/>}
             <div className="info-content">
-                <h3 style={{margin: '0 auto', backgroundColor: '#44EAC5'}}> {bgName}({engName}) </h3>
+                <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName}) </h3>
                 <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} | {(type === '건물') && (<> No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
                 {loungeCnt && <>라운지 수 : {loungeCnt}</>}
                 <p style={{marginTop: '5px', marginBottom: '0px'}}> {bgSummary} </p>

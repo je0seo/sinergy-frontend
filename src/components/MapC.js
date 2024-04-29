@@ -27,7 +27,7 @@ import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/Irumaker2.png';
 
-const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/288AB3D7-7900-3465-BC2F-66917AB18D55';
+const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/ABA020A7-DBB7-3954-900F-E891C0E4995E';
 
 const osmLayer = new TileLayer({
     source: new OSM({ attributions: '', cacheSize: 0 }),
