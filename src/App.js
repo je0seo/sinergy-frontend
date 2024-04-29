@@ -264,7 +264,7 @@ const App = () => {
                         {keyword != '' && <div className='info-page'> {/* && !showFacilitiesMenu && !showObstacleMenu */}
                             <Search keyword = {keyword} />
                         </div>}
-                        <div style={{borderStyle: 'solid', borderColor: '#44eac5'}}>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A'}}>
                         <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---편의 시설 위치 보기---</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
@@ -297,7 +297,7 @@ const App = () => {
                             <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
                         )}*/}
                         {/*{showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정*/}
-                        <div style={{borderStyle: 'solid', borderColor: '#44eac5', marginTop: '5px'}}>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', marginTop: '5px'}}>
                             <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---보행 장애물 위치 보기---</div>
                             <div className='showingObstacleBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
