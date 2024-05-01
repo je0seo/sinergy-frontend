@@ -16,7 +16,7 @@ import Search from './components/Search';
 //
 import irumarkerS from './components/images/IrumakerS.png';
 import irumarkerE from './components/images/IrumakerE.png';
-import irumarker2 from './components/images/Irumaker2.png';
+import irumarkerY from './components/images/IrumakerY.png';
 //
 import {Icons} from './components/MarkerStyle'
 
@@ -337,7 +337,7 @@ const App = () => {
                             <div className="stopover-textboxes">
                               {stopovers.map((stopover, index) => (
                                   <div>
-                                      <img src={irumarker2} alt="stopover irumarker" className="irumarkerImage"/>
+                                      <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
                                       <input className='pf-input-style' key={index} type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
                                   </div>
                               ))}
