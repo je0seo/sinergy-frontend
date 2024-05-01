@@ -25,7 +25,7 @@ import ShowObsOnPath from './ShowObsOnPath';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
-import irumarker2 from './images/Irumaker2.png';
+import irumarker2 from './images/IrumakerY.png';
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/ABA020A7-DBB7-3954-900F-E891C0E4995E';
 
