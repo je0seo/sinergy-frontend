@@ -194,14 +194,18 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
     const createShortestPathLayer = (pathData) => {
         console.log("pathData:", pathData);
-        const colorPalette = ['#FD5230', '#007AC5','#44EAC5', 'yellow', 'orange', 'purple', 'cyan', 'magenta'];
+        const colorPalette = ['#FD5230', '#007AC5', '#FFCD4A','#44EAC5','blue','orange', 'purple', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
             const listOfEdgeId = path.map(e => e.edge);
             const crsFilter = makeCrsFilter(listOfEdgeId);
-
-            const colorIndex = (index === pathData.length - 1) ? 0 : index +1;
-
+            //1개면 -> 0
+            //2개면 -> 1, 2, 0
+            //3개면 -> 1, 2, 3, 0
+            //내가 원하는 거: 1개면 -> 노랑
+            // 2개 이상이면 -> 현재처럼
+            let colorIndex = (index === pathData.length - 1) ? 0 : index +1; //마지막 인덱스이면 0, 그렇지 않으면 +1
+            if(pathData.length===1){colorIndex = 2;}
             const shortestPathLayer = new VectorLayer({
                 title: `UOS Shortest Path ${index + 1}`,
                 source: new VectorSource({
