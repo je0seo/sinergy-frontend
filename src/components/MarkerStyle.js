@@ -38,6 +38,13 @@ export const Icons = {
     sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon
 }
 
+export const clickedLinkStyle = new Style({
+     stroke: new Stroke({
+         color: 'rgba(255, 255, 255, 1)',
+         width: 7
+     })
+})
+
 export const basicMarkerStyle = (irumarker) => { //출발지 스타일
     return new Style({
         image: new Icon({
@@ -94,21 +101,21 @@ export const showMarkerStyle = (markertype) => {
             return new Style({
                 stroke: new Stroke({
                     color: '#711B6B', // 선의 색상
-                    width: 4 // 선의 두께
+                    width: 3 // 선의 두께
                 })
             });
         case 'stairs':
             return new Style({
                 stroke: new Stroke({
                     color: '#D03C36', // 선의 색상
-                    width: 2.5 // 선의 두께
+                    width: 3 // 선의 두께
                 })
             });
         case 'slope':
             return new Style({
                 stroke: new Stroke({
                     color: '#FC3083', // 선의 색상
-                    width: 2.5 // 선의 두께
+                    width: 3 // 선의 두께
                 })
             });
         default: /* 처리되지 않은 경우 기본값 설정 */ break;

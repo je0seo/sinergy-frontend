@@ -10,7 +10,7 @@ import { click } from 'ol/events/condition';
 
 import {makeCrsFilter} from "./utils/crs-filter.js";
 import { Stroke, Style } from "ol/style";
-import {showMarkerStyle} from './MarkerStyle'
+import {showMarkerStyle, clickedLinkStyle} from './MarkerStyle'
 import {setPopupSelect, PopupUIComponent} from './PopupC'
 
 const getNodeIdsOnPath = (pathData) => {
@@ -61,49 +61,38 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
     return obsLayer
 }
 
-const fetchFeatures = (url) => {
+/*const fetchFeatures = (url) => {
     return fetch(url)
         .then(response => response.json())
         .then(data => data.totalFeatures); // 반환된 피처 수 반환
-}
-// 피처 수를 확인하고 레이어를 생성하는 함수
+}*/
+// 피처 수를 확인하고 레이어를 생성하는 함수 -> 바로 link obs 집합 layer return
 const createLayerIfNeeded = (url) => {
-    return fetchFeatures(url)
-        .then(featureCount => {
-            if (featureCount > 0) {
-                const layer = new VectorLayer({
-                    title: `ShowReqIds Layer`,
-                    visible: true,
-                    source: new VectorSource({
-                        format: new GeoJSON({
-                            dataProjection: 'EPSG:5181'
-                        }),
-                        url: url,
-                        serverType: 'geoserver'
-                    }),
-                    zIndex: 6,
-                    style: //showMarkerStyle('unpaved')
-                    new Style({
-                        stroke: new Stroke({
-                            color: 'rgba(255, 255, 255, 0.1)',
-                            width: 3
-                        })
-                    })
-                });
-                return layer; // 레이어 반환
-            } else {
-                return null; // 피처가 없을 경우 null 반환
-            }
+    return new VectorLayer({
+        title: `linkObs Layer`,
+        visible: true,
+        source: new VectorSource({
+            format: new GeoJSON({
+                dataProjection: 'EPSG:5181'
+            }),
+            url: url,
+            serverType: 'geoserver'
+        }),
+        zIndex: 6,
+        style:
+        new Style({
+            stroke: new Stroke({
+                color: 'rgba(255, 255, 255, 0.1)',
+                width: 3
+            })
         })
-        .catch(error => {
-            console.error('에러 발생: ', error);
-            throw error; // 에러를 다시 던져서 상위 함수에서 처리하도록 함
-        });
+    });
 }
 
 const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
     let [bumpLayer, setBumpLayer] = useState([]);
     let [bolLayer, setBolLayer] = useState([]);
+    let [linkObsLayer, setLinkObsLayer] = useState([]);
 
     useEffect(() => {
         if (map && locaArray && locaArray.length >= 2) {
@@ -138,7 +127,10 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
 
                 // 3. 클릭 가능한 장애물 link 객체 생성
                 const url = url4AllLinkObs(pathEdgeIds)
-                createLayerIfNeeded(url)
+                const linkLayer = createLayerIfNeeded(url)
+                setLinkObsLayer(linkLayer) //setLinkObsLayer(createLayerIfNeeded(url)) 하면 null오류 남
+                map.addLayer(linkLayer);
+                /*createLayerIfNeeded(url)
                     .then(linkObsLayer => {
                         // linkObsLayer가 존재하면 map에 레이어 추가
                         if (linkObsLayer) {
@@ -155,34 +147,24 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
                             }
                         });*/
 
-                        const select4Popup = setPopupSelect(linkObsLayer, map)
+                        const select4Popup = setPopupSelect(linkLayer, map)
 
                         select4Popup.on('select', (event) => {
                             const features = event.selected;
                             const feature = features[0];
                             if (feature){
-                                 const clickedStyle = new Style({
-                                     stroke: new Stroke({
-                                         color: 'rgba(255, 255, 255, 1)',
-                                         width: 7
-                                     })
-                                 })
-                                 feature.setStyle(clickedStyle)  //1. 클릭 시 스타일 바꾸기
-
-                                 const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
-                                 const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
-                                 //popupOverlay.setPosition(coordinate); // 3. 피처 좌표에 팝업 띄우기
-
+                                 feature.setStyle(clickedLinkStyle)
                                  //setImage(feature.get('image_lobs'))
                                  //setContent('경사도[degree] <br>'+feature.get('slopel'))
                                  //map.addOverlay(popupOverlay) // 4. 팝업 가시화
                             }
                         });
 
-                    })
-                    .catch(error => {
-                        console.error('에러 발생: ', error);
-                    });
+                    //})
+                    //.catch(error => {
+                      //  console.error('에러 발생: ', error);
+                    //});
+
 
                 return () => {
                     map.removeLayer(bumpMarker);
