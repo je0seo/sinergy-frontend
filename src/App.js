@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useRef, useState, KeyboardEvent } from 'react';
 import UOSLogo from './components/images/uosMark.png';
 import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
@@ -22,6 +22,13 @@ import {Icons} from './components/MarkerStyle'
 
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
+    const inputRef = useRef(null);
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") { // Enter 키를 누르면 연결된 버튼을 클릭
+            inputRef.current.click();
+        }
+    };
+
     return (
         <header className='header'>
             <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
@@ -31,12 +38,18 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
                    placeholder="검색어를 입력하세요"
                    value={searchTerm}
                    onChange={(e) => setSearchTerm(e.target.value)}
-                   style={{margin: '0 Auto'}}/>
-                <button onClick={handleSearch}>검색</button>
+                   style={{margin: '0 Auto'}}
+                   onKeyPress={handleKeyPress}
+                />
+                <button ref={inputRef} onClick={handleSearch}>검색</button>
             </div>
         </header>
     );
 }
+
+/*function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") handleSearch;
+}*/
 
 //길찾기//
 const usePathfinding = () => {
