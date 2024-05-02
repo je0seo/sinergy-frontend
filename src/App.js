@@ -1,5 +1,5 @@
 // App.js
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import UOSLogo from './components/images/uosMark.png';
 import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
@@ -262,7 +262,7 @@ const App = () => {
                         )}
                         */}
                         {keyword != '' && <div className='info-page'> {/* && !showFacilitiesMenu && !showObstacleMenu */}
-                            <Search keyword = {keyword} />
+                            <Search keyword = {keyword} setKeyword = {setKeyword}/>
                         </div>}
                         <div style={{borderStyle: 'solid', borderColor: '#FFCD4A'}}>
                         <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---편의 시설 위치 보기---</div>
