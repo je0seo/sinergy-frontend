@@ -38,6 +38,13 @@ export const Icons = {
     sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon
 }
 
+export const clickedLinkStyle = new Style({
+     stroke: new Stroke({
+         color: 'rgba(255, 255, 255, 1)',
+         width: 7
+     })
+})
+
 export const basicMarkerStyle = (irumarker) => { //출발지 스타일
     return new Style({
         image: new Icon({
