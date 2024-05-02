@@ -3,7 +3,7 @@ import Overlay from 'ol/Overlay';
 import Select from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 
-import {showMarkerStyle} from './MarkerStyle'
+import {showMarkerStyle, clickedLinkStyle} from './MarkerStyle'
 import './MapC.css';
 
 export const setPopupSelect = (layer, map) => {
@@ -62,7 +62,9 @@ export const usePopup = (category, map, layer) => {
             const features = event.selected;
             const feature = features[0];
             if (feature){
-                feature.setStyle(showMarkerStyle(category.type)); // 1. 클릭 시 스타일 바꾸기
+                if(feature.getId().includes('link')){ // link인 경우
+                    feature.setStyle(clickedLinkStyle); // 1. 클릭 시 스타일 바꾸기
+                }
                 // map.on 이벤트는 이벤트 발생 위치를 좌표로 넣을 수 있는데 select는 안 됨
                 //const coordinate = geom.getCoordinates() 도 가능
                 const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();

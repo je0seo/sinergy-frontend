@@ -10,7 +10,7 @@ import { click } from 'ol/events/condition';
 
 import {makeCrsFilter} from "./utils/crs-filter.js";
 import { Stroke, Style } from "ol/style";
-import {showMarkerStyle} from './MarkerStyle'
+import {showMarkerStyle, clickedLinkStyle} from './MarkerStyle'
 import {setPopupSelect, PopupUIComponent} from './PopupC'
 
 const getNodeIdsOnPath = (pathData) => {
@@ -153,6 +153,7 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
                             const features = event.selected;
                             const feature = features[0];
                             if (feature){
+                                 feature.setStyle(clickedLinkStyle)
                                  //setImage(feature.get('image_lobs'))
                                  //setContent('경사도[degree] <br>'+feature.get('slopel'))
                                  //map.addOverlay(popupOverlay) // 4. 팝업 가시화
