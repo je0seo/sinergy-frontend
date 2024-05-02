@@ -1,11 +1,13 @@
-/*App.js에서 사용*/
+/*App.css*/
+/*배경색: #FFFEF4 */
+/*메인색: #FFCD4A */
 .container {
   display: flex;
   height: 100vh;
 }
 .main-left-side {
   flex: 1;
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
   padding: 0px;
 }
 .ToggleLeftSide {
@@ -14,7 +16,7 @@
   justify-content: center; /* 수직 정중앙 정렬 */
   align-items: center; /* 수직 정중앙 정렬 */
   display: flex;
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
 }
 
 .ToggleLeftSideBtn {
@@ -26,22 +28,22 @@
   justify-content: center; /* 수평 정중앙 정렬 */
   align-items: center; /* 수직 정중앙 정렬 */
   border-style: none;
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
 }
 .ToggleLeftSideBtn:hover {
-  background-color: rgba(68, 234, 197, 0.5); /* 마우스 호버 시 배경색 변경, 불투명도 50% */
+  background-color: #FFCD4A; /*메인색*/ /* 마우스 호버 시 배경색 변경, 불투명도 50% */
 }
 
 .main-right-side {
   flex: 2.5;
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
 }
 /*Header부분*/
 .header {
   display: flex;
   flex-direction: column;
   padding: 10px;
-  background-color: #F5FFF5; /* 헤더 배경색 */
+  background-color: #FFFEF4; /*배경색*/
   color: #fff; /* 헤더 텍스트 색상 */
   justify-content: space-between;
   align-items: center;
@@ -49,10 +51,10 @@
 }
 .search-bar {
   display: flex;
-  border: 1px solid #44EAC5;
+  border: 1px solid #FFCD4A; /*메인색*/
   border-radius: 80px;
   padding: 2px;
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
   width: 350px;
   margin-bottom: 0px;
 }
@@ -62,8 +64,8 @@
   outline: none;
 }
 .search-bar button {
-  background-color: #44EAC5;
-  color: #F5FFF5;
+  background-color: #FFCD4A; /*메인색*/
+  color: #FFFEF4; /*배경색*/
   border: none;
   border-radius: 15px 15px 15px 15px;
   cursor: pointer;
@@ -75,7 +77,7 @@
   display: flex;
   justify-content: space-around;
   margin-bottom: 5px;
-  background-color: #F5FFF5;
+  background-color: #ffe8b0; /*메인색 연하게 응용*/
 }
 .menu-tab {
   background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
@@ -96,15 +98,15 @@
 }
 /*홈화면 좌측 패널*/
 .home-left {
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
   padding-left: 1px;
   justify-content: space-around;
 }
 /*info 창*/
 .info-page{
   border-style: solid;
-  border-color: #44EAC5;
-  background-color: #F5FFF5;
+  border-color: #FFCD4A; /*메인색*/
+  background-color: #FFFEF4; /*배경색*/
   margin: 3px 0px 5px 0px; /*위 오 아래 왼*/
   padding-left: 0px;
   padding-right: 0px;
@@ -112,7 +114,7 @@
 /*pathfinder-page*/
 .pathfinder-page {
   flex: 1;
-  background-color: #F5FFF5;
+  background-color: #FFFEF4; /*배경색*/
 }
 .option-button-row {
   display: flex;
@@ -128,18 +130,18 @@
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid; 
-  border-color:#44EAC5;
-  background-color: #ffffff;
+  border-color:#FFCD4A; /*메인색*/
+  background-color: #FFFEF4; /*배경색*/
 }
 .option-button:hover {
-  color: white;
-  background-color: #44EAC5; /* 마우스 호버 시 배경색 변경 */
+  color: #FFFEF4; /*배경색*/
+  background-color: #FFCD4A; /*메인색 마우스 호버 시 배경색 변경 */
 }
 .selected-button {
-  background-color: #44EAC5;
+  background-color: #FFCD4A; /*메인색*/
   height: 35px;
   font-size: 13.8px;
-  color:white;
+  color: #FFFEF4; /*배경색*/
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid; 
@@ -176,11 +178,11 @@
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid; 
-  background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
+  background-color: #FFFEF4; /*배경색*/
   transition: background-color 0.1s ease;
 }
 .button-style:hover {
-  color: white;
+  color: #FFFEF4; /*배경색*/
   background-color: #2a2828; /* 마우스 호버 시 배경색 변경 */
 }
 .shortest-path-text{
@@ -209,7 +211,7 @@
   transition: background-color 0.1s ease;
 }
 .showingBtn:hover {
-  background-color: #44EAC5; /* 마우스 호버 시 배경색 변경 */
+  background-color: #FFCD4A; /*메인색 마우스 호버 시 배경색 변경 */
 }
 .showingObstacleBtns {
   display: flex;
@@ -227,8 +229,8 @@
 }
 
 .showingFacBtn {
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 50px;
   border-radius: 50%;
   border-style: solid;
   border-color: #dcdbd9;
@@ -242,7 +244,7 @@
 }
 
 .showingFacBtn:hover {
-  border-color: #44eac5;
+  border-color: #FFCD4A; /*메인색*/
 }
 
 .showingFacilitiesBtns {

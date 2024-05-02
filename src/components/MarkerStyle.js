@@ -29,7 +29,7 @@ import toiletIcon from './images/icons/toiletIcon.png';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
-import irumarker2 from './images/Irumaker2.png';
+import irumarker2 from './images/IrumakerY.png';
 
 export const Icons = {
     bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
@@ -49,11 +49,12 @@ export const basicMarkerStyle = (irumarker) => { //출발지 스타일
     return new Style({
         image: new Icon({
             src: irumarker,
-            scale: 0.1, // 이미지의 크기
+            scale: 0.08,
             opacity: 1, // 이미지의 투명도
             rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부
-            rotation: 0 // 이미지의 초기 회전 각도
-        })
+            rotation: 0,// 이미지의 초기 회전 각도
+            anchor: [0.5, 1] // 아이콘의 중심을 아이콘 이미지의 아래 중앙으로 이동
+        }),
     });
 };
 
@@ -61,10 +62,11 @@ export const clickedMarkerStyle = (irumarker) => {
   return new Style({
       image: new Icon({
           src: irumarker, // 이미지 파일의 경로를 설정합니다.
-          scale: 0.1, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
+          scale: 0.08, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
           opacity: 0.7, // 이미지의 투명도를 조절합니다.
           rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부를 설정합니다.
-          rotation: 0 // 이미지의 초기 회전 각도를 설정합니다.
+          rotation: 0, // 이미지의 초기 회전 각도를 설정합니다.
+          anchor: [0.5, 1], // 아이콘의 중심을 아이콘 이미지의 아래 중앙으로 이동
       })
   });
 };
@@ -121,10 +123,10 @@ export const showMarkerStyle = (markertype) => {
     return new Style({
         image: new Icon({
             src: markerimg,
-            scale: 0.03,
+            scale: 0.04,
             opacity: 1,
             rotateWithView: false,
-            rotation: 0
+            rotation: 0,
         })
     });
 };

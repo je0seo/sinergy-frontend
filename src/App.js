@@ -16,7 +16,7 @@ import Search from './components/Search';
 //
 import irumarkerS from './components/images/IrumakerS.png';
 import irumarkerE from './components/images/IrumakerE.png';
-import irumarker2 from './components/images/Irumaker2.png';
+import irumarkerY from './components/images/IrumakerY.png';
 //
 import {Icons} from './components/MarkerStyle'
 
@@ -264,7 +264,7 @@ const App = () => {
                         {keyword != '' && <div className='info-page'> {/* && !showFacilitiesMenu && !showObstacleMenu */}
                             <Search keyword = {keyword} />
                         </div>}
-                        <div style={{borderStyle: 'solid', borderColor: '#44eac5'}}>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A'}}>
                         <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---편의 시설 위치 보기---</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
@@ -297,7 +297,7 @@ const App = () => {
                             <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
                         )}*/}
                         {/*{showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정*/}
-                        <div style={{borderStyle: 'solid', borderColor: '#44eac5', marginTop: '5px'}}>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', marginTop: '5px'}}>
                             <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---보행 장애물 위치 보기---</div>
                             <div className='showingObstacleBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
@@ -337,7 +337,7 @@ const App = () => {
                             <div className="stopover-textboxes">
                               {stopovers.map((stopover, index) => (
                                   <div>
-                                      <img src={irumarker2} alt="stopover irumarker" className="irumarkerImage"/>
+                                      <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
                                       <input className='pf-input-style' key={index} type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
                                   </div>
                               ))}
