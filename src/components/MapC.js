@@ -258,7 +258,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
     useEffect(() => {
         if (map) {
             console.log('-------rendering------')
-            console.log(map.getLayers().getArray())
             const layerExists = map.getLayers();
             // 배경지도 옵션 설정
             if (layerExists) {
