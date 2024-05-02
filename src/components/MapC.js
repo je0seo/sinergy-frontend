@@ -30,6 +30,7 @@ import irumarker2 from './images/IrumakerY.png';
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/ABA020A7-DBB7-3954-900F-E891C0E4995E';
 
 const osmLayer = new TileLayer({
+    title: 'base-osm',
     source: new OSM({ attributions: '', cacheSize: 0 }),
     properties: { name: 'base-osm' },
     //zIndex: 1,
@@ -37,6 +38,7 @@ const osmLayer = new TileLayer({
 });
 
 const vworldBaseLayer = new TileLayer({
+    title: 'base-vworld-base',
     source: new XYZ({ url: `${VWorldBaseUrl}/Base/{z}/{y}/{x}.png` }),
     properties: { name: 'base-vworld-base' },
     minZoom: 16,
@@ -46,6 +48,7 @@ const vworldBaseLayer = new TileLayer({
 });
 
 const vworldSatelliteLayer = new TileLayer({
+    title: 'base-vworld-satellite',
     source: new XYZ({ url: `${VWorldBaseUrl}/Satellite/{z}/{y}/{x}.jpeg` }),
     properties: { name: 'base-vworld-satellite' },
     minZoom: 15,
@@ -172,7 +175,7 @@ export const useMap = () => { // 배경지도만 따로 분리
         });
 
         const newMap = new Map({
-            layers: [osmLayer],
+            layers: [vworldBaseLayer, UOSbasemapTile],
             target: 'map',
             view: view,
         });
@@ -255,6 +258,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
     useEffect(() => {
         if (map) {
             console.log('-------rendering------')
+            console.log(map.getLayers().getArray())
             const layerExists = map.getLayers();
             // 배경지도 옵션 설정
             if (layerExists) {
@@ -321,8 +325,8 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 </select>
             </div>
             <div id="map" style={{ width, height }}></div>
-            {category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
-            {showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} showObs={showObs}/>}
+            {map && category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
+            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} showObs={showObs}/>}
         </div>
     );
 };
