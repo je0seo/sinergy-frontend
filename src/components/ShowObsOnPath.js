@@ -177,8 +177,8 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
 
     return (
         <div>
-            {bump && bump.type && <PopupUIComponent category={bump} map={map} layer={bumpLayer}/>}
-            {bol && bol.type && <PopupUIComponent category={bol} map={map} layer={bolLayer}/>}
+            {bump && bump.type && <PopupUIComponent category={bump} map={map} layer={bumpLayer} onPath = {true}/>}
+            {bol && bol.type && <PopupUIComponent category={bol} map={map} layer={bolLayer} onPath = {true}/>}
         </div>
     );
 }
