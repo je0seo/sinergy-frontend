@@ -375,9 +375,13 @@ const App = () => {
                             <div className="shortest-path-text">
                                 [최단 경로 검색 결과]
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
-                                {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
                             </div>
                             <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
+                            {showObsOnPath &&(
+                                <div>
+                                    {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
+                                </div>
+                            )}
                         </div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (

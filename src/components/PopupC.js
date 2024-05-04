@@ -33,6 +33,7 @@ const getIdOf = (feature, category) => {
 export const usePopup = (category, map, layer) => {
     let [image, setImage] = useState('');
     let [content, setContent] = useState('');
+    let [ObstacleNodeID, setObstacleNodeID] = useState('');
     let [popupOverlay, setOverlay] = useState('');
     const containerRef = useRef(null);
     const contentRef = useRef(null);
@@ -74,6 +75,7 @@ export const usePopup = (category, map, layer) => {
                 const index = getIdOf(feature, category)
                 setImage(category.data.images[index]);
                 setContent(category.data.info[index]);
+                setObstacleNodeID(feature.id_); // node.1574 이런식의 구조.
 
                 map.addOverlay(popupOverlay) // 5. 팝업 띄우기
             }
@@ -91,16 +93,17 @@ export const usePopup = (category, map, layer) => {
         }
     }, [layer])
 
-    return {image, content, containerRef, contentRef, closerRef, deletePopup};
+    return {image, content, ObstacleNodeID, containerRef, contentRef, closerRef, deletePopup};
 }
 
-export const PopupUIComponent = ({category, map, layer}) => {
+export const PopupUIComponent = ({category, map, layer, onPath}) => { //onPath: 길찾기 장애물 결과 보여주는 팝업인지 확인하는 불값
     let type = category.type;
-    const {image, content, containerRef, contentRef, closerRef, deletePopup} = usePopup(category, map, layer);
+    const {image, content,ObstacleNodeID, containerRef, contentRef, closerRef, deletePopup} = usePopup(category, map, layer);
 
     return (
         <div ref={containerRef} className="ol-popup">
           {<button ref={closerRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>}
+          <div>{ObstacleNodeID}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
             {(type === 'unpaved' || type === 'stairs' || type === 'slope') && <>경사도[degree]</>}
@@ -108,6 +111,11 @@ export const PopupUIComponent = ({category, map, layer}) => {
             {type === 'bol' && <>볼라드 간격[cm]</>}
             <div dangerouslySetInnerHTML={{__html: content}} />
           </div>
+            {onPath && (
+                <div>
+                    <button>해당 장애물 회피</button>
+                </div>
+            )}
         </div>
     );
 };
