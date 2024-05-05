@@ -26,6 +26,7 @@ import sBicycleIcon from './images/icons/sBicycleIcon.png';
 import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
 import libraryIcon from './images/icons/libraryIcon.png';
 import toiletIcon from './images/icons/toiletIcon.png';
+import magnifier from './images/icons/magnifier.png';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
@@ -35,7 +36,7 @@ export const Icons = {
     bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
     bicycleIcon, smokingIcon, storeIcon, cafeIcon, postOfficeIcon, healthServiceIcon, cafeteriaIcon,
     printIcon, gymIcon, tennisIcon, basketballIcon, breakRoomIcon, loungeIcon, seminarRoomIcon,
-    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon
+    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier
 }
 
 export const clickedLinkStyle = new Style({
