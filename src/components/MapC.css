@@ -24,6 +24,22 @@
     align-items: center;
 }
 
+.result-list {
+  border: 1px #FFCD4A;
+  background-color: #FFFFFF;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.result-list:hover {
+  background-color: #ffde84;
+}
+
 .button {
     background-color: rgba(255,248,230,0.5);
     cursor: pointer;
