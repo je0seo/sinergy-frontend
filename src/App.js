@@ -71,6 +71,7 @@ const usePathfinding = () => {
   const [totalDistance, setTotalDistance] = useState(0);
   const [pathData, setPathData] = useState(null);
   const [showText4deco, setShowText4deco] = useState(true);
+  const [obstacleNodeIDs, setObstacleNodeIDs] = useState([]);
 
   const handlePathResult = (data) => {
     const calculatedTotalDistance = data.minAggCost;
@@ -101,6 +102,7 @@ const usePathfinding = () => {
         end,
         stopovers,
         features,
+        obstacleNodeIDs,
       };
       if (start===""){
           alert("출발지가 입력되지 않았습니다. 다시한번 확인해주세요")
@@ -122,9 +124,26 @@ const usePathfinding = () => {
       console.error('Error finding path:', error);
     }
   };
+  const handleObstacleAvoidance = (obstacleNodeID) => {
+        // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수 -> ObstacleNodeID를 받아와서 사용자에게 개별 회피 노드 목록 보여주기
+        const nodeIdWithoutPrefix = obstacleNodeID.replace("node.", "");
+        // 배열에 이미 존재하는지 확인
+        if (!obstacleNodeIDs.includes(nodeIdWithoutPrefix)) {
+            const updatedResults = [...obstacleNodeIDs, nodeIdWithoutPrefix];
+            setObstacleNodeIDs(updatedResults);
+        }
+  };
 
+  const handleRemoveObstacleNode = (indexToRemove) => {
+        const updatedResults = obstacleNodeIDs.filter((_, index) => index !== indexToRemove);
+        setObstacleNodeIDs(updatedResults);
+  };
   const addStopover = () => {
     setStopovers([...stopovers, '']);
+  };
+  const handleRemoveStopover = (indexToRemove) => {
+        const updatedStopovers = stopovers.filter((_, index) => index !== indexToRemove);
+        setStopovers(updatedStopovers);
   };
 
   const handleStopoverChange = (index, value) => {
@@ -143,6 +162,7 @@ const usePathfinding = () => {
     setShowText4deco(true);
     setTotalDistance(0);
     setPathData(null);
+    setObstacleNodeIDs([]);
   };
 
   return {
@@ -155,6 +175,7 @@ const usePathfinding = () => {
     showText4deco,
     totalDistance,
     pathData,
+    obstacleNodeIDs,
     setFeatures,
     setStart,
     setEnd,
@@ -164,10 +185,14 @@ const usePathfinding = () => {
     setShowText4deco,
     setTotalDistance,
     setPathData,
+    setObstacleNodeIDs,
     handleFindPathClick,
     addStopover,
     handleStopoverChange,
+    handleRemoveStopover,
     handleInputReset,
+    handleObstacleAvoidance,
+    handleRemoveObstacleNode,
   };
 };
 
@@ -231,15 +256,20 @@ const App = () => {
       showText4deco,
       totalDistance,
       pathData,
+      obstacleNodeIDs,
       setFeatures,
       setStart,
       setEnd,
+      setObstacleNodeIDs,
       handleFindPathClick,
       addStopover,
       handleStopoverChange,
+      handleRemoveStopover,
       handleInputReset,
+      handleObstacleAvoidance,
+      handleRemoveObstacleNode,
     } = usePathfinding();
-  
+
     const toggleFeature = (feature) => {
       setFeatures({ ...features, [feature]: !features[feature] });
     };
@@ -252,14 +282,6 @@ const App = () => {
         } catch (error) {
             console.error('Error during Axios POST request while Showing Request Maker', error);
         }
-    };
-
-    const [obstacleNodeIDs, setObstacleNodeIDs] = useState([]);
-    const handleObstacleAvoidance = (obstacleNodeID) => {
-        // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수 -> ObstacleNodeID를 받아와서 사용자에게 개별 회피 노드 목록 보여주기
-        const nodeIdWithoutPrefix = obstacleNodeID.replace("node.", "");
-        const updatedResults = [...obstacleNodeIDs, nodeIdWithoutPrefix];
-        setObstacleNodeIDs(updatedResults);
     };
 
     return (
@@ -352,28 +374,37 @@ const App = () => {
                       <button className={`option-button ${features.bol ? 'selected-button' : ''}`} style={{ marginRight: '5px' }} onClick={() => toggleFeature('bol')} >볼라드 제외</button>
                     </div>
                     <div className="input-row">
-                        <div>
+                        <div className="input">
                             <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
-                            <input className='pf-input-style' type="text" placeholder="출발지를 입력하세요" value={start} onChange={(e) => setStart(e.target.value)} />
+                            <div className="input-box">
+                                <input className='pf-input-style' type="text" placeholder="출발지를 입력하세요" value={start} onChange={(e) => setStart(e.target.value)} />
+                            </div>
                         </div>
-                            <div className="stopover-textboxes">
-                              {stopovers.map((stopover, index) => (
-                                  <div>
-                                      <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
-                                      <input className='pf-input-style' key={index} type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
-                                  </div>
-                              ))}
-                          </div>
                         <div>
+                            {stopovers.map((stopover, index) => (
+                                <div className="input" key={index}>
+                                    <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
+                                    <div className="input-box">
+                                        <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
+                                        <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>-</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <button className="stopover-add-button" onClick={addStopover}>+</button>
+                        <div className="input">
                             <img src={irumarkerE} alt="end irumarker" className="irumarkerImage"/>
-                            <input className='pf-input-style'type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
+                            <div className="input-box">
+                                <input className='pf-input-style' type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
+                            </div>
                         </div>
                     </div>
-                    <div className="button-row">
-                      <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleNodeIDs([]);}}>다시 입력</button>
-                      <button className="button-style" onClick={addStopover}>경유지 추가</button>
-                      <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
-                    </div>
+                    {obstacleNodeIDs.length ==0 && (
+                        <div className="button-row">
+                            <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleNodeIDs([]);}}>⟲</button>
+                            <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                        </div>
+                    )}
                     {showText4deco && (
                         <div className="deco-text-style">
                             <p>서울시립대학교 어디로 안내할까요?</p>
@@ -385,17 +416,29 @@ const App = () => {
                                 [최단 경로 검색 결과]
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
                             </div>
+                            {obstacleNodeIDs.length !==0 && (
+                                <div className="obstacles-list">
+                                    [추가로 회피할 장애물 목록]
+                                    <ul>
+                                        {obstacleNodeIDs.map((result, index) => (
+                                            <li className="individual-obstacles-box" key={index}>
+                                                <div className="individual-obstacles">{result}</div>
+                                                <button className="stopover-remove-button" onClick={() => handleRemoveObstacleNode(index)}>-</button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <div className="button-row">
+                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleNodeIDs([]);}}>⟲</button>
+                                        <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>경로 재검색</button>
+                                    </div>
+                                </div>
+                            )}
                             <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
                             {showObsOnPath &&(
                                 <div>
                                     {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
                                 </div>
                             )}
-                            <ul>
-                                {obstacleNodeIDs.map((result, index) => (
-                                    <li key={index}>{result}</li>
-                                ))}
-                            </ul>
                         </div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (

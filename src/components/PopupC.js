@@ -122,7 +122,7 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
           </div>
             {onPath && (
                 <div>
-                    <button onClick={handleObstacleAvoidance}>해당 장애물 회피</button>
+                    <button className="individual-obstacles-button" onClick={handleObstacleAvoidance}>해당 장애물 회피</button>
                 </div>
             )}
         </div>
