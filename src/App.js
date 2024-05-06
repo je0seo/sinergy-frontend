@@ -20,6 +20,7 @@ import irumarkerY from './components/images/IrumakerY.png';
 //
 import {Icons} from './components/MarkerStyle'
 
+import { PopupUIComponent } from './components/PopupC';
 
 const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange}) => {
     const inputRef = useRef(null);
@@ -253,6 +254,14 @@ const App = () => {
         }
     };
 
+    const [obstacleNodeIDs, setObstacleNodeIDs] = useState([]);
+    const handleObstacleAvoidance = (obstacleNodeID) => {
+        // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수 -> ObstacleNodeID를 받아와서 사용자에게 개별 회피 노드 목록 보여주기
+        const nodeIdWithoutPrefix = obstacleNodeID.replace("node.", "");
+        const updatedResults = [...obstacleNodeIDs, nodeIdWithoutPrefix];
+        setObstacleNodeIDs(updatedResults);
+    };
+
     return (
         <div className='container' >
             {toggleLeftSide && (
@@ -361,7 +370,7 @@ const App = () => {
                         </div>
                     </div>
                     <div className="button-row">
-                      <button className="button-style" onClick={() => {handleInputReset(); initialObsState();}}>다시 입력</button>
+                      <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleNodeIDs([]);}}>다시 입력</button>
                       <button className="button-style" onClick={addStopover}>경유지 추가</button>
                       <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                     </div>
@@ -382,6 +391,11 @@ const App = () => {
                                     {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
                                 </div>
                             )}
+                            <ul>
+                                {obstacleNodeIDs.map((result, index) => (
+                                    <li key={index}>{result}</li>
+                                ))}
+                            </ul>
                         </div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
@@ -403,7 +417,7 @@ const App = () => {
             <div className='main-right-side'>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} category ={showReqIdsNtype} />}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );

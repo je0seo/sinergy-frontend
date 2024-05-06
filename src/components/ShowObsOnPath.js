@@ -1,3 +1,4 @@
+//ShowObsOnPath.js
 import { useEffect, useState } from 'react';
 
 import TileLayer from 'ol/layer/Tile';
@@ -89,7 +90,7 @@ const createLayerIfNeeded = (url) => {
     });
 }
 
-const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
+const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacleAvoidance}) => {
     let [bumpLayer, setBumpLayer] = useState([]);
     let [bolLayer, setBolLayer] = useState([]);
     let [linkObsLayer, setLinkObsLayer] = useState([]);
@@ -177,8 +178,8 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs}) => {
 
     return (
         <div>
-            {bump && bump.type && <PopupUIComponent category={bump} map={map} layer={bumpLayer} onPath = {true}/>}
-            {bol && bol.type && <PopupUIComponent category={bol} map={map} layer={bolLayer} onPath = {true}/>}
+            {bump && bump.type && <PopupUIComponent category={bump} map={map} layer={bumpLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
+            {bol && bol.type && <PopupUIComponent category={bol} map={map} layer={bolLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
         </div>
     );
 }
