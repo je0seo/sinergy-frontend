@@ -1,3 +1,4 @@
+//HandleCategoryClick.js
 import { useEffect, useState } from 'react';
 import {PopupUIComponent} from './PopupC'
 import Map from 'ol/Map';

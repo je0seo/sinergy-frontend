@@ -1,3 +1,5 @@
+//PopupC.js
+
 import {useEffect, useState, useRef } from 'react';
 import Overlay from 'ol/Overlay';
 import Select from 'ol/interaction/Select';
@@ -96,9 +98,16 @@ export const usePopup = (category, map, layer) => {
     return {image, content, ObstacleNodeID, containerRef, contentRef, closerRef, deletePopup};
 }
 
-export const PopupUIComponent = ({category, map, layer, onPath}) => { //onPath: 길찾기 장애물 결과 보여주는 팝업인지 확인하는 불값
+export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoidance}) => { //onPath: 길찾기 장애물 결과 보여주는 팝업인지 확인하는 불값
     let type = category.type;
     const {image, content,ObstacleNodeID, containerRef, contentRef, closerRef, deletePopup} = usePopup(category, map, layer);
+
+    const handleObstacleAvoidance = () => {
+        // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수
+        // ObstacleNodeID를 콜백 함수를 통해 App.js로 전달
+        console.log("여기");
+        onObstacleAvoidance(ObstacleNodeID);
+    };
 
     return (
         <div ref={containerRef} className="ol-popup">
@@ -113,7 +122,7 @@ export const PopupUIComponent = ({category, map, layer, onPath}) => { //onPath: 
           </div>
             {onPath && (
                 <div>
-                    <button>해당 장애물 회피</button>
+                    <button className="individual-obstacles-button" onClick={handleObstacleAvoidance}>해당 장애물 회피</button>
                 </div>
             )}
         </div>
