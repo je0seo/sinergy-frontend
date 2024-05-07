@@ -131,46 +131,11 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacle
                 const linkLayer = createLayerIfNeeded(url)
                 setLinkObsLayer(linkLayer) //setLinkObsLayer(createLayerIfNeeded(url)) 하면 null오류 남
                 map.addLayer(linkLayer);
-                /*createLayerIfNeeded(url)
-                    .then(linkObsLayer => {
-                        // linkObsLayer가 존재하면 map에 레이어 추가
-                        if (linkObsLayer) {
-                            map.addLayer(linkObsLayer);
-                        }
 
-                        /*const popupOverlay = new Overlay({
-                            element: popupContainerRef.current,
-                            positioning: 'bottom-left',
-                            autoPan: {
-                                animation: {
-                                    duration: 250
-                                }
-                            }
-                        });*/
-
-                        const select4Popup = setPopupSelect(linkLayer, map)
-
-                        select4Popup.on('select', (event) => {
-                            const features = event.selected;
-                            const feature = features[0];
-                            if (feature){
-                                 feature.setStyle(clickedLinkStyle)
-                                 //setImage(feature.get('image_lobs'))
-                                 //setContent('경사도[degree] <br>'+feature.get('slopel'))
-                                 //map.addOverlay(popupOverlay) // 4. 팝업 가시화
-                            }
-                        });
-
-                    //})
-                    //.catch(error => {
-                      //  console.error('에러 발생: ', error);
-                    //});
-
-
-                return () => {
+                return () => {  // cleanUp
                     map.removeLayer(bumpMarker);
                     map.removeLayer(bolMarker);
-                    //map.removeInteraction(select4Popup);
+                    map.removeLayer(linkLayer)
                 }
             }
         }
@@ -178,8 +143,9 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacle
 
     return (
         <div>
-            {bump && bump.type && <PopupUIComponent category={bump} map={map} layer={bumpLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
-            {bol && bol.type && <PopupUIComponent category={bol} map={map} layer={bolLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
+            <PopupUIComponent category={bump} map={map} layer={bumpLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>
+            <PopupUIComponent category={bol} map={map} layer={bolLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>
+            <PopupUIComponent category={{type: 'allLinkObs'}} map={map} layer={linkObsLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>
         </div>
     );
 }
