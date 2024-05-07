@@ -71,7 +71,7 @@ const usePathfinding = () => {
   const [totalDistance, setTotalDistance] = useState(0);
   const [pathData, setPathData] = useState(null);
   const [showText4deco, setShowText4deco] = useState(true);
-  const [obstacleNodeIDs, setObstacleNodeIDs] = useState([]);
+  const [obstacleIDs, setObstacleIDs] = useState({ObstacleNodeIDs: [], ObstacleLinkIDs: []});
 
   const handlePathResult = (data) => {
     const calculatedTotalDistance = data.minAggCost;
@@ -102,7 +102,7 @@ const usePathfinding = () => {
         end,
         stopovers,
         features,
-        obstacleNodeIDs,
+        obstacleIDs,
       };
       if (start===""){
           alert("출발지가 입력되지 않았습니다. 다시한번 확인해주세요")
@@ -124,19 +124,51 @@ const usePathfinding = () => {
       console.error('Error finding path:', error);
     }
   };
-  const handleObstacleAvoidance = (obstacleNodeID) => {
-        // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수 -> ObstacleNodeID를 받아와서 사용자에게 개별 회피 노드 목록 보여주기
-        const nodeIdWithoutPrefix = obstacleNodeID.replace("node.", "");
-        // 배열에 이미 존재하는지 확인
-        if (!obstacleNodeIDs.includes(nodeIdWithoutPrefix)) {
-            const updatedResults = [...obstacleNodeIDs, nodeIdWithoutPrefix];
-            setObstacleNodeIDs(updatedResults);
+
+  const handleObstacleAvoidance = (obstacleID) => {
+        // 주어진 obstacleID의 유형 판별
+        const obstacleType = obstacleID.startsWith("node.") ? "node" : obstacleID.startsWith("link.") ? "link" : null;
+
+        if (obstacleType === "node") {
+            // obstacleID에서 접두사를 제거하여 순수한 ID 추출
+            const nodeIdWithoutPrefix = obstacleID.replace(`${obstacleType}.`, "");
+
+            // 배열에 이미 존재하는지 확인
+            if (!obstacleIDs.ObstacleNodeIDs.includes(nodeIdWithoutPrefix)) {
+                const updatedResults = [...obstacleIDs.ObstacleNodeIDs, nodeIdWithoutPrefix];
+                // ObstacleIDs 객체의 ObstacleNodeIDs 배열 업데이트
+                setObstacleIDs({ ...obstacleIDs, ObstacleNodeIDs: updatedResults });
+            }
+        }
+        else if (obstacleType === "link") {
+            // obstacleID에서 접두사를 제거하여 순수한 ID 추출
+            const linkIdWithoutPrefix = obstacleID.replace(`${obstacleType}.`, "");
+
+            // 배열에 이미 존재하는지 확인
+            if (!obstacleIDs.ObstacleLinkIDs.includes(linkIdWithoutPrefix)) {
+                const updatedResults = [...obstacleIDs.ObstacleLinkIDs, linkIdWithoutPrefix];
+                // ObstacleIDs 객체의 ObstacleLinkIDs 배열 업데이트
+                setObstacleIDs({ ...obstacleIDs, ObstacleLinkIDs: updatedResults });
+            }
+        }
+        else {
+            console.error("Invalid obstacleID format:", obstacleID);
         }
   };
 
   const handleRemoveObstacleNode = (indexToRemove) => {
-        const updatedResults = obstacleNodeIDs.filter((_, index) => index !== indexToRemove);
-        setObstacleNodeIDs(updatedResults);
+        // ObstacleNodeIDs와 ObstacleLinkIDs 배열을 별도로 처리
+        const updatedNodeIDs = obstacleIDs.ObstacleNodeIDs.filter((_, index) => index !== indexToRemove);
+        const updatedLinkIDs = obstacleIDs.ObstacleLinkIDs.filter((_, index) => index !== indexToRemove);
+
+        // 새로운 객체를 생성하여 ObstacleNodeIDs와 ObstacleLinkIDs를 업데이트
+        const updatedObstacleIDs = {
+            ObstacleNodeIDs: updatedNodeIDs,
+            ObstacleLinkIDs: updatedLinkIDs
+        };
+
+        // 새로운 ObstacleIDs 객체로 설정
+        setObstacleIDs(updatedObstacleIDs);
   };
   const addStopover = () => {
     setStopovers([...stopovers, '']);
@@ -162,7 +194,7 @@ const usePathfinding = () => {
     setShowText4deco(true);
     setTotalDistance(0);
     setPathData(null);
-    setObstacleNodeIDs([]);
+    setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});
   };
 
   return {
@@ -175,7 +207,7 @@ const usePathfinding = () => {
     showText4deco,
     totalDistance,
     pathData,
-    obstacleNodeIDs,
+    obstacleIDs,
     setFeatures,
     setStart,
     setEnd,
@@ -185,7 +217,7 @@ const usePathfinding = () => {
     setShowText4deco,
     setTotalDistance,
     setPathData,
-    setObstacleNodeIDs,
+    setObstacleIDs,
     handleFindPathClick,
     addStopover,
     handleStopoverChange,
@@ -256,11 +288,11 @@ const App = () => {
       showText4deco,
       totalDistance,
       pathData,
-      obstacleNodeIDs,
+      obstacleIDs,
       setFeatures,
       setStart,
       setEnd,
-      setObstacleNodeIDs,
+      setObstacleIDs,
       handleFindPathClick,
       addStopover,
       handleStopoverChange,
@@ -399,9 +431,9 @@ const App = () => {
                             </div>
                         </div>
                     </div>
-                    {obstacleNodeIDs.length ==0 && (
+                    {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
                         <div className="button-row">
-                            <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleNodeIDs([]);}}>⟲</button>
+                            <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
                             <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                         </div>
                     )}
@@ -416,23 +448,32 @@ const App = () => {
                                 [최단 경로 검색 결과]
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
                             </div>
-                            {obstacleNodeIDs.length !==0 && (
+                            {!(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
                                 <div className="obstacles-list">
                                     [추가로 회피할 장애물 목록]
                                     <ul>
-                                        {obstacleNodeIDs.map((result, index) => (
+                                        {obstacleIDs.ObstacleNodeIDs.map((result, index) => (
                                             <li className="individual-obstacles-box" key={index}>
-                                                <div className="individual-obstacles">{result}</div>
+                                                <div className="individual-obstacles">node.{result}</div>
+                                                <button className="stopover-remove-button" onClick={() => handleRemoveObstacleNode(index)}>-</button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <ul>
+                                        {obstacleIDs.ObstacleLinkIDs.map((result, index) => (
+                                            <li className="individual-obstacles-box" key={index}>
+                                                <div className="individual-obstacles">link.{result}</div>
                                                 <button className="stopover-remove-button" onClick={() => handleRemoveObstacleNode(index)}>-</button>
                                             </li>
                                         ))}
                                     </ul>
                                     <div className="button-row">
-                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleNodeIDs([]);}}>⟲</button>
+                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
                                         <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>경로 재검색</button>
                                     </div>
                                 </div>
                             )}
+
                             <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
                             {showObsOnPath &&(
                                 <div>
