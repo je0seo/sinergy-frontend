@@ -35,7 +35,7 @@ const getIdOf = (feature, category) => {
 export const usePopup = (category, map, layer) => {
     let [image, setImage] = useState('');
     let [content, setContent] = useState('');
-    let [ObstacleNodeID, setObstacleNodeID] = useState('');
+    let [ObstacleID, setObstacleID] = useState('');
     let [popupOverlay, setOverlay] = useState('');
     const containerRef = useRef(null);
     const contentRef = useRef(null);
@@ -82,7 +82,7 @@ export const usePopup = (category, map, layer) => {
                     setImage(category.data.images[index]);
                     setContent(category.data.info[index]);
                 }
-                setObstacleNodeID(feature.id_); // node.1574 이런식의 구조.
+                setObstacleID(feature.id_); // node.1574 이런식의 구조.
                 map.addOverlay(popupOverlay) // 5. 팝업 띄우기
             }
 
@@ -99,24 +99,23 @@ export const usePopup = (category, map, layer) => {
         }
     }, [layer])
 
-    return {image, content, ObstacleNodeID, containerRef, contentRef, closerRef, deletePopup};
+    return {image, content, ObstacleID: ObstacleID, containerRef, contentRef, closerRef, deletePopup};
 }
 
 export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoidance}) => { //onPath: 길찾기 장애물 결과 보여주는 팝업인지 확인하는 불값
     let type = category.type;
-    const {image, content,ObstacleNodeID, containerRef, contentRef, closerRef, deletePopup} = usePopup(category, map, layer);
+    const {image, content,ObstacleID, containerRef, contentRef, closerRef, deletePopup} = usePopup(category, map, layer);
 
     const handleObstacleAvoidance = () => {
         // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수
-        // ObstacleNodeID를 콜백 함수를 통해 App.js로 전달
-        console.log("여기");
-        onObstacleAvoidance(ObstacleNodeID);
+        // ObstacleID를 콜백 함수를 통해 App.js로 전달
+        onObstacleAvoidance(ObstacleID);
     };
 
     return (
         <div ref={containerRef} className="ol-popup">
           {<button ref={closerRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>}
-          <div>{ObstacleNodeID}</div>
+          <div>{ObstacleID}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
             {(type === 'unpaved' || type === 'stairs' || type === 'slope' || 'allLinkObs') && <>경사도[degree]</>}
