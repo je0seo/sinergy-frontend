@@ -129,13 +129,14 @@
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid; 
-  border-color: black; /*메인색*/
+  border-color: #FFCD4A; /*메인색*/
   background-color: #FFFEF4; /*배경색*/
 }
 .option-button:hover {
-  color: black; /*배경색*/
+  color: black;
   background-color: #ffe8b0; /*메인색 연하게 응용*//*메인색 마우스 호버 시 배경색 변경 */
   border-color: #FFCD4A;
+  cursor: pointer;
 }
 .selected-button {
   background-color: #FFCD4A; /*메인색*/
@@ -161,8 +162,8 @@
   width:26px;
   font-size:10px;
   font-weight: 700; /* 보다 굵은 굵기 */
+  border: #a49c9c solid 1px;/*회색*/
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
   background-color: #FFFEF4; /*배경색*/
   transition: background-color 0.1s ease;
   align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
@@ -172,15 +173,15 @@
   background-color: #FFFEF4; /*배경색*/
   border: #FFCD4A;
   outline: #FFCD4A solid 0.5px;
+  cursor: pointer;
 }
 .stopover-add-button{
   margin: 2% 75% 2% 45px;
   height: 30px;
   width: 30px;
   font-size:15px;
+  border: #a49c9c solid 1px;/*회색*/
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid;
   background-color: #FFFEF4; /*배경색*/
   transition: background-color 0.1s ease;
 }
@@ -189,21 +190,22 @@
   background-color: #FFFEF4; /*배경색*/
   border: #FFCD4A;
   outline: #FFCD4A solid 0.5px;
+  cursor: pointer;
 }
 .input{
   display: flex;
   flex-wrap: nowrap;
+  background: #FFFEF4; /*배경색*/
 }
 .input-box{
   height: 30px;
   width: 90%;
   margin: 2px 0 2px 0;
-  border-style: solid;
+  border: #a49c9c solid 1px; /*회색*/
   border-radius: 2px;
-  border-width: 1px;
+  background: #FFFEF4; /*배경색*/
   display: flex;
   align-items: center;
-  outline: #FFCD4A; /* 포커스 스타일 제거 */
 }
 .pf-input-style{ /* 출발,도착,경유지 입력창 */
   height: 70%;
@@ -212,6 +214,7 @@
   border-style: none;
   outline: none; /* 포커스 스타일 제거 */
   background: #FFFEF4; /*배경색*/
+  cursor: text;
 }
 .button-row {
   display: flex;
@@ -220,51 +223,106 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.return-button-style{
-  margin: 0 5px 0 0;
+.button-style{
+  margin: 0 0 0 4mm;
   height:9mm;
   font-size:13px;
+  border: #a49c9c solid 1px;/*회색*/
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid; 
   background-color: #FFFEF4; /*배경색*/
   transition: background-color 0.1s ease;
 }
-.return-button-style:hover {
-  color: #FFFEF4; /*배경색*/
-  background-color: #2a2828; /* 마우스 호버 시 배경색 변경 */
+.button-style:hover {
+  color: #FFCD4A; /*배경색*/
   font-size:13px;
+  border: #FFCD4A solid 1px;
+  cursor: pointer;
 }
-.result-button-style{
-  margin: 0 0 0 0;
-  height:9mm;
-  font-size:13px;
-  border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid;
-  background-color: #FFFEF4; /*배경색*/
-  transition: background-color 0.1s ease;
-}
-.result-button-style:hover {
-  color: #FFFEF4; /*배경색*/
-  background-color: #2a2828; /* 마우스 호버 시 배경색 변경 */
-  font-size:13px;
+.warning-result-text{
+  font-size:16px;
+  display: flex;
+  flex-direction: column;
+  padding: 2mm;
+  gap: 5px;
+  margin: 0 0 2mm 4mm;
+  color: #FD5230;
+  border: 2px solid #FD5230;
 }
 .shortest-path-text{
   font-size:16px;
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  gap: 10px;
-  margin: 8px;
-  border: 1px solid black;
+  padding: 4mm;
+  gap: 5px;
+  margin: 0 0 2mm 4mm;
+  color: black; /*배경색*/
+  border-bottom: 1px solid #FFCD4A; /*배경색*/
+  border-top: 1px solid #FFCD4A;
+  background: #ffe8b0; /*메인색 연하게 응용*/
 }
 .deco-text-style{
   font-size:16px;
   align-items: center;
   display: flex;
   flex-direction: column;
+  color: #FFCD4A;/*배경색*/
 }
+.obstacles-list{
+  font-size:16px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #FFCD4A;
+  padding:2mm;
+  margin: 0 0 2mm 4mm;
+  color: black;
+  background: #FFFEF4; /*배경색*/
+  justify-content: space-between;
+}
+.obstacles-node-list{
+  margin: 0 0 0 0;
+  align-items: center;
+}
+.obstacles-link-list{
+  margin: 0 0 0 0;
+}
+.individual-obstacles-box{
+  display: inline-flex; /* 요소를 플렉스 컨테이너로 설정 */
+  justify-content: space-between; /* 요소를 오른쪽에 정렬 */
+  align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
+  flex-direction: row;
+  height: 30px;
+  width: 110px;
+  margin: 1mm;
+  border-radius: 4px;
+  background-color: #FFCD4A;
+}
+.individual-obstacles{
+  margin: 0 1px 0 5px;
+  display: flex;
+  align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
+  height: 25px;
+  font-size: 15px;
+}
+.obstacle-remove-button{
+  height:25px;
+  width:25px;
+  font-size:10px;
+  border: #a49c9c solid 1px;/*회색*/
+  border-radius: 100%; /* 테두리의 모서리를 둥글게 설정 */
+  background-color: #FFFEF4; /*배경색*/
+  align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
+  margin: 0 2px 0 0;
+}
+.obstacle-remove-button:hover {
+  color: #FFCD4A;
+  background-color: #FFFEF4; /*배경색*/
+  border: #FFCD4A;
+  outline: #FFCD4A solid 0.5px;
+  cursor: pointer;
+}
+
+
 /*버튼 설정 */
 .showingBtn{ /*장애물 버튼 설정 */
   margin: 3px;
@@ -319,39 +377,9 @@
   margin-top: 5px;
   justify-content: space-between;
 }
-
 .iconImage {
   width: 15px;
   height: 15px;
 }
 
-.obstacles-list{
-  font-size:16px;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  gap: 10px;
-  margin: 8px;
-  border: 1px solid black;
-}
-
-.individual-obstacles-box{
-  display: flex; /* 요소를 플렉스 컨테이너로 설정 */
-  justify-content: flex-end; /* 요소를 오른쪽에 정렬 */
-  margin-inline-end: 5px;
-  height: 30px;
-  width: 80px;
-  font-size: 15px;
-  border-radius: 4px;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #FFCD4A;
-  background-color: #FFFEF4;
-}
-.individual-obstacles{
-  margin: 10px;
-  display: flex;
-  align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
-}
 
