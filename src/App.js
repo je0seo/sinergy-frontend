@@ -329,7 +329,7 @@ const App = () => {
                 <div className='menu'>
                   <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
-                    {/* <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>3D</button>*/}
+                    <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>배리어프리 길찾기</button>
                 </div>
                 {activeTab === '' && <div className='home-left'>
                     <div>
@@ -436,8 +436,8 @@ const App = () => {
                     </div>
                     {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
                         <div className="button-row">
-                            <button className="return-button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
-                            <button className="result-button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                            <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                            <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                         </div>
                     )}
                     {showText4deco && (
@@ -448,36 +448,36 @@ const App = () => {
                     {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
                         <div>
                             <div className="shortest-path-text">
-                                [최단 경로 검색 결과]
+                                [최단 경로]
                                 <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
                             </div>
+                            {(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
+                            <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>)}
                             {!(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
                                 <div className="obstacles-list">
                                     [추가로 회피할 장애물 목록]
-                                    <ul>
+                                    <ul className="obstacles-node-list">
                                         {obstacleIDs.ObstacleNodeIDs.map((result, index) => (
                                             <li className="individual-obstacles-box" key={index}>
                                                 <div className="individual-obstacles">node.{result}</div>
-                                                <button className="stopover-remove-button" onClick={() => handleRemoveObstacleNode(index)}>-</button>
+                                                <button className="obstacle-remove-button" onClick={() => handleRemoveObstacleNode(index)}>―</button>
                                             </li>
                                         ))}
                                     </ul>
-                                    <ul>
+                                    <ul className="obstacles-link-list">
                                         {obstacleIDs.ObstacleLinkIDs.map((result, index) => (
                                             <li className="individual-obstacles-box" key={index}>
                                                 <div className="individual-obstacles">link.{result}</div>
-                                                <button className="stopover-remove-button" onClick={() => handleRemoveObstacleLink(index)}>-</button>
+                                                <button className="obstacle-remove-button" onClick={() => handleRemoveObstacleLink(index)}>―</button>
                                             </li>
                                         ))}
                                     </ul>
                                     <div className="button-row">
-                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
-                                        <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>경로 재검색</button>
+                                        <button className="button-style" onClick={() => {setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
+                                        <button className="button-style" onClick={() => {handleFindPathClick().then(r => handleShowObsOnPath()); initialObsState(); }}>경로 재검색</button>
                                     </div>
                                 </div>
                             )}
-
-                            <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
                             {showObsOnPath &&(
                                 <div>
                                     {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
@@ -486,12 +486,17 @@ const App = () => {
                         </div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
-                        <div className="shortest-path-text">
-                            조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요.
+                        <div>
+                            <div className="button-row">
+                                <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                                <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                            </div>
+                            <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
                         </div>
+
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
-                        <div className="shortest-path-text">
+                        <div className="warning-result-text">
                             {StartEndNormalCheckMessage}
                         </div>
                     )}
