@@ -155,21 +155,22 @@ const usePathfinding = () => {
             console.error("Invalid obstacleID format:", obstacleID);
         }
   };
-
   const handleRemoveObstacleNode = (indexToRemove) => {
-        // ObstacleNodeIDs와 ObstacleLinkIDs 배열을 별도로 처리
         const updatedNodeIDs = obstacleIDs.ObstacleNodeIDs.filter((_, index) => index !== indexToRemove);
-        const updatedLinkIDs = obstacleIDs.ObstacleLinkIDs.filter((_, index) => index !== indexToRemove);
-
-        // 새로운 객체를 생성하여 ObstacleNodeIDs와 ObstacleLinkIDs를 업데이트
         const updatedObstacleIDs = {
             ObstacleNodeIDs: updatedNodeIDs,
-            ObstacleLinkIDs: updatedLinkIDs
+            ObstacleLinkIDs: obstacleIDs.ObstacleLinkIDs
         };
-
-        // 새로운 ObstacleIDs 객체로 설정
         setObstacleIDs(updatedObstacleIDs);
   };
+    const handleRemoveObstacleLink = (indexToRemove) => {
+        const updatedLinkIDs = obstacleIDs.ObstacleLinkIDs.filter((_, index) => index !== indexToRemove);
+        const updatedObstacleIDs = {
+            ObstacleNodeIDs: obstacleIDs.ObstacleNodeIDs,
+            ObstacleLinkIDs: updatedLinkIDs
+        };
+        setObstacleIDs(updatedObstacleIDs);
+    };
   const addStopover = () => {
     setStopovers([...stopovers, '']);
   };
@@ -225,6 +226,7 @@ const usePathfinding = () => {
     handleInputReset,
     handleObstacleAvoidance,
     handleRemoveObstacleNode,
+    handleRemoveObstacleLink
   };
 };
 
@@ -300,6 +302,7 @@ const App = () => {
       handleInputReset,
       handleObstacleAvoidance,
       handleRemoveObstacleNode,
+      handleRemoveObstacleLink,
     } = usePathfinding();
 
     const toggleFeature = (feature) => {
@@ -326,7 +329,7 @@ const App = () => {
                 <div className='menu'>
                   <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
-                  <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>3D</button>
+                    {/* <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>3D</button>*/}
                 </div>
                 {activeTab === '' && <div className='home-left'>
                     <div>
@@ -418,7 +421,7 @@ const App = () => {
                                     <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
                                     <div className="input-box">
                                         <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
-                                        <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>-</button>
+                                        <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>―</button>
                                     </div>
                                 </div>
                             ))}
@@ -433,8 +436,8 @@ const App = () => {
                     </div>
                     {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
                         <div className="button-row">
-                            <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
-                            <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                            <button className="return-button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                            <button className="result-button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                         </div>
                     )}
                     {showText4deco && (
@@ -463,7 +466,7 @@ const App = () => {
                                         {obstacleIDs.ObstacleLinkIDs.map((result, index) => (
                                             <li className="individual-obstacles-box" key={index}>
                                                 <div className="individual-obstacles">link.{result}</div>
-                                                <button className="stopover-remove-button" onClick={() => handleRemoveObstacleNode(index)}>-</button>
+                                                <button className="stopover-remove-button" onClick={() => handleRemoveObstacleLink(index)}>-</button>
                                             </li>
                                         ))}
                                     </ul>
