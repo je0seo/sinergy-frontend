@@ -321,6 +321,31 @@
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
 }
+.option-input{
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  background: #FFFEF4; /*배경색*/
+}
+.option-input-box{
+  height: 30px;
+  width: 80px;
+  margin: 2px 0 2px 0;
+  border: #a49c9c solid 1px; /*회색*/
+  border-radius: 2px;
+  background: #FFFEF4; /*배경색*/
+  display: flex;
+  align-items: center;
+}
+.pf-input-style{ /* 출발,도착,경유지 입력창 */
+  height: 70%;
+  width: 90%;
+  margin: 0 0 0 4px;
+  border-style: none;
+  outline: none; /* 포커스 스타일 제거 */
+  background: #FFFEF4; /*배경색*/
+  cursor: text;
+}
 
 
 /*버튼 설정 */
