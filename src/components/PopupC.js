@@ -74,11 +74,15 @@ export const usePopup = (category, map, layer) => {
                 const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
                 popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
                 // 4. 팝업 컨텐츠 세팅
-                const index = getIdOf(feature, category)
-                setImage(category.data.images[index]);
-                setContent(category.data.info[index]);
+                if(category.type == 'allLinkObs') {
+                    setImage(feature.get('image_lobs'))
+                    setContent(feature.get('slopel'))
+                } else {
+                    const index = getIdOf(feature, category)
+                    setImage(category.data.images[index]);
+                    setContent(category.data.info[index]);
+                }
                 setObstacleNodeID(feature.id_); // node.1574 이런식의 구조.
-
                 map.addOverlay(popupOverlay) // 5. 팝업 띄우기
             }
 
@@ -115,7 +119,7 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
           <div>{ObstacleNodeID}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
-            {(type === 'unpaved' || type === 'stairs' || type === 'slope') && <>경사도[degree]</>}
+            {(type === 'unpaved' || type === 'stairs' || type === 'slope' || 'allLinkObs') && <>경사도[degree]</>}
             {type === 'bump' && <>도로턱 높이[cm]</>}
             {type === 'bol' && <>볼라드 간격[cm]</>}
             <div dangerouslySetInnerHTML={{__html: content}} />
