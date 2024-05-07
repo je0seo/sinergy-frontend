@@ -106,6 +106,9 @@ const usePathfinding = () => {
         stopovers,
         features,
         obstacleIDs,
+        slopeD,
+        bolC,
+        bumpC,
       };
       if (start===""){
           alert("출발지가 입력되지 않았습니다. 다시한번 확인해주세요")
@@ -598,7 +601,7 @@ const App = () => {
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
                 {activeTab === '3D'
-                    && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance} bolC = {bolC} bumpC = {bumpC}/>}
+                    && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );
