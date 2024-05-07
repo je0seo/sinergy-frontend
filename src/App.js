@@ -66,7 +66,7 @@ const usePathfinding = () => {
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [slopeD, setSlopeD] = useState(3.18);
-  const [bolC, setBolC] = useState(12);
+  const [bolC, setBolC] = useState(120);
   const [bumpC, setBumpC] = useState(2);
   const [stopovers, setStopovers] = useState([]);
   const [showShortestPathText, setShowShortestPathText] = useState(false);
@@ -270,6 +270,9 @@ const App = () => {
         setBol({})
         setBump({})
         setShowObsOnPath(false)
+        setBumpC(2)
+        setSlopeD(3.18)
+        setBolC(120)
     }
 
     const handleShowReq = async (ReqType) => {
@@ -521,16 +524,16 @@ const App = () => {
                             )}
                             <div className="option-add">
                                 <div className="option-input">
-                                    경사로 경사
+                                    경사로 경사도
                                     <div className="option-input-box">
                                         <input className='pf-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
                                     </div>degree 이상 제외 설정
                                 </div>
-                                <div className="option-input">도로턱 높이<div className="option-input-box">
-                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>cm 이상 제외 설정
-                                </div>
                                 <div className="option-input">볼라드 간격<div className="option-input-box">
-                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>cm 이하 제외 설정
+                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>cm 이하 제외 설정
+                                </div>
+                                <div className="option-input">도로턱 높이<div className="option-input-box">
+                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>cm 이상 제외 설정
                                 </div>
                             </div>
                             {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
