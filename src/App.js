@@ -65,6 +65,9 @@ const usePathfinding = () => {
   const [features, setFeatures] = useState(initialFeaturesState);
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
+  const [slopeD, setSlopeD] = useState(3.18);
+  const [bolC, setBolC] = useState(12);
+  const [bumpC, setBumpC] = useState(2);
   const [stopovers, setStopovers] = useState([]);
   const [showShortestPathText, setShowShortestPathText] = useState(false);
   const [StartEndNormalCheckMessage, setStartEndNormalCheckMessage] = useState('');
@@ -189,6 +192,9 @@ const usePathfinding = () => {
     setFeatures(initialFeaturesState);
     setStart('');
     setEnd('');
+    setSlopeD(3.18);
+    setBolC(120);
+    setBumpC(2);
     setStopovers([]);
     setShowShortestPathText(false);
     setStartEndNormalCheckMessage('');
@@ -202,6 +208,9 @@ const usePathfinding = () => {
     features,
     start,
     end,
+      slopeD,
+      bolC,
+      bumpC,
     stopovers,
     showShortestPathText,
     StartEndNormalCheckMessage,
@@ -212,6 +221,9 @@ const usePathfinding = () => {
     setFeatures,
     setStart,
     setEnd,
+    setSlopeD,
+    setBolC,
+    setBumpC,
     setStopovers,
     setShowShortestPathText,
     setStartEndNormalCheckMessage,
@@ -284,6 +296,9 @@ const App = () => {
       features,
       start,
       end,
+        slopeD,
+        bolC,
+        bumpC,
       stopovers,
       showShortestPathText,
       StartEndNormalCheckMessage,
@@ -294,6 +309,9 @@ const App = () => {
       setFeatures,
       setStart,
       setEnd,
+      setSlopeD,
+      setBolC,
+      setBumpC,
       setObstacleIDs,
       handleFindPathClick,
       addStopover,
@@ -401,13 +419,6 @@ const App = () => {
                 {activeTab === '길찾기' && (
                 <div>
                   <div className="pathfinder-page">
-                    <div className="option-button-row">
-                      <button className={`option-button ${features.unpaved ? 'selected-button' : ''}`} style={{ marginLeft: '5px' }} onClick={() => toggleFeature('unpaved')} >비포장도로 제외</button>
-                      <button className={`option-button ${features.stairs ? 'selected-button' : ''}`} onClick={() => toggleFeature('stairs')}>계단 제외</button>
-                      <button className={`option-button ${features.slope ? 'selected-button' : ''}`} onClick={() => toggleFeature('slope')}>경사로 제외</button>
-                      <button className={`option-button ${features.bump ? 'selected-button' : ''}`} onClick={() => toggleFeature('bump')}>도로턱 제외</button>
-                      <button className={`option-button ${features.bol ? 'selected-button' : ''}`} style={{ marginRight: '5px' }} onClick={() => toggleFeature('bol')} >볼라드 제외</button>
-                    </div>
                     <div className="input-row">
                         <div className="input">
                             <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
@@ -426,7 +437,6 @@ const App = () => {
                                 </div>
                             ))}
                         </div>
-                        <button className="stopover-add-button" onClick={addStopover}>+</button>
                         <div className="input">
                             <img src={irumarkerE} alt="end irumarker" className="irumarkerImage"/>
                             <div className="input-box">
@@ -434,12 +444,11 @@ const App = () => {
                             </div>
                         </div>
                     </div>
-                    {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
-                        <div className="button-row">
-                            <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
-                            <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
-                        </div>
-                    )}
+                    <div className="button-row">
+                        <button className="button-style" onClick={addStopover}>+ 경유지</button>
+                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                        <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                    </div>
                     {showText4deco && (
                         <div className="deco-text-style">
                             <p>서울시립대학교 어디로 안내할까요?</p>
@@ -449,51 +458,14 @@ const App = () => {
                         <div>
                             <div className="shortest-path-text">
                                 [최단 경로]
-                                <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m</div>
-                            </div>
-                            {(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
-                            <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>)}
-                            {!(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
-                                <div className="obstacles-list">
-                                    [추가로 회피할 장애물 목록]
-                                    <ul className="obstacles-node-list">
-                                        {obstacleIDs.ObstacleNodeIDs.map((result, index) => (
-                                            <li className="individual-obstacles-box" key={index}>
-                                                <div className="individual-obstacles">node.{result}</div>
-                                                <button className="obstacle-remove-button" onClick={() => handleRemoveObstacleNode(index)}>―</button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <ul className="obstacles-link-list">
-                                        {obstacleIDs.ObstacleLinkIDs.map((result, index) => (
-                                            <li className="individual-obstacles-box" key={index}>
-                                                <div className="individual-obstacles">link.{result}</div>
-                                                <button className="obstacle-remove-button" onClick={() => handleRemoveObstacleLink(index)}>―</button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div className="button-row">
-                                        <button className="button-style" onClick={() => {setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
-                                        <button className="button-style" onClick={() => {handleFindPathClick().then(r => handleShowObsOnPath()); initialObsState(); }}>경로 재검색</button>
-                                    </div>
-                                </div>
-                            )}
-                            {showObsOnPath &&(
                                 <div>
-                                    {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
+                                    <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m  (예상 시간: 약 {(totalDistance / 64).toFixed(0)}분, {(totalDistance / 0.64).toFixed(0)} 걸음)</div>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
-                        <div>
-                            <div className="button-row">
-                                <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
-                                <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
-                            </div>
-                            <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
-                        </div>
-
+                        <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
                     )}
                     {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
                         <div className="warning-result-text">
@@ -502,7 +474,122 @@ const App = () => {
                     )}
                   </div>
                 </div>)}
-                {activeTab === '3D' && <ThreeDContent />}
+                {activeTab === '3D' && (
+                    <div>
+                        <div className="pathfinder-page">
+                            <div className="option-button-row">
+                                <button className={`option-button ${features.unpaved ? 'selected-button' : ''}`} style={{ marginLeft: '5px' }} onClick={() => toggleFeature('unpaved')} >비포장도로 제외</button>
+                                <button className={`option-button ${features.stairs ? 'selected-button' : ''}`} onClick={() => toggleFeature('stairs')}>계단 제외</button>
+                                <button className={`option-button ${features.slope ? 'selected-button' : ''}`} onClick={() => toggleFeature('slope')}>경사로 제외</button>
+                                <button className={`option-button ${features.bump ? 'selected-button' : ''}`} onClick={() => toggleFeature('bump')}>도로턱 제외</button>
+                                <button className={`option-button ${features.bol ? 'selected-button' : ''}`} style={{ marginRight: '5px' }} onClick={() => toggleFeature('bol')} >볼라드 제외</button>
+                            </div>
+                            <div className="input-row">
+                                <div className="input">
+                                    <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
+                                    <div className="input-box">
+                                        <input className='pf-input-style' type="text" placeholder="출발지를 입력하세요" value={start} onChange={(e) => setStart(e.target.value)} />
+                                    </div>
+                                </div>
+                                <div>
+                                    {stopovers.map((stopover, index) => (
+                                        <div className="input" key={index}>
+                                            <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
+                                            <div className="input-box">
+                                                <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
+                                                <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>―</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button className="stopover-add-button" onClick={addStopover}>+</button>
+                                <div className="input">
+                                    <img src={irumarkerE} alt="end irumarker" className="irumarkerImage"/>
+                                    <div className="input-box">
+                                        <input className='pf-input-style' type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
+                                    </div>
+                                </div>
+                            </div>
+                            {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
+                                <div className="button-row">
+                                    <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                                    <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                                </div>
+                            )}
+                            <div className="option-add">
+                                <div className="option-input">
+                                    경사로 경사
+                                    <div className="option-input-box">
+                                        <input className='pf-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
+                                    </div>degree 이상 제외 설정
+                                </div>
+                                <div className="option-input">도로턱 높이<div className="option-input-box">
+                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>cm 이상 제외 설정
+                                </div>
+                                <div className="option-input">볼라드 간격<div className="option-input-box">
+                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>cm 이상 제외 설정
+                                </div>
+                            </div>
+                            {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
+                                <div>
+                                    <div className="shortest-path-text">
+                                        [최단 경로]
+                                        <div>
+                                            <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m  (예상 시간: 약 {(totalDistance / 64).toFixed(0)}분, {(totalDistance / 0.64).toFixed(0)} 걸음)</div>
+                                        </div>
+                                    </div>
+                                    {(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
+                                        <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>)}
+                                    {!(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
+                                        <div className="obstacles-list">
+                                            [추가로 회피할 장애물 목록]
+                                            <ul className="obstacles-node-list">
+                                                {obstacleIDs.ObstacleNodeIDs.map((result, index) => (
+                                                    <li className="individual-obstacles-box" key={index}>
+                                                        <div className="individual-obstacles">node.{result}</div>
+                                                        <button className="obstacle-remove-button" onClick={() => handleRemoveObstacleNode(index)}>―</button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <ul className="obstacles-link-list">
+                                                {obstacleIDs.ObstacleLinkIDs.map((result, index) => (
+                                                    <li className="individual-obstacles-box" key={index}>
+                                                        <div className="individual-obstacles">link.{result}</div>
+                                                        <button className="obstacle-remove-button" onClick={() => handleRemoveObstacleLink(index)}>―</button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <div className="button-row">
+                                                <button className="button-style" onClick={() => {setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲</button>
+                                                <button className="button-style" onClick={() => {handleFindPathClick().then(r => handleShowObsOnPath()); initialObsState(); }}>경로 재검색</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {showObsOnPath &&(
+                                        <div>
+                                            {<img src={legend} alt="link_legend" style={{ width: '60%', margin: '0 auto' }} />}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
+                                <div>
+                                    <div className="button-row">
+                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                                        <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                                    </div>
+                                    <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
+                                </div>
+
+                            )}
+                            {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
+                                <div className="warning-result-text">
+                                    {StartEndNormalCheckMessage}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
             )}
             <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
@@ -510,6 +597,8 @@ const App = () => {
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} category ={showReqIdsNtype} />}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                {activeTab === '3D'
+                    && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance} bolC = {bolC} bumpC = {bumpC}/>}
             </div>
         </div>
     );
