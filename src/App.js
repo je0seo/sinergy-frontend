@@ -527,7 +527,7 @@ const App = () => {
                                     <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>cm 이상 제외 설정
                                 </div>
                                 <div className="option-input">볼라드 간격<div className="option-input-box">
-                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>cm 이상 제외 설정
+                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>cm 이하 제외 설정
                                 </div>
                             </div>
                             {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
