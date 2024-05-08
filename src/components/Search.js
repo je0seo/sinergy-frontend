@@ -5,7 +5,6 @@ import './MapC.css';
 import {Icons} from './MarkerStyle'
 
 const searchBuildingInfo = async (keyword, setBuildingInfo) => {
-    console.log('(searchBuildingINFO)')
     const req = {keyword};
     try {
         var response = await axios.post(NODE_BACKEND_URL+'/showBuildingInfo', req, {
