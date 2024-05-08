@@ -36,6 +36,8 @@ const useSearch = (keyword) => {
         if (data.rowCount == 0) {           // 검색 결과가 없을 때
             setResultExistence(false);
         } else if (data.rowCount == 1) {    // 검색 결과가 1개일 때
+            setFinalKeyword(data.rows[0].bg_name)   // MapC에 poiMarker 표시용도로 전달될 키워드 설정
+
             setBgName(data.rows[0].bg_name)
             setEngName(data.rows[0].eng_name)
             setBgId(data.rows[0].bd_id)
@@ -69,7 +71,7 @@ const useSearch = (keyword) => {
     setCandidatesExist, resultList, loungeCnt, bgSummary};
 }
 
-const SearchResultUIComponent = ({keyword, setKeyword}) => {
+const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
     const {bgImage, bgName, engName, type, bgId, totalFloors, resultExistence,
     candidatesExist, setCandidatesExist, resultList, loungeCnt, bgSummary} = useSearch(keyword);
 
@@ -83,7 +85,7 @@ const SearchResultUIComponent = ({keyword, setKeyword}) => {
         return (
             <div className = 'result-list'>
                 {resultList.map((item, index) => (
-                    <button key={index} className = 'result' onClick={() => {setCandidatesExist(false); setKeyword(item)}}>
+                    <button key={index} className = 'result' onClick={() => {setCandidatesExist(false); setKeyword(item); setFinalKeyword(item)}}>
                         <img src={Icons.magnifier} style={{width:'5%', height:'5%'}}></img>
                         <div style={{paddingLeft: '8px'}}>{item}</div>
                     </button>
@@ -96,8 +98,10 @@ const SearchResultUIComponent = ({keyword, setKeyword}) => {
             <div style={{margin: '0 auto'}}>
                 {bgImage && <img className="bg-image" src={bgImage} alt="Building Image" style={{width: '350px',height: '250px',display: 'block',margin: '0 auto'}}/>}
                 <div className="info-content">
-                    <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName}) {<button className='closer-button' onClick={() => setKeyword('')}>닫기</button>}</h3>
-                    <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} | {(type === '건물') && (<> No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
+                    <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName})
+                        {<button className='closer-button' onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>}
+                    </h3>
+                    <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} {(type === '건물') && (<> | No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
                     {loungeCnt && <>라운지 수 : {loungeCnt}</>}
                     <p style={{marginTop: '5px', marginBottom: '0px'}}> {bgSummary} </p>
                 </div>
