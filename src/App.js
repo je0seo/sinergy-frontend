@@ -211,9 +211,9 @@ const usePathfinding = () => {
     features,
     start,
     end,
-      slopeD,
-      bolC,
-      bumpC,
+    slopeD,
+    bolC,
+    bumpC,
     stopovers,
     showShortestPathText,
     StartEndNormalCheckMessage,
@@ -250,7 +250,7 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [keyword, setKeyword] = useState('');
     const [activeTab, setActiveTab] = useState('');
-    //const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
+    const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
     const [showFacilitiesMenu, setShowFacilitiesMenu] = useState( false);
     const [toggleLeftSide, setToggleLeftSide] = useState(true);
     const [toggleLeftSideFeature, setToggleLeftSideFeature] = useState('<')
@@ -270,9 +270,6 @@ const App = () => {
         setBol({})
         setBump({})
         setShowObsOnPath(false)
-        setBumpC(2)
-        setSlopeD(3.18)
-        setBolC(120)
     }
 
     const handleShowReq = async (ReqType) => {
@@ -282,9 +279,9 @@ const App = () => {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
     };
-    /*const handleToggleObstacleMenu = () => {
+    const handleToggleObstacleMenu = () => {
         setShowObstacleMenu(!showObstacleMenu);
-    };*/
+    };
     const handleToggleFacilitiesMenu = () =>{
         setShowFacilitiesMenu(!showFacilitiesMenu);
     }
@@ -302,9 +299,9 @@ const App = () => {
       features,
       start,
       end,
-        slopeD,
-        bolC,
-        bumpC,
+      slopeD,
+      bolC,
+      bumpC,
       stopovers,
       showShortestPathText,
       StartEndNormalCheckMessage,
@@ -396,10 +393,6 @@ const App = () => {
                             </div>
                         )}
                         </div>
-                        {/* {!showObstacleMenu && (
-                            <button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 </button>
-                        )}*/}
-                        {/*{showObstacleMenu && ( // showObstacleMenu 상태에 따라 보이게 설정*/}
                         <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', marginTop: '5px'}}>
                             <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---보행 장애물 위치 보기---</div>
                             <div className='showingObstacleBtns'>
@@ -490,6 +483,25 @@ const App = () => {
                                 <button className={`option-button ${features.bump ? 'selected-button' : ''}`} onClick={() => toggleFeature('bump')}>도로턱 제외</button>
                                 <button className={`option-button ${features.bol ? 'selected-button' : ''}`} style={{ marginRight: '5px' }} onClick={() => toggleFeature('bol')} >볼라드 제외</button>
                             </div>
+                            <div className='user-obs-option-setting'>
+                                {!showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>▽ 장애물 기준 설정창 열기 </button>)}
+                                {showObstacleMenu && (
+                                    <div className="option-add">
+                                        <div className="option-input">
+                                            경사로 경사도 임계값 설정[단위: °]
+                                            <div className="option-input-box">
+                                                <input className='op-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="option-input">볼라드 간격 임계값 설정[단위: cm]<div className="option-input-box">
+                                            <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>
+                                        </div>
+                                        <div className="option-input">도로턱 높이 임계값 설정[단위: cm]<div className="option-input-box">
+                                            <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>
+                                        </div>
+                                    </div>)}
+                                {showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>△ 장애물 기준 설정창 닫기 </button>)}
+                            </div>
                             <div className="input-row">
                                 <div className="input">
                                     <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
@@ -522,20 +534,6 @@ const App = () => {
                                     <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                                 </div>
                             )}
-                            <div className="option-add">
-                                <div className="option-input">
-                                    경사로 경사도
-                                    <div className="option-input-box">
-                                        <input className='pf-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
-                                    </div>degree 이상 제외 설정
-                                </div>
-                                <div className="option-input">볼라드 간격<div className="option-input-box">
-                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>cm 이하 제외 설정
-                                </div>
-                                <div className="option-input">도로턱 높이<div className="option-input-box">
-                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>cm 이상 제외 설정
-                                </div>
-                            </div>
                             {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
                                 <div>
                                     <div className="shortest-path-text">
