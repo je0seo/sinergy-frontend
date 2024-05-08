@@ -6,13 +6,11 @@ import TileWMS from 'ol/source/TileWMS';
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import {GeoJSON} from "ol/format";
-import Select from 'ol/interaction/Select';
-import { click } from 'ol/events/condition';
 
 import {makeCrsFilter} from "./utils/crs-filter.js";
 import { Stroke, Style } from "ol/style";
-import {showMarkerStyle, clickedLinkStyle} from './MarkerStyle'
-import {setPopupSelect, PopupUIComponent} from './PopupC'
+import {showMarkerStyle} from './MarkerStyle'
+import {PopupUIComponent} from './PopupC'
 
 const getNodeIdsOnPath = (pathData) => {
     let listOfNodeId = [];
@@ -53,7 +51,7 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
     })
     //console.log(obsSource.getFeatures())
     const obsLayer = new VectorLayer({
-        title: `ShowObsOnPath Layer`,
+        title: `${obsType.type}OnPath Layer`,
         visible: true,
         source: obsSource,
         zIndex: 6,
@@ -87,7 +85,7 @@ const createLayerIfNeeded = (url) => {
                 width: 3
             })
         })
-    });
+    })
 }
 
 const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacleAvoidance}) => {
@@ -106,15 +104,13 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacle
                 const bolMarker = createObsLayerWith(bol, pathNodeIds)
                 setBumpLayer(bumpMarker)
                 setBolLayer(bolMarker)
-                map.addLayer(bumpMarker)
-                map.addLayer(bolMarker)
 
                 // 2. 범례 지도에 시각화
                 pathData.forEach((path, index) => {
                     const listOfEdgeId = path.map(e => e.edge);
                     const crsFilter = makeCrsFilter(listOfEdgeId);
                     const legendLayer = new TileLayer({
-                        title: `UOS Shortest Path ${index + 1}`,
+                        title: `legend ${index + 1}`,
                         source: new TileWMS({
                             url: 'http://localhost:8080/geoserver/gp/wms',
                             params: { 'LAYERS': 'gp:link','CQL_FILTER': crsFilter },
@@ -130,6 +126,9 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacle
                 const url = url4AllLinkObs(pathEdgeIds)
                 const linkLayer = createLayerIfNeeded(url)
                 setLinkObsLayer(linkLayer) //setLinkObsLayer(createLayerIfNeeded(url)) 하면 null오류 남
+                //
+                map.addLayer(bumpMarker)
+                map.addLayer(bolMarker)
                 map.addLayer(linkLayer);
 
                 return () => {  // cleanUp
@@ -143,9 +142,7 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacle
 
     return (
         <div>
-            <PopupUIComponent category={bump} map={map} layer={bumpLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>
-            <PopupUIComponent category={bol} map={map} layer={bolLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>
-            <PopupUIComponent category={{type: 'allLinkObs'}} map={map} layer={linkObsLayer} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>
+            {<PopupUIComponent category={{type: 'allObs'}} map={map} layer={[bumpLayer, bolLayer, linkObsLayer]} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
         </div>
     );
 }

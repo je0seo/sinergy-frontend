@@ -58,12 +58,11 @@ const HandleCategoryClick = ({category, map}) => {
             return () => {
                 map.removeLayer(layer2Add);
             }
-
         }
     }, [category]);
 
     return (
-        <PopupUIComponent category={category} map={map} layer={showLayer}/>
+        <PopupUIComponent category={category} map={map} layer={[showLayer]}/>
     );
 }
 
