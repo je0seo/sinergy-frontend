@@ -18,7 +18,7 @@ const searchBuildingInfo = async (keyword, setBuildingInfo) => {
     }
 };
 
-const useSearch = (keyword) => {
+const useSearch = (keyword,setFinalKeyword) => {
     const [bgName, setBgName] = useState('');
     const [engName, setEngName] = useState('');
     const [bgId, setBgId] = useState(0);
@@ -73,7 +73,7 @@ const useSearch = (keyword) => {
 
 const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
     const {bgImage, bgName, engName, type, bgId, totalFloors, resultExistence,
-    candidatesExist, setCandidatesExist, resultList, loungeCnt, bgSummary} = useSearch(keyword);
+    candidatesExist, setCandidatesExist, resultList, loungeCnt, bgSummary} = useSearch(keyword, setFinalKeyword);
 
     if (resultExistence == false)
         return (
