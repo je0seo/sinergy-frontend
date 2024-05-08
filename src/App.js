@@ -248,12 +248,15 @@ const usePathfinding = () => {
 
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [keyword, setKeyword] = useState('');
+    const [keyword, setKeyword] = useState(''); // info페이지 결과 검색 용도
+    const [poiKeyword, setPoiKeyword] = useState('') // 지도 위 마커 띄울 대상 키워드 설정 용도
+
     const [activeTab, setActiveTab] = useState('');
     const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
     const [showFacilitiesMenu, setShowFacilitiesMenu] = useState( false);
     const [toggleLeftSide, setToggleLeftSide] = useState(true);
     const [toggleLeftSideFeature, setToggleLeftSideFeature] = useState('<')
+
     const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
     const [bol, setBol] = useState({})
     const [bump, setBump] = useState({})
@@ -362,7 +365,7 @@ const App = () => {
                         )}
                         */}
                         {keyword != '' && <div className='info-page'> {/* && !showFacilitiesMenu && !showObstacleMenu */}
-                            <Search keyword = {keyword} setKeyword = {setKeyword}/>
+                            <Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/>
                         </div>}
                         <div style={{borderStyle: 'solid', borderColor: '#FFCD4A'}}>
                         <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---편의 시설 위치 보기---</div>
@@ -598,11 +601,11 @@ const App = () => {
             )}
             <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
             <div className='main-right-side'>
-                {activeTab === '' && <Map width='100%' height='100vh' keyword={keyword} category ={showReqIdsNtype} />}
+                {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
                 {activeTab === '3D'
-                    && <Map width='100%' height='100vh' pathData={pathData} bol = {bol} bump = {bump} showObs = {showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );
