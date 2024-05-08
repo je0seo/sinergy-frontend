@@ -8,10 +8,10 @@ import { click } from 'ol/events/condition';
 import {showMarkerStyle, clickedLinkStyle} from './MarkerStyle'
 import './MapC.css';
 
-export const setPopupSelect = (layer, map) => {
+const setPopupSelect = (layer, map) => {
     const select = new Select({
         condition: click,
-        layers: [layer],
+        layers: layer,
         hitTolerance: 20
     });
     map.addInteraction(select)
@@ -46,6 +46,25 @@ export const usePopup = (category, map, layer) => {
         map.getOverlays().getArray()[0].setPosition(undefined); // 아이콘 클릭할 때마다 overlay 생성되는데 가장 최근 팝업이 overlay[0]임
         closerRef.current.blur();
     }
+    const setInfoPagePopup = (index) => {
+        setImage(category.data.images[index]);
+        setContent(category.data.info[index]);
+    }
+    const setPathFinderPagePopup = (feature) => {
+        let bumpExist = layer[0].getSource().getFeatures().includes(feature)
+        let bolExist = layer[1].getSource().getFeatures().includes(feature)
+        let linkExist = layer[2].getSource().getFeatures().includes(feature)
+        if (bumpExist) {
+            setImage(feature.get('image_nobs'))
+            setContent('도로턱 높이[cm] <br>'+feature.get('bump_hei'))
+        } else if (bolExist) {
+            setImage(feature.get('image_nobs'))
+            setContent('볼라드 간격[cm] <br>'+feature.get('bol_width'))
+        } else {    // linkExist
+            setImage(feature.get('image_lobs'))
+            setContent('경사도[degree] <br>'+feature.get('slopel'))
+        }
+    }
 
     useEffect(() => {
         // 편의시설 및 장애물 팝업용 overlay 생성
@@ -73,14 +92,12 @@ export const usePopup = (category, map, layer) => {
                 const [ minX, minY, maxX, maxY ] = feature.getGeometry().getExtent();
                 const coordinate = [ (maxX + minX) / 2, (maxY + minY) / 2 ] // 2. 팝업 뜨는 위치를 위한 좌표 설정
                 popupOverlay.setPosition(coordinate); // 3. 팝업 뜨는 위치 설정
+
                 // 4. 팝업 컨텐츠 세팅
-                if(category.type == 'allLinkObs') {
-                    setImage(feature.get('image_lobs'))
-                    setContent(feature.get('slopel'))
+                if(category.type === 'allObs') {
+                    setPathFinderPagePopup(feature);
                 } else {
-                    const index = getIdOf(feature, category)
-                    setImage(category.data.images[index]);
-                    setContent(category.data.info[index]);
+                    setInfoPagePopup(getIdOf(feature, category))
                 }
                 setObstacleID(feature.id_); // node.1574 이런식의 구조.
                 map.addOverlay(popupOverlay) // 5. 팝업 띄우기
@@ -118,7 +135,7 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
           <div>{ObstacleID}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
-            {(type === 'unpaved' || type === 'stairs' || type === 'slope' || 'allLinkObs') && <>경사도[degree]</>}
+            {(type === 'unpaved' || type === 'stairs' || type === 'slope' || type === 'allLinkObs') && <>경사도[degree]</>}
             {type === 'bump' && <>도로턱 높이[cm]</>}
             {type === 'bol' && <>볼라드 간격[cm]</>}
             <div dangerouslySetInnerHTML={{__html: content}} />
