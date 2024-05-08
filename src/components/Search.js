@@ -5,7 +5,6 @@ import './MapC.css';
 import {Icons} from './MarkerStyle'
 
 const searchBuildingInfo = async (keyword, setBuildingInfo) => {
-    console.log('(searchBuildingINFO)')
     const req = {keyword};
     try {
         var response = await axios.post(NODE_BACKEND_URL+'/showBuildingInfo', req, {
@@ -82,9 +81,9 @@ const SearchResultUIComponent = ({keyword, setKeyword}) => {
         )
     if (candidatesExist == true) {
         return (
-            <div>
+            <div className = 'result-list'>
                 {resultList.map((item, index) => (
-                    <button key={index} className = 'result-list' onClick={() => {setCandidatesExist(false); setKeyword(item)}}>
+                    <button key={index} className = 'result' onClick={() => {setCandidatesExist(false); setKeyword(item)}}>
                         <img src={Icons.magnifier} style={{width:'5%', height:'5%'}}></img>
                         <div style={{paddingLeft: '8px'}}>{item}</div>
                     </button>
@@ -97,7 +96,7 @@ const SearchResultUIComponent = ({keyword, setKeyword}) => {
             <div style={{margin: '0 auto'}}>
                 {bgImage && <img className="bg-image" src={bgImage} alt="Building Image" style={{width: '350px',height: '250px',display: 'block',margin: '0 auto'}}/>}
                 <div className="info-content">
-                    <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName}) {<button className='button' onClick={() => setKeyword('')}>닫기</button>}</h3>
+                    <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName}) {<button className='closer-button' onClick={() => setKeyword('')}>닫기</button>}</h3>
                     <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} | {(type === '건물') && (<> No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
                     {loungeCnt && <>라운지 수 : {loungeCnt}</>}
                     <p style={{marginTop: '5px', marginBottom: '0px'}}> {bgSummary} </p>
