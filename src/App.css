@@ -77,7 +77,7 @@
   display: flex;
   justify-content: space-around;
   margin:0px 0px 1% 1%;
-  background-color: #ffe8b0; /*메인색 연하게 응용*/
+  background-color: 한
 }
 .menu-tab {
   width: 50%;
@@ -321,15 +321,21 @@
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
 }
+/*사용자 설정*/
+.option-add{
+  display: flex;
+  flex-direction: column;
+}
 .option-input{
   display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
+  flex-direction: column;
   background: #FFFEF4; /*배경색*/
+  margin: 5px 0 0 10px;
+  gap: 2px;
 }
 .option-input-box{
   height: 30px;
-  width: 80px;
+  width: 100px;
   margin: 2px 0 2px 0;
   border: #a49c9c solid 1px; /*회색*/
   border-radius: 2px;
@@ -337,7 +343,7 @@
   display: flex;
   align-items: center;
 }
-.pf-input-style{ /* 출발,도착,경유지 입력창 */
+.op-input-style{ /* 출발,도착,경유지 입력창 */
   height: 70%;
   width: 90%;
   margin: 0 0 0 4px;
@@ -346,7 +352,24 @@
   background: #FFFEF4; /*배경색*/
   cursor: text;
 }
-
+.user-obs-option-setting{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px 2px 2px 2px;
+  border: #FFCD4A dashed 1px;
+}
+.option-toggle-btn{
+  height: 25px;
+  width: 100%;
+  align-items: center;
+  background: #ffe8b0; /*메인색 연하게 응용*/
+  border: #ffe8b0 solid 1px;
+}
+.option-toggle-btn:hover{
+  background-color: #FFCD4A;
+  cursor: pointer;
+}
 
 /*버튼 설정 */
 .showingBtn{ /*장애물 버튼 설정 */
