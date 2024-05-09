@@ -145,7 +145,7 @@ export const showMarkerStyle = (markertype) => {
         case 'slope':
             return new Style({
                 stroke: new Stroke({
-                    color: '#fd9f28', // 선의 색상
+                    color: '#0d5f55', // 선의 색상
                     width: 3 // 선의 두께
                 })
             });
