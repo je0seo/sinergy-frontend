@@ -62,7 +62,7 @@ export const usePopup = (category, map, layer) => {
             setContent('볼라드 간격[cm] <br>'+feature.get('bol_width'))
         } else {    // linkExist
             setImage(feature.get('image_lobs'))
-            setContent('경사도[degree] <br>'+feature.get('slopel'))
+            setContent('경사도[degree] <br>'+feature.get('grad_deg'))
         }
     }
 
