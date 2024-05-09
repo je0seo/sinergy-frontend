@@ -60,13 +60,7 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
     return obsLayer
 }
 
-/*const fetchFeatures = (url) => {
-    return fetch(url)
-        .then(response => response.json())
-        .then(data => data.totalFeatures); // 반환된 피처 수 반환
-}*/
-// 피처 수를 확인하고 레이어를 생성하는 함수 -> 바로 link obs 집합 layer return
-const createLayerIfNeeded = (url) => {
+const createInvisibleLinkObsLayer = (url) => {
     return new VectorLayer({
         title: `linkObs Layer`,
         visible: true,
@@ -98,44 +92,65 @@ const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacle
             let pathNodeIds = getNodeIdsOnPath(pathData).map(Number);
             let pathEdgeIds = getEdgeIdsOnPath(pathData).map(Number);
 
-            if (showObs) {
-                // 1. 노드 장애물 레이어 생성 및 지도에 추가
-                const bumpMarker = createObsLayerWith(bump, pathNodeIds)
-                const bolMarker = createObsLayerWith(bol, pathNodeIds)
-                setBumpLayer(bumpMarker)
-                setBolLayer(bolMarker)
+            // 1. 노드 장애물 레이어 생성
+            const bumpMarker = createObsLayerWith(bump, pathNodeIds)
+            const bolMarker = createObsLayerWith(bol, pathNodeIds)
+            setBumpLayer(bumpMarker)
+            setBolLayer(bolMarker)
 
-                // 2. 범례 지도에 시각화
-                pathData.forEach((path, index) => {
-                    const listOfEdgeId = path.map(e => e.edge);
-                    const crsFilter = makeCrsFilter(listOfEdgeId);
-                    const legendLayer = new TileLayer({
-                        title: `legend ${index + 1}`,
-                        source: new TileWMS({
-                            url: 'http://localhost:8080/geoserver/gp/wms',
-                            params: { 'LAYERS': 'gp:link','CQL_FILTER': crsFilter },
-                            serverType: 'geoserver',
-                            visible: true,
-                            }),
-                        zIndex: 2
-                    });
-                    map.addLayer(legendLayer);
-                })
+            // 2. 링크 장애물 레이어 생성
+            const url = url4AllLinkObs(pathEdgeIds)
+            const linkLayer = createInvisibleLinkObsLayer(url)
+            setLinkObsLayer(linkLayer) //setLinkObsLayer(createInvisibleLinkObsLayer(url)) 하면 null오류 남
 
-                // 3. 클릭 가능한 장애물 link 객체 생성
-                const url = url4AllLinkObs(pathEdgeIds)
-                const linkLayer = createLayerIfNeeded(url)
-                setLinkObsLayer(linkLayer) //setLinkObsLayer(createLayerIfNeeded(url)) 하면 null오류 남
-                //
-                map.addLayer(bumpMarker)
-                map.addLayer(bolMarker)
-                map.addLayer(linkLayer);
+            // 2. 범례 지도에 시각화
+            pathData.forEach((path, index) => {
+                const listOfEdgeId = path.map(e => e.edge);
+                const crsFilter = makeCrsFilter(listOfEdgeId);
+                const legendLayer = new TileLayer({
+                    title: `legend ${index + 1}`,
+                    source: new TileWMS({
+                        url: 'http://localhost:8080/geoserver/gp/wms',
+                        params: { 'LAYERS': 'gp:link','CQL_FILTER': crsFilter },
+                        serverType: 'geoserver',
+                        visible: true,
+                        }),
+                    zIndex: 2
+                });
+                map.addLayer(legendLayer);
+            })
 
-                return () => {  // cleanUp
-                    map.removeLayer(bumpMarker);
-                    map.removeLayer(bolMarker);
-                    map.removeLayer(linkLayer)
+            // 4. 모든 경로 내 장애물 레이어 지도에 추가
+            map.addLayer(bumpMarker)
+            map.addLayer(bolMarker)
+            map.addLayer(linkLayer);
+
+            // 장애물 레이어 위로 마우스 호버 시 포인터 커서 스타일 변경
+            map.on('pointermove', (e) => {
+                const pixel = e.pixel;
+                const radius = 3; // 호버 반경 설정
+
+                for (let dx = -radius; dx <= radius; dx++) {
+                    for (let dy = -radius; dy <= radius; dy++) {
+                        const feature = map.forEachFeatureAtPixel([pixel[0] + dx, pixel[1] + dy], function(feature, layer) {
+                            if (layer.get('title') === 'bumpOnPath Layer' || layer.get('title') === 'bolOnPath Layer'
+                            || layer.get('title') === 'linkObs Layer') {
+                                map.getViewport().style.cursor = 'pointer';
+                                return feature;
+                            }
+                        });
+                        if (feature) return;
+                    }
                 }
+
+                map.getViewport().style.cursor = '';
+            });
+
+
+            return () => {  // cleanUp
+                map.removeLayer(bumpMarker);
+                map.removeLayer(bolMarker);
+                map.removeLayer(linkLayer)
             }
         }
     }, [map, pathData, bump, bol, showObs]);
