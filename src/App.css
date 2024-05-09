@@ -4,12 +4,46 @@
 .container {
   display: flex;
   height: 100vh;
+  overflow: hidden;
 }
 .main-left-side {
   width: 12cm; /*맥북 기준: , 해상도 2560*11440 컴퓨터 기준: 460*/
   background-color: #FFFEF4; /*배경색*/
   padding: 0px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  transition: all 0.4s ease;
 }
+.main-left-side::-webkit-scrollbar {
+    width: 20px;  /* 세로축 스크롤바 폭 너비 */
+}
+.main-left-side::-webkit-scrollbar-thumb {
+   max-height: 5px;
+   background: grey; /* 스크롤바 막대 색상 */
+   border-radius: 12px 12px 12px 12px;
+   border: 7.5px solid #FFFEF4;
+}
+.main-left-side::-webkit-scrollbar-thumb:hover {
+    background-color:dimgrey;
+}
+.main-left-side::-webkit-scrollbar-track {  /*스크롤바 배경*/
+background-color: #FFFEF4;
+}
+.main-left-side::-webkit-scrollbar-button {
+  background: #FFFEF4;
+  height: 15px;
+}
+.main-left-side::-webkit-scrollbar-button:vertical:start:decrement,
+.main-left-side::-webkit-scrollbar-button:vertical:start:increment {
+   display: block;
+   height: 120px;
+}
+.main-left-side::-webkit-scrollbar-button:vertical:end:decrement {
+     display: block;
+     height: 10px;
+ }
+
 .ToggleLeftSide {
   width:18px;
   height: 100vh;
