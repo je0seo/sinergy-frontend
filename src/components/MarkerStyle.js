@@ -158,6 +158,7 @@ export const showMarkerStyle = (markertype) => {
             opacity: 1,
             rotateWithView: false,
             rotation: 0,
+            anchor: [0.5, 1], // 아이콘의 중심을 아이콘 이미지의 아래 중앙으로 이동
             //color: 'rgb(252,243,198)'
         })
     });
