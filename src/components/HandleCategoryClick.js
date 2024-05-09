@@ -49,6 +49,7 @@ const HandleCategoryClick = ({category, map}) => {
     useEffect(() => {
         let layer2Add = null
         if (map && category.type) {
+            map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
             console.log(category.type)
             // 편의시설 및 장애물 일괄 아이콘 표시
             layer2Add = createShowLayer(category)

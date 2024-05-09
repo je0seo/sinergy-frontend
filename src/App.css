@@ -20,12 +20,15 @@
 }
 .main-left-side::-webkit-scrollbar-thumb {
    max-height: 5px;
-   background: grey; /* 스크롤바 막대 색상 */
+   background: #C1C1C1; /* 스크롤바 막대 색상 */
    border-radius: 12px 12px 12px 12px;
    border: 7.5px solid #FFFEF4;
 }
 .main-left-side::-webkit-scrollbar-thumb:hover {
-    background-color:dimgrey;
+    background-color: #A7A7A7;
+}
+.main-left-side::-webkit-scrollbar-thumb:active {
+    background-color: #787878;
 }
 .main-left-side::-webkit-scrollbar-track {  /*스크롤바 배경*/
 background-color: #FFFEF4;
@@ -42,7 +45,7 @@ background-color: #FFFEF4;
 .main-left-side::-webkit-scrollbar-button:vertical:end:decrement {
      display: block;
      height: 10px;
- }
+}
 
 .ToggleLeftSide {
   width:18px;

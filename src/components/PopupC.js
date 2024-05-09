@@ -12,7 +12,7 @@ const setPopupSelect = (layer, map) => {
     const select = new Select({
         condition: click,
         layers: layer,
-        hitTolerance: 20
+        hitTolerance: 20,
     });
     map.addInteraction(select)
     return select;
@@ -102,7 +102,6 @@ export const usePopup = (category, map, layer) => {
                 setObstacleID(feature.id_); // node.1574 이런식의 구조.
                 map.addOverlay(popupOverlay) // 5. 팝업 띄우기
             }
-
         });
 
         return () => { // clean-up
@@ -135,7 +134,7 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
           <div>{ObstacleID}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
-            {(type === 'unpaved' || type === 'stairs' || type === 'slope' || type === 'allLinkObs') && <>경사도[degree]</>}
+            {(type === 'unpaved' || type === 'stairs' || type === 'slope') && <>경사도[degree]</>}
             {type === 'bump' && <>도로턱 높이[cm]</>}
             {type === 'bol' && <>볼라드 간격[cm]</>}
             <div dangerouslySetInnerHTML={{__html: content}} />

@@ -144,17 +144,12 @@ const markerClickEventWith = (locaArray, selectClick) => {
         var selectedFeatures = e.selected;
 
         selectedFeatures.forEach(function(feature) {
-
             if (feature.get('node_id')==locaArray[0]) {
-                feature.setStyle(clickedMarkerStyle(irumarkerS))
-                console.log('출발지 click: '+feature.getId());
-                //setMarkerClicked(false);
+                feature.setStyle(clickedMarkerStyle(irumarkerS)) // 출발지
             } else if (feature.get('node_id')==locaArray[locaArray.length-1]){
-                feature.setStyle(clickedMarkerStyle(irumarkerE))
-                console.log('도착지 click: '+feature.getId());
+                feature.setStyle(clickedMarkerStyle(irumarkerE)) // 도착지
             } else {
-                feature.setStyle(clickedMarkerStyle(irumarker2))
-                console.log('경유지 click: '+feature.getId());
+                feature.setStyle(clickedMarkerStyle(irumarker2)) // 경유지
             }
         });
     });
@@ -279,7 +274,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         break;
                 }
             }
-            map.on('pointermove', (e) => map.getViewport().style.cursor = map.hasFeatureAtPixel(e.pixel) ? 'pointer' : '');
 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
