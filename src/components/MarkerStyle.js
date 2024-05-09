@@ -28,6 +28,36 @@ import libraryIcon from './images/icons/libraryIcon.png';
 import toiletIcon from './images/icons/toiletIcon.png';
 import magnifier from './images/icons/magnifier.png';
 
+
+import IrubumpIcon from './images/icons/Icon/bumpIcon.png';
+import IrubolIcon from './images/icons/Icon/bolIcon.png';
+import IruunpavedIcon from './images/icons/Icon/unpavedIcon.png';
+import IrustairsIcon from './images/icons/Icon/stairsIcon.png';
+import IruslopeIcon from './images/icons/Icon/slopeIcon.png';
+//import facilitiesIcon from './images/icons/facilitiesIcon.png';
+import IrubenchIcon from './images/icons/Icon/benchIcon.png';
+import IruatmIcon from './images/icons/Icon/atmIcon.png';
+import IrubicycleIcon from './images/icons/Icon/bicycleIcon.png';
+import IrusmokingIcon from './images/icons/Icon/smokingIcon.png';
+import IrustoreIcon from './images/icons/Icon/storeIcon.png';
+import IrucafeIcon from './images/icons/Icon/cafeIcon.png';
+import IrupostOfficeIcon from './images/icons/Icon/postOfficeIcon.png';
+import IruhealthServiceIcon from './images/icons/Icon/healthServiceIcon.png';
+import IrucafeteriaIcon from './images/icons/Icon/cafeteriaIcon.png';
+import IruprintIcon from './images/icons/Icon/printIcon.png';
+import IrugymIcon from './images/icons/Icon/gymIcon.png';
+import IrutennisIcon from './images/icons/Icon/tennisIcon.png';
+import IrubasketballIcon from './images/icons/Icon/basketballIcon.png';
+import IrubreakRoomIcon from './images/icons/Icon/breakRoomIcon.png';
+import IruloungeIcon from './images/icons/Icon/loungeIcon.png';
+import IruseminarRoomIcon from './images/icons/Icon/seminarRoomIcon.png';
+import IrusBicycleIcon from './images/icons/Icon/sBicycleIcon.png';
+import IruvendingMachineIcon from './images/icons/Icon/vendingMachineIcon.png';
+import IrulibraryIcon from './images/icons/Icon/libraryIcon.png';
+import IrutoiletIcon from './images/icons/Icon/toiletIcon.png';
+//import magnifier from './images/icons/magnifier.png';
+
+
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/IrumakerY.png';
@@ -76,28 +106,28 @@ export const showMarkerStyle = (markertype) => {
     let markerimg; // markerimg 변수를 함수 스코프 내로 이동하여 전역으로 선언
     switch (markertype) {
         case 'facilities': markerimg = facilitiesIcon; break;
-        case 'bench': markerimg = benchIcon; break;
-        case 'atm': markerimg = atmIcon; break;
-        case 'bicycle': markerimg = bicycleIcon; break;
-        case 'smoking': markerimg = smokingIcon; break;
-        case 'store': markerimg = storeIcon; break;
-        case 'cafe': markerimg = cafeIcon; break;
-        case 'postoffice': markerimg = postOfficeIcon; break;
-        case 'healthservice': markerimg = healthServiceIcon; break;
-        case 'cafeteria': markerimg = cafeteriaIcon; break;
-        case 'print': markerimg = printIcon; break;
-        case 'gym': markerimg = gymIcon; break;
-        case 'tennis': markerimg = tennisIcon; break;
-        case 'basketball': markerimg = basketballIcon; break;
-        case 'breakroom': markerimg = breakRoomIcon; break;
-        case 'lounge': markerimg = loungeIcon; break;
-        case 'seminarroom': markerimg = seminarRoomIcon; break;
-        case 'Sbicycle': markerimg = sBicycleIcon; break;
-        case 'library': markerimg = libraryIcon; break;
-        case 'vendingMachine': markerimg = vendingMachineIcon; break;
-        case 'toilet': markerimg = toiletIcon; break;
-        case 'bump': markerimg = bumpIcon; break;
-        case 'bol': markerimg = bolIcon; break;
+        case 'bench': markerimg = IrubenchIcon; break;
+        case 'atm': markerimg = IruatmIcon; break;
+        case 'bicycle': markerimg = IrubicycleIcon; break;
+        case 'smoking': markerimg = IrusmokingIcon; break;
+        case 'store': markerimg = IrustoreIcon; break;
+        case 'cafe': markerimg = IrucafeIcon; break;
+        case 'postoffice': markerimg = IrupostOfficeIcon; break;
+        case 'healthservice': markerimg = IruhealthServiceIcon; break;
+        case 'cafeteria': markerimg = IrucafeteriaIcon; break;
+        case 'print': markerimg = IruprintIcon; break;
+        case 'gym': markerimg = IrugymIcon; break;
+        case 'tennis': markerimg = IrutennisIcon; break;
+        case 'basketball': markerimg = IrubasketballIcon; break;
+        case 'breakroom': markerimg = IrubreakRoomIcon; break;
+        case 'lounge': markerimg = IruloungeIcon; break;
+        case 'seminarroom': markerimg = IruseminarRoomIcon; break;
+        case 'Sbicycle': markerimg = IrusBicycleIcon; break;
+        case 'library': markerimg = IrulibraryIcon; break;
+        case 'vendingMachine': markerimg = IruvendingMachineIcon; break;
+        case 'toilet': markerimg = IrutoiletIcon; break;
+        case 'bump': markerimg = IrubumpIcon; break;
+        case 'bol': markerimg = IrubolIcon; break;
         case 'unpaved':
             return new Style({
                 stroke: new Stroke({
@@ -108,14 +138,14 @@ export const showMarkerStyle = (markertype) => {
         case 'stairs':
             return new Style({
                 stroke: new Stroke({
-                    color: '#D03C36', // 선의 색상
+                    color: '#ff0000', // 선의 색상
                     width: 3 // 선의 두께
                 })
             });
         case 'slope':
             return new Style({
                 stroke: new Stroke({
-                    color: '#FC3083', // 선의 색상
+                    color: '#fd9f28', // 선의 색상
                     width: 3 // 선의 두께
                 })
             });
@@ -124,10 +154,11 @@ export const showMarkerStyle = (markertype) => {
     return new Style({
         image: new Icon({
             src: markerimg,
-            scale: 0.04,
+            scale: 0.06,
             opacity: 1,
             rotateWithView: false,
             rotation: 0,
+            //color: 'rgb(252,243,198)'
         })
     });
 };
