@@ -126,6 +126,13 @@ export const showMarkerStyle = (markertype) => {
         case 'library': markerimg = IrulibraryIcon; break;
         case 'vendingMachine': markerimg = IruvendingMachineIcon; break;
         case 'toilet': markerimg = IrutoiletIcon; break;
+        case 'restaurant': markerimg = IrubasketballIcon; break;
+        case 'unmanned civil service': markerimg = IrubasketballIcon; break;
+        case 'rooftop garden': markerimg = IrubasketballIcon; break;
+        case 'shower room': markerimg = IrubasketballIcon; break;
+        case 'sports': markerimg = IrubasketballIcon; break;
+        case 'dining': markerimg = IrubasketballIcon; break;
+        case 'cafe&store': markerimg = IrubasketballIcon; break;
         case 'bump': markerimg = IrubumpIcon; break;
         case 'bol': markerimg = IrubolIcon; break;
         case 'unpaved':
