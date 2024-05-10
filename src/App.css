@@ -12,7 +12,7 @@
   padding: 0px;
   height: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: all 0.4s ease;
 }
 .main-left-side::-webkit-scrollbar {

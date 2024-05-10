@@ -75,6 +75,7 @@ const usePathfinding = () => {
   const [bolC, setBolC] = useState(120);
   const [bumpC, setBumpC] = useState(2);
   const [stopovers, setStopovers] = useState([]);
+  const STOPOVER_MAX_INDEX = 3;
   const [showShortestPathText, setShowShortestPathText] = useState(false);
   const [StartEndNormalCheckMessage, setStartEndNormalCheckMessage] = useState('');
   const [totalDistance, setTotalDistance] = useState(0);
@@ -185,6 +186,9 @@ const usePathfinding = () => {
     };
   const addStopover = () => {
     setStopovers([...stopovers, '']);
+    console.log(stopovers)
+    if (stopovers.length >= STOPOVER_MAX_INDEX) // >3하면 한 번 stopovers값이 초기화 되는 과정 때문에 경유지 추가 버튼을 한 번 더 클릭해야 다시 처음부터 추가 가능
+      handleInputReset();
   };
   const handleRemoveStopover = (indexToRemove) => {
         const updatedStopovers = stopovers.filter((_, index) => index !== indexToRemove);
@@ -221,6 +225,7 @@ const usePathfinding = () => {
     bolC,
     bumpC,
     stopovers,
+    STOPOVER_MAX_INDEX,
     showShortestPathText,
     StartEndNormalCheckMessage,
     showText4deco,
@@ -317,6 +322,7 @@ const App = () => {
       bolC,
       bumpC,
       stopovers,
+      STOPOVER_MAX_INDEX,
       showShortestPathText,
       StartEndNormalCheckMessage,
       showText4deco,
@@ -437,7 +443,7 @@ const App = () => {
                             </div>
                         </div>
                         <div>
-                            {stopovers.map((stopover, index) => (
+                            {!(stopovers.length>STOPOVER_MAX_INDEX) && stopovers.map((stopover, index) => (
                                 <div className="input" key={index}>
                                     <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
                                     <div className="input-box">
@@ -456,7 +462,7 @@ const App = () => {
                     </div>
                     <div className="button-row">
                         <button className="button-style" onClick={addStopover}>+ 경유지</button>
-                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                        <button className="button-style" onClick={() => {handleInputReset();    initialObsState();}}>⟲ 다시입력</button>
                         <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                     </div>
                     {showText4deco && (
@@ -525,7 +531,7 @@ const App = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    {stopovers.map((stopover, index) => (
+                                    {!(stopovers.length>STOPOVER_MAX_INDEX) && stopovers.map((stopover, index) => (
                                         <div className="input" key={index}>
                                             <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
                                             <div className="input-box">
@@ -545,7 +551,7 @@ const App = () => {
                             </div> {/*공통 끝*/}
                             {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
                                 <div className="button-row">
-                                    <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                                    <button className="button-style" onClick={() => {handleInputReset();    initialObsState();}}>⟲ 다시입력</button>
                                     <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                                 </div>
                             )}
@@ -597,7 +603,7 @@ const App = () => {
                                 <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
                                 {BarrierFreeMode && !(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
                                     <div className="button-row">
-                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
+                                        <button className="button-style" onClick={() => {handleInputReset(); initialObsState();}}>⟲ 다시입력</button>
                                         <button className="button-style" onClick={() => {handleFindPathClick().then(r => handleShowObsOnPath()); initialObsState(); }}>경로 재검색</button>
                                     </div>
                                 )}
@@ -607,7 +613,6 @@ const App = () => {
                             <div>
                                 <div className="warning-result-text"> {StartEndNormalCheckMessage}</div>
                                 <div className="button-row">
-                                    <button className="button-style" onClick={() => {handleInputReset(); initialObsState(); setObstacleIDs({ObstacleNodeIDs: [], ObstacleLinkIDs: []});}}>⟲ 다시입력</button>
                                     <button className="button-style" onClick={() => {handleFindPathClick().then(r => handleShowObsOnPath()); initialObsState(); }}>경로 재검색</button>
                                 </div>
                             </div>
