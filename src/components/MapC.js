@@ -186,7 +186,7 @@ export const useMap = () => { // 배경지도만 따로 분리
 }
 
 
-export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showObs, category, onObstacleAvoidance }) => {
+export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showObs, category, onObstacleAvoidance, setStairExist, setunpavedExist, setslopeExist, setinExist }) => {
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
@@ -275,11 +275,36 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 }
             }
 
+
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
+
+                // link att를 pathData의 모든 path에서 확인하는 코드
+                pathData.forEach((path, index) => {
+                    path.forEach(item => {
+                        console.log(item.link_att)
+                        if (item.link_att == 5) {
+                            setStairExist(true)
+                        }
+                        if (item.link_att == 4) {
+                            setunpavedExist(true)
+                        }
+                        if (item.link_att != 5 && item.grad_deg>=3.18){
+                            setslopeExist(true)
+                        }
+                        if (item.link_att == 6){
+                            setinExist(true)
+                        }
+
+
+
+                    });
+                });
             }
+
+
             // 출발, 도착, 경유 노드 마커 표시
             if (locaArray && locaArray.length >= 2) {
                 let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
@@ -323,7 +348,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             </div>
             <div id="map" style={{ width, height }}></div>
             {map && category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
-            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} showObs={showObs} onObstacleAvoidance={onObstacleAvoidance}/>}
+            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} showObs={showObs} onObstacleAvoidance={onObstacleAvoidance} />}
         </div>
     );
 };

@@ -9,6 +9,12 @@ import './App.css'; // App.css 파일을 import
 
 // FindPathContent.js
 import legend from './components/images/legend.png';
+import legend_stair from './components/images/legend_stair.png';
+import legend_unpaved from './components/images/legend_unpaved.png';
+import legend_slope from './components/images/legend_slope.png';
+import legend_in from './components/images/legend_in.png';
+
+
 import axios from 'axios';
 import {NODE_BACKEND_URL} from "./constants/urls";
 //
@@ -274,6 +280,11 @@ const App = () => {
     const [bol, setBol] = useState({})
     const [bump, setBump] = useState({})
     const [showObsOnPath, setShowObsOnPath] = useState(false)
+
+    const [stairExist, setStairExist] = useState(false)
+    const [unpavedExist, setunpavedExist] = useState(false)
+    const [slopeExist, setslopeExist] = useState(false)
+    const [inExist, setinExist] = useState(false)
 
     const handleShowObsOnPath = async() => {
         let data = await showReq('bol');
@@ -596,7 +607,14 @@ const App = () => {
                                 </div>
                             )}
                             {showObsOnPath && showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
-                                <div>{<img src={legend} alt="link_legend" style={{ width: '50%', margin: '0 4mm 0 0' }} />}</div>)}
+                                <div>
+                                    {<img src={legend} alt="link_legend" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {unpavedExist && <img src={legend_unpaved} alt="link_legend_unpaved" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {stairExist && <img src={legend_stair} alt="link_legend_stair" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {slopeExist && <img src={legend_slope} alt="link_legend_slope" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {inExist && <img src={legend_in} alt="link_legend_in" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                </div>
+                            )}
                         </div>
                         {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
                             <div>
@@ -627,7 +645,7 @@ const App = () => {
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
                 {activeTab === '3D'
-                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance} setStairExist={setStairExist} setunpavedExist={setunpavedExist} setslopeExist={setslopeExist} setinExist={setinExist}/>}
             </div>
         </div>
     );
