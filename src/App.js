@@ -287,9 +287,9 @@ const App = () => {
     const [inExist, setinExist] = useState(false)
 
     const handleShowObsOnPath = async() => {
-        let data = await showReq('bol');
+        let data = await showReq({ReqType: 'bol', bolC: bolC});
         setBol({type: 'bol', data})
-        data = await showReq('bump');
+        data = await showReq({ReqType: 'bump', bumpC: bumpC});
         setBump({type: 'bump', data})
         setShowObsOnPath(true);
     }
@@ -300,7 +300,7 @@ const App = () => {
     }
 
     const handleShowReq = async (ReqType) => {
-        const data = await showReq(ReqType);
+        const data = await showReq({ReqType, slopeD, bolC, bumpC});
         setShowReqIdsNtype({ type: ReqType, data });
     }
     const handleModeChange = () => {
@@ -401,6 +401,25 @@ const App = () => {
                                     <button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={Icons.slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
                                     <button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={Icons.bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
                                     <button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={Icons.bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
+                                </div>
+                                <div className='user-obs-option-setting'>
+                                    {!showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>▽ 장애물 기준 설정창 열기 </button>)}
+                                    {showObstacleMenu && (
+                                        <div className="option-add">
+                                            <div className="option-input">
+                                                경사로 경사도 임계값 설정[단위: °]
+                                                <div className="option-input-box">
+                                                    <input className='op-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
+                                                </div>
+                                            </div>
+                                            <div className="option-input">볼라드 간격 임계값 설정[단위: cm]<div className="option-input-box">
+                                                <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>
+                                            </div>
+                                            <div className="option-input">도로턱 높이 임계값 설정[단위: cm]<div className="option-input-box">
+                                                <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>
+                                            </div>
+                                        </div>)}
+                                    {showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>△ 장애물 기준 설정창 닫기 </button>)}
                                 </div>
                             </div>
                         )}
