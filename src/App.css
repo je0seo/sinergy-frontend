@@ -1,7 +1,15 @@
 /*App.css*/
 /*배경색: #FFFEF4 */
 /*메인색: #FFCD4A */
+@font-face {
+    font-family: 'NEXON Lv1 Gothic OTF';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .container {
+  /font-family: 'NEXON Lv1 Gothic OTF';
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -98,6 +106,7 @@ background-color: #FFFEF4;
   flex: 2;
   border: none;
   outline: none;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .search-bar button {
   background-color: #FFCD4A; /*메인색*/
@@ -117,6 +126,7 @@ background-color: #FFFEF4;
   background-color: 한
 }
 .menu-tab {
+  font-family: 'NEXON Lv1 Gothic OTF';
   width: 50%;
   height: 9mm;
   background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
@@ -252,6 +262,7 @@ background-color: #FFFEF4;
   outline: none; /* 포커스 스타일 제거 */
   background: #FFFEF4; /*배경색*/
   cursor: text;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .button-row {
   display: flex;
@@ -259,6 +270,7 @@ background-color: #FFFEF4;
   justify-content: flex-end;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .button-style{
   margin: 0 0 0 4mm;
@@ -364,6 +376,7 @@ background-color: #FFFEF4;
   flex-direction: column;
 }
 .option-input{
+  font-family: 'NEXON Lv1 Gothic OTF';
   display: flex;
   flex-direction: column;
   background: #FFFEF4; /*배경색*/
@@ -402,6 +415,7 @@ background-color: #FFFEF4;
   align-items: center;
   background: #ffe8b0; /*메인색 연하게 응용*/
   border: #ffe8b0 solid 1px;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .option-toggle-btn:hover{
   background-color: #FFCD4A;
@@ -410,6 +424,7 @@ background-color: #FFFEF4;
 
 /*버튼 설정 */
 .showingBtn{ /*장애물 버튼 설정 */
+  font-family: 'NEXON Lv1 Gothic OTF';
   margin: 3px;
   height:35px;
   font-size: 15px;
@@ -423,11 +438,13 @@ background-color: #FFFEF4;
   background-color: #FFCD4A; /*메인색 마우스 호버 시 배경색 변경 */
 }
 .showingObstacleBtns {
+  font-family: 'NEXON Lv1 Gothic OTF';
   display: flex;
   margin-top: 5px;
   justify-content: space-between;
 }
 .showingFacBtnT {
+  font-family: 'NEXON Lv1 Gothic OTF';
   font-size: 13px;
   text-align: center;
   padding: 5px;

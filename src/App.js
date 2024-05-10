@@ -53,7 +53,7 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
                     <button ref={inputRef} onClick={handleSearch}>검색</button>
                 </div>
                 <div>
-                    <button onClick={handleModeChange}>barrier free mode</button>
+                    <button onClick={handleModeChange} style={{fontFamily:'NEXON Lv1 Gothic OTF'}}>barrier free mode</button>
                 </div>
             </div>
         </header>
@@ -393,7 +393,7 @@ const App = () => {
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
                             <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', marginBottom: '5px'}}>
-                                <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---보행 장애물 위치 보기---</div>
+                                <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px', fontFamily: 'NEXON Lv1 Gothic OTF'}}>---보행 장애물 위치 보기---</div>
                                 <div className='showingObstacleBtns'>
                                     {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
                                     <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={Icons.unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
@@ -405,7 +405,7 @@ const App = () => {
                             </div>
                         )}
                         <div style={{borderStyle: 'solid', borderColor: '#FFCD4A'}}>
-                        <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px'}}>---편의 시설 위치 보기---</div>
+                        <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px', fontFamily: 'NEXON Lv1 Gothic OTF'}}>---편의 시설 위치 보기---</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
