@@ -27,6 +27,14 @@ import vendingMachineIcon from './images/icons/vendingMachineIcon.png';
 import libraryIcon from './images/icons/libraryIcon.png';
 import toiletIcon from './images/icons/toiletIcon.png';
 import magnifier from './images/icons/magnifier.png';
+import rooftopIcon from './images/icons/rooftopIcon.png';
+import cafestoreIcon from './images/icons/cafestoreIcon.png';
+import diningIcon from './images/icons/diningIcon.png';
+import restaurantIcon from './images/icons/restaurantIcon.png';
+import showerRoomIcon from './images/icons/showerroomIcon.png';
+import sportsIcon from './images/icons/sportsIcon.png';
+import squashIcon from './images/icons/squashIcon.png';
+import unmannedIcon from './images/icons/unmannedIcon.png';
 
 
 import IrubumpIcon from './images/icons/Icon/bumpIcon.png';
@@ -55,6 +63,15 @@ import IrusBicycleIcon from './images/icons/Icon/sBicycleIcon.png';
 import IruvendingMachineIcon from './images/icons/Icon/vendingMachineIcon.png';
 import IrulibraryIcon from './images/icons/Icon/libraryIcon.png';
 import IrutoiletIcon from './images/icons/Icon/toiletIcon.png';
+import IrurooftopIcon from './images/icons/Icon/rooftopIcon.png';
+import IrucafestoreIcon from './images/icons/Icon/cafestoreIcon.png';
+import IrudiningIcon from './images/icons/Icon/diningIcon.png';
+import IrurestaurantIcon from './images/icons/Icon/restaurantIcon.png';
+import IrushowerRoomIcon from './images/icons/Icon/showerroomIcon.png';
+import IrusportsIcon from './images/icons/Icon/sportsIcon.png';
+import IrusquashIcon from './images/icons/Icon/squashIcon.png';
+import IruunmannedIcon from './images/icons/Icon/unmannedIcon.png';
+
 //import magnifier from './images/icons/magnifier.png';
 
 
@@ -66,7 +83,7 @@ export const Icons = {
     bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
     bicycleIcon, smokingIcon, storeIcon, cafeIcon, postOfficeIcon, healthServiceIcon, cafeteriaIcon,
     printIcon, gymIcon, tennisIcon, basketballIcon, breakRoomIcon, loungeIcon, seminarRoomIcon,
-    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier
+    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier, rooftopIcon, cafestoreIcon, diningIcon, restaurantIcon, showerRoomIcon, sportsIcon, squashIcon, unmannedIcon
 }
 
 export const clickedLinkStyle = new Style({
@@ -126,13 +143,14 @@ export const showMarkerStyle = (markertype) => {
         case 'library': markerimg = IrulibraryIcon; break;
         case 'vendingMachine': markerimg = IruvendingMachineIcon; break;
         case 'toilet': markerimg = IrutoiletIcon; break;
-        case 'restaurant': markerimg = IrubasketballIcon; break;
-        case 'unmanned civil service': markerimg = IrubasketballIcon; break;
-        case 'rooftop garden': markerimg = IrubasketballIcon; break;
-        case 'shower room': markerimg = IrubasketballIcon; break;
-        case 'sports': markerimg = IrubasketballIcon; break;
-        case 'dining': markerimg = IrubasketballIcon; break;
-        case 'cafe&store': markerimg = IrubasketballIcon; break;
+        case 'restaurant': markerimg = IrurestaurantIcon; break;
+        case 'unmanned civil service': markerimg = IruunmannedIcon; break;
+        case 'rooftop garden': markerimg = IrurooftopIcon; break;
+        case 'shower room': markerimg = IrushowerRoomIcon; break;
+        case 'sports': markerimg = IrusportsIcon; break;
+        case 'squash': markerimg = IrusquashIcon; break;
+        case 'dining': markerimg = IrudiningIcon; break;
+        case 'cafe&store': markerimg = IrucafestoreIcon; break;
         case 'bump': markerimg = IrubumpIcon; break;
         case 'bol': markerimg = IrubolIcon; break;
         case 'unpaved':
