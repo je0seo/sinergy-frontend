@@ -538,5 +538,12 @@ background-color: #FFFEF4;
   width: 15px;
   height: 15px;
 }
-
+.legend {
+  display: flex;
+  flex-direction: column;
+}
+.legend-individual {
+  width: 200px;
+  margin: 0 0 0 15px; /*위 오 아래 왼*/
+}
 

@@ -8,11 +8,14 @@ import SLogo from './components/images/SLogo.png';
 import './App.css'; // App.css 파일을 import
 
 // FindPathContent.js
-import legend from './components/images/legend.png';
+import legend_mixed from './components/images/legend_mixed.png';
+import legend_sidewalk from './components/images/legend_sidewalk.png';
+import legend_wheelchair from './components/images/legend_wheelchair.png';
+import legend_crosswalk from './components/images/legend_crosswalk.png';
 import legend_stair from './components/images/legend_stair.png';
 import legend_unpaved from './components/images/legend_unpaved.png';
 import legend_slope from './components/images/legend_slope.png';
-import legend_in from './components/images/legend_in.png';
+import legend_in from './components/images/legend_indoor.png';
 
 
 import axios from 'axios';
@@ -643,12 +646,15 @@ const App = () => {
                                 </div>
                             )}
                             {showObsOnPath && showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
-                                <div>
-                                    {<img src={legend} alt="link_legend" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {legendState.unpaved && <img src={legend_unpaved} alt="link_legend_unpaved" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {legendState.stair && <img src={legend_stair} alt="link_legend_stair" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {legendState.slope && <img src={legend_slope} alt="link_legend_slope" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {legendState.indoor && <img src={legend_in} alt="link_legend_in" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                <div className="legend">
+                                    <img src={legend_sidewalk} alt="link_legend_sidewalk" className="legend-individual" />
+                                    <img src={legend_mixed} alt="link_legend_mixed" className="legend-individual" />
+                                    <img src={legend_crosswalk} alt="link_legend_crosswalk" className="legend-individual" />
+                                    <img src={legend_wheelchair} alt="link_legend_wheelchair" className="legend-individual" />
+                                    {legendState.unpaved && <img src={legend_unpaved} alt="link_legend_unpaved" className="legend-individual" />}
+                                    {legendState.stair && <img src={legend_stair} alt="link_legend_stair" className="legend-individual" />}
+                                    {legendState.slope && <img src={legend_slope} alt="link_legend_slope" className="legend-individual" />}
+                                    {legendState.indoor && <img src={legend_in} alt="link_legend_in" className="legend-individual" />}
                                 </div>
                             )}
                         </div>
@@ -679,9 +685,7 @@ const App = () => {
             <div className='main-right-side'>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
-                {activeTab === '3D'
-                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );

@@ -31,12 +31,26 @@ const getEdgeIdsOnPath = (pathData) => {
     return listOfEdgeId
 }
 
-const url4AllLinkObs = (edgeIds) => {
+const url4slopeObs = (edgeIds, slopeD) => {
     const crsFilter = makeCrsFilter(edgeIds);
     return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
            '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
            + crsFilter
-           + ' AND (link_att IN (4,5) OR (grad_deg >= 3.18 AND link_att NEQ 5))'
+           + ' And (link_att NEQ 5 AND grad_deg >='+slopeD + ')'
+}
+const url4unpavedObs = (edgeIds) => {
+    const crsFilter = makeCrsFilter(edgeIds);
+    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+        '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
+        + crsFilter
+        + ' AND link_att = 4'
+}
+const url4stairObs = (edgeIds) => {
+    const crsFilter = makeCrsFilter(edgeIds);
+    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+        '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
+        + crsFilter
+        + ' AND link_att = 5'
 }
 
 const createObsLayerWith = (obsType, pathNodeIds) => {
@@ -62,9 +76,19 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
     return obsLayer
 }
 
-const createInvisibleLinkObsLayer = (url) => {
+const createVisibleLinkObsLayer = (obsType, url) => {
+    let colorCode = 'black'
+    if (obsType === 'slope'){
+        colorCode = '#FF8400'
+    }
+    else if (obsType === 'unpaved'){
+        colorCode = '#711B6B'
+    }
+    else if (obsType === 'stair'){
+        colorCode = '#FF0000'
+    }
     return new VectorLayer({
-        title: `linkObs Layer`,
+        title: `${obsType}OnPath Layer`,
         visible: true,
         source: new VectorSource({
             format: new GeoJSON({
@@ -75,19 +99,22 @@ const createInvisibleLinkObsLayer = (url) => {
         }),
         zIndex: 6,
         style:
-        new Style({
-            stroke: new Stroke({
-                color: 'rgba(255, 255, 255, 0.1)',
-                width: 3
+            new Style({
+                stroke: new Stroke({
+                    color: colorCode,
+                    width: 5,
+                    lineCap: 'square'
+
+                })
             })
-        })
     })
 }
-
-export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacleAvoidance}) => {
+export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, showObs, onObstacleAvoidance}) => {
     let [bumpLayer, setBumpLayer] = useState([]);
     let [bolLayer, setBolLayer] = useState([]);
-    let [linkObsLayer, setLinkObsLayer] = useState([]);
+    let [slopeLinkLayer, setSlopeLinkLayer] = useState([]);
+    let [stairLinkLayer, setStairLinkLayer] = useState([]);
+    let [unpavedLinkLayer, setUnpavedLinkLayer] = useState([]);
 
     useEffect(() => {
         if (map && locaArray && locaArray.length >= 2) {
@@ -101,9 +128,15 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onO
             setBolLayer(bolMarker)
 
             // 2. 링크 장애물 레이어 생성
-            const url = url4AllLinkObs(pathEdgeIds)
-            const linkLayer = createInvisibleLinkObsLayer(url)
-            setLinkObsLayer(linkLayer) //setLinkObsLayer(createInvisibleLinkObsLayer(url)) 하면 null오류 남
+            const urlSl = url4slopeObs(pathEdgeIds, slopeD)
+            slopeLinkLayer = createVisibleLinkObsLayer('slope', urlSl)
+            setSlopeLinkLayer(slopeLinkLayer) //setLinkObsLayer(createInvisibleLinkObsLayer(url)) 하면 null오류 남
+            const urlSt = url4stairObs(pathEdgeIds)
+            stairLinkLayer = createVisibleLinkObsLayer('stair', urlSt)
+            setStairLinkLayer(stairLinkLayer)
+            const urlUn = url4unpavedObs(pathEdgeIds)
+            unpavedLinkLayer = createVisibleLinkObsLayer('unpaved', urlUn)
+            setUnpavedLinkLayer(unpavedLinkLayer)
 
             // 2. 범례 지도에 시각화
             pathData.forEach((path, index) => {
@@ -116,7 +149,7 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onO
                         params: { 'LAYERS': 'gp:link','CQL_FILTER': crsFilter },
                         serverType: 'geoserver',
                         visible: true,
-                        }),
+                    }),
                     zIndex: 2
                 });
                 map.addLayer(legendLayer);
@@ -125,7 +158,9 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onO
             // 4. 모든 경로 내 장애물 레이어 지도에 추가
             map.addLayer(bumpMarker)
             map.addLayer(bolMarker)
-            map.addLayer(linkLayer);
+            map.addLayer(slopeLinkLayer)
+            map.addLayer(stairLinkLayer)
+            map.addLayer(unpavedLinkLayer)
 
             // 장애물 레이어 위로 마우스 호버 시 포인터 커서 스타일 변경
             map.on('pointermove', (e) => {
@@ -136,7 +171,8 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onO
                     for (let dy = -radius; dy <= radius; dy++) {
                         const feature = map.forEachFeatureAtPixel([pixel[0] + dx, pixel[1] + dy], function(feature, layer) {
                             if (layer.get('title') === 'bumpOnPath Layer' || layer.get('title') === 'bolOnPath Layer'
-                            || layer.get('title') === 'linkObs Layer') {
+                            || layer.get('title') === 'slopeOnPath Layer' || layer.get('title') === 'stairOnPath Layer' || layer.get('title') === 'unpavedOnPath Layer') {
+                                console.log(layer.get('title'));
                                 map.getViewport().style.cursor = 'pointer';
                                 return feature;
                             }
@@ -148,18 +184,19 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onO
                 map.getViewport().style.cursor = '';
             });
 
-
             return () => {  // cleanUp
                 map.removeLayer(bumpMarker);
                 map.removeLayer(bolMarker);
-                map.removeLayer(linkLayer)
+                map.removeLayer(slopeLinkLayer);
+                map.removeLayer(stairLinkLayer);
+                map.removeLayer(unpavedLinkLayer);
             }
         }
     }, [map, pathData, bump, bol, showObs]);
 
     return (
         <div>
-            {<PopupUIComponent category={{type: 'allObs'}} map={map} layer={[bumpLayer, bolLayer, linkObsLayer]} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
+            {<PopupUIComponent category={{type: 'allObs'}} map={map} layer={[bumpLayer, bolLayer, slopeLinkLayer, stairLinkLayer, unpavedLinkLayer ]} onPath = {true} onObstacleAvoidance={onObstacleAvoidance}/>}
         </div>
     );
 }
