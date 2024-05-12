@@ -70,7 +70,7 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
         title: `${obsType.type}OnPath Layer`,
         visible: true,
         source: obsSource,
-        zIndex: 6,
+        zIndex: 7,
         style: showMarkerStyle(obsType.type),
     });
     return obsLayer
@@ -97,7 +97,7 @@ const createVisibleLinkObsLayer = (obsType, url) => {
             url: url,
             serverType: 'geoserver'
         }),
-        zIndex: 6,
+        zIndex: 7,
         style:
             new Style({
                 stroke: new Stroke({
@@ -150,7 +150,7 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
                         serverType: 'geoserver',
                         visible: true,
                     }),
-                    zIndex: 2
+                    zIndex: 3
                 });
                 map.addLayer(legendLayer);
             })
