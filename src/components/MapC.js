@@ -28,6 +28,9 @@ import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/IrumakerY.png';
 
+import axios from 'axios';
+import {NODE_BACKEND_URL} from "../constants/urls";
+
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/ABA020A7-DBB7-3954-900F-E891C0E4995E';
 
 const osmLayer = new TileLayer({
@@ -77,7 +80,6 @@ const UOSorthoTile = new TileLayer({
         }),
         zIndex: 1
     });
-
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
@@ -153,7 +155,7 @@ const createEntryMarkerLayer = (pathNodeIds) => {
             },
             serverType: 'geoserver'
         }),
-        zIndex: 4
+        zIndex: 5
     });
 }
 
@@ -171,6 +173,36 @@ const markerClickEventWith = (locaArray, selectClick) => {
                 feature.setStyle(clickedMarkerStyle(irumarker2)) // 경유지
             }
         });
+    });
+}
+
+const createIndoorLayer = (buildingName, floor) => {
+    console.log(buildingName)
+    let cqlFilter = encodeURIComponent("build_name ='"+buildingName+"'"+" AND floor="+floor);
+    return new VectorLayer({
+        title: 'indoor',
+        visible: true,
+        source: new VectorSource({ // feature들이 담겨있는 vector source
+            format: new GeoJSON({
+                dataProjection: 'EPSG:5181'
+            }),
+            url: function(extent) {
+                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0'+
+                '&request=GetFeature&typeName=gp%3Abd_in&maxFeatures=50&outputFormat=application%2Fjson'+
+                '&CQL_FILTER='+cqlFilter
+            },
+            serverType: 'geoserver'
+        }),
+        zIndex: 2,
+        style: new Style({
+            stroke: new Stroke({
+                color: '#d5bfa5', // 선의 색상
+                width: 3 // 선의 두께
+            }),
+            fill: new Fill({
+                color: '#f7ebac' // 노랑
+            })
+        })
     });
 }
 
@@ -204,11 +236,32 @@ export const useMap = () => { // 배경지도만 따로 분리
     return map;
 }
 
-
 export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showObs, category, onObstacleAvoidance, setStairExist, setunpavedExist, setslopeExist, setinExist }) => {
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
+
+    const handlePositions = (data) => {
+        for (let i=0;i<data.length;i++){
+            console.log(data[i].bulid_name,data[i].floor,'층')
+            const indoorLayer = createIndoorLayer(data[i].bulid_name,data[i].floor)
+            map.addLayer(indoorLayer)
+        }
+    }
+
+    const getPositionOf = async (locaArray) => {
+        const req = locaArray;
+        try {
+            var response = await axios.post(NODE_BACKEND_URL+'/showYourPosition', req, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            handlePositions(response.data)
+        } catch (error) {
+          console.error('Error during Axios POST request', error);
+        }
+    };
 
     const createShortestPathLayer = (pathData) => {
         console.log("pathData:", pathData);
@@ -237,7 +290,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         width: 2
                     })
                 }),
-                zIndex: 2
+                zIndex: 4
             });
 
             map.addLayer(shortestPathLayer);
@@ -262,7 +315,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                     serverType: 'geoserver'
                 }),
                 style: basicMarkerStyle(setMarkerSrcOf(locaArray,index)),
-                zIndex: 5
+                zIndex: 6
             });
             nodeLayers.push(nodeLayer);
             map.addLayer(nodeLayer);
@@ -314,6 +367,10 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 });
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
+
+                // 1. locaArray의 id 튜플의 floor is not null이면 locaArray 튜플의 floor값이랑 bulid_name값을 넘겨줌
+                // 2. build_name의 값이 bulid_name 값이랑 같고 floor값이 받은 floor값이랑 같은 폴리곤을 조회
+                getPositionOf(locaArray)
             }
         }
     }, [map, layerState, pathData, showObs]);
