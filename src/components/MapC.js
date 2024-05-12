@@ -205,7 +205,7 @@ export const useMap = () => { // 배경지도만 따로 분리
 }
 
 
-export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, showObs, category, onObstacleAvoidance, setStairExist, setunpavedExist, setslopeExist, setinExist }) => {
+export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, slopeD, showObs, category, onObstacleAvoidance, setStairExist, setunpavedExist, setslopeExist, setinExist }) => {
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
@@ -349,7 +349,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             </div>
             <div id="map" style={{ width, height }}></div>
             {map && category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
-            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} showObs={showObs} onObstacleAvoidance={onObstacleAvoidance} />}
+            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} slopeD={slopeD} showObs={showObs} onObstacleAvoidance={onObstacleAvoidance} />}
         </div>
     );
 };
