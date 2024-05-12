@@ -21,7 +21,7 @@ import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
 
 import HandleCategoryClick from './HandleCategoryClick';
-import ShowObsOnPath from './ShowObsOnPath';
+import {getNodeIdsOnPath, ShowObsOnPath} from './ShowObsOnPath';
 import PopupUIComponent from './PopupC'
 
 import irumarkerS from './images/IrumakerS.png';
@@ -83,6 +83,7 @@ const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
         const listOfNodeId = path.map(n => n.node) // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
         locaArray.push(listOfNodeId[0]);
+        //console.log(listOfNodeId)
         if (index === pathData.length - 1) {
             locaArray.push(listOfNodeId[listOfNodeId.length - 1]);
         }
@@ -136,6 +137,24 @@ const createPoiMarkerLayer = (cqlFilter) => {
     });
 
     return poiMarkerLayer;
+}
+
+const createEntryMarkerLayer = (pathNodeIds) => {
+    return new VectorLayer({
+        title: 'ENTRY',
+        visible: true,
+        source: new VectorSource({ // feature들이 담겨있는 vector source
+            format: new GeoJSON({
+                dataProjection: 'EPSG:5181'
+            }),
+            url: function(extent) {
+                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                    '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id IN ('+pathNodeIds+ ') AND node_att = 2';
+            },
+            serverType: 'geoserver'
+        }),
+        zIndex: 4
+    });
 }
 
 const markerClickEventWith = (locaArray, selectClick) => {
@@ -279,7 +298,12 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
+
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
+                //console.log(locaArray)
+                // 건물 출입구
+                const entryMarker = createEntryMarkerLayer(getNodeIdsOnPath(pathData).map(Number))
+                map.addLayer(entryMarker)
             }
 
             // 출발, 도착, 경유 노드 마커 표시
