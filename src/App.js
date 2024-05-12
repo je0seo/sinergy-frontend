@@ -158,7 +158,6 @@ const usePathfinding = () => {
     }
     if (shortestPath) {
       setPathData(shortestPath);
-      console.log(shortestPath)
       handleLegendState(shortestPath)
     }
   };
