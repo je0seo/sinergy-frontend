@@ -5,6 +5,8 @@ import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
 import fullKLogo from './components/images/fullKLogo.png';
 import SLogo from './components/images/SLogo.png';
+import GLogo from './components/images/logo_G_red.png';
+import YLogo from './components/images/logo_Y_yellow.png';
 import './App.css'; // App.css 파일을 import
 
 // FindPathContent.js
@@ -56,7 +58,9 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
                     <button ref={inputRef} onClick={handleSearch}>검색</button>
                 </div>
                 <div className="barrier-free-switch">
-                    <input type="checkbox" id="chk1" checked={BarrierFreeMode} onChange={handleModeChange}/><label htmlFor="chk1"></label>
+                    {/* <a style={{fontSize: '10px', color: 'black'}}>barrier-free</a>*/}
+                    <input type="checkbox" id="switch" checked={BarrierFreeMode} onChange={handleModeChange}/><label htmlFor="switch">
+                </label>
                 </div>
             </div>
         </header>
