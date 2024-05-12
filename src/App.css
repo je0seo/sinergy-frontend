@@ -99,7 +99,7 @@ background-color: #FFFEF4;
   border-radius: 80px;
   padding: 2px;
   background-color: #FFFEF4; /*배경색*/
-  width: 80%;
+  width: 300px;
   margin: 0px 0px 0px 0px;
 }
 .search-bar input {
@@ -119,24 +119,38 @@ background-color: #FFFEF4;
 }
 /*barrier free mode 전환 스위치*/
 .barrier-free-switch{
-  padding: 5px 0 2px 3px;
+  margin: 3px 0 1px 4px;
+  padding:2px 2px 2px 2px; /*위 오 아래 왼*/
 }
 .barrier-free-switch input[type="checkbox"] {
   display: none;
+  position: absolute;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 .barrier-free-switch label {
   display: inline-block;
   position: relative;
-  width: 60px;
-  height: 25px;
   background-color: #a49c9c;/*회색*/
-  border-radius: 60px;
-  transition: background 0.4s;
+  cursor: pointer;
+  width: 55px;
+  height: 25px;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+.barrier-free-switch label:hover {/* 추가 */
+  background: #ffe8b0;
 }
 .barrier-free-switch label::after {
-  content: "";
+  content: "BF";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'NEXON Lv1 Gothic OTF';
+  color: #313030;
   position: absolute;
-  left: 3px;
+  left: 0px;
   top: 50%;
   width: 30px;
   height: 30px;
@@ -148,10 +162,10 @@ background-color: #FFFEF4;
 }
 .barrier-free-switch label::before {
   content: "OFF";
-  font-size: 10px;
+  font-size: 9px;
   font-family: 'NEXON Lv1 Gothic OTF';
   position: absolute;
-  left: 35px;
+  left: 31.5px;
   top: 50%;
   transform: translateY(-50%);
   transition: all 0.4s;
@@ -165,8 +179,10 @@ background-color: #FFFEF4;
 .barrier-free-switch input[type="checkbox"]:checked + label::before {
   content: "ON";
   color: #ff0000;
-  left: 10px;
+  font-family: 'NEXON Lv1 Gothic OTF';
+  left: 9px;
 }
+
 .header-search-bar-line{
   justify-content: center; /* 수직 정중앙 정렬 */
   align-items: center; /* 수직 정중앙 정렬 */
