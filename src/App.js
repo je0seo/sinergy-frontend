@@ -679,9 +679,7 @@ const App = () => {
             <div className='main-right-side'>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
-                {activeTab === '3D'
-                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );
