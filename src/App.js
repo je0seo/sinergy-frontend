@@ -431,7 +431,6 @@ const App = () => {
                 <div className='menu'>
                   <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
-                    <button onClick={() => handleTabChange('3D')} className={`menu-tab ${activeTab === '3D' ? 'active' : ''}`}>배리어프리 길찾기</button>
                 </div>
                 {activeTab === '' && <div className='home-left'>
                     <div>
@@ -483,7 +482,7 @@ const App = () => {
                                 {/*<button className='showingBtn' onClick={() => handleShowReq('facilities')}><div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div></button> */}
                                 <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('toilet')}><img src={Icons.toiletIcon} alt="toiletIcon" className="iconImage" /></button>장애인 화장실</div>
                                 {ToggBtnType!=='sports' && (<div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('sports').then(r => setToggBtnType('sports'))}><img src={Icons.sportsIcon} alt="Sports Icon" className="iconImage" /></button>▽운동시설</div>)}
-                                {ToggBtnType=='sports' &&(
+                                {ToggBtnType==='sports' &&(
                                     <div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.sportsIcon} alt="Sports Icon" className="iconImage" /></button>△운동시설</div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={Icons.basketballIcon} alt="Basketball Icon" className="iconImage" /></button>농구장</div>
@@ -493,7 +492,7 @@ const App = () => {
                                     </div>
                                 )}
                                 {ToggBtnType!=='dining' && (<div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('dining').then(r => setToggBtnType('dining'))}><img src={Icons.diningIcon} alt="Dining Icon" className="iconImage" /></button>▽식당</div>)}
-                                {ToggBtnType=='dining' && (
+                                {ToggBtnType==='dining' && (
                                     <div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.diningIcon} alt="Dining Icon" className="iconImage" /></button>△식당</div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafeteria')}><img src={Icons.cafeteriaIcon} alt="Cafeteria Icon" className="iconImage" /></button>학생식당</div>
@@ -501,7 +500,7 @@ const App = () => {
                                     </div>
                                 )}
                                 {ToggBtnType!=='cafe&store' && (<div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafe&store').then(r => setToggBtnType('cafe&store'))}><img src={Icons.cafestoreIcon} alt="Cafestore Icon" className="iconImage" /></button>▽카페/편의점</div>)}
-                                {ToggBtnType=='cafe&store' && (
+                                {ToggBtnType==='cafe&store' && (
                                     <div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.cafestoreIcon} alt="Cafestore Icon" className="iconImage" /></button>△카페/편의점</div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafe')}><img src={Icons.cafeIcon} alt="Cafe Icon" className="iconImage" /></button>카페</div>
@@ -539,64 +538,6 @@ const App = () => {
                     )}
                 </div>}
                 {activeTab === '길찾기' && (
-                <div>
-                  <div className="pathfinder-page">
-                    <div className="input-row">
-                        <div className="input">
-                            <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
-                            <div className="input-box">
-                                <input className='pf-input-style' type="text" placeholder="출발지를 입력하세요" value={start} onChange={(e) => setStart(e.target.value)} />
-                            </div>
-                        </div>
-                        <div>
-                            {!(stopovers.length>STOPOVER_MAX_INDEX) && stopovers.map((stopover, index) => (
-                                <div className="input" key={index}>
-                                    <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
-                                    <div className="input-box">
-                                        <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
-                                        <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>―</button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="input">
-                            <img src={irumarkerE} alt="end irumarker" className="irumarkerImage"/>
-                            <div className="input-box">
-                                <input className='pf-input-style' type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="button-row">
-                        <button className="button-style" onClick={addStopover}>+ 경유지</button>
-                        <button className="button-style" onClick={() => {handleInputReset();    initialObsState();}}>⟲ 다시입력</button>
-                        <button className="button-style" onClick={() => {initLegend(); handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
-                    </div>
-                    {showText4deco && (
-                        <div className="deco-text-style">
-                            <p>서울시립대학교 어디로 안내할까요?</p>
-                        </div>
-                    )}
-                    {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
-                        <div>
-                            <div className="shortest-path-text">
-                                [최단 경로]
-                                <div>
-                                    <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m  (예상 시간: 약 {(totalDistance / 64).toFixed(0)}분, {(totalDistance / 0.64).toFixed(0)} 걸음)</div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
-                        <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
-                    )}
-                    {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
-                        <div className="warning-result-text">
-                            {StartEndNormalCheckMessage}
-                        </div>
-                    )}
-                  </div>
-                </div>)}
-                {activeTab === '3D' && (
                     <div>
                         <div className="pathfinder-page">
                             {BarrierFreeMode && (
