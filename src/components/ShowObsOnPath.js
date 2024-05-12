@@ -12,19 +12,21 @@ import { Stroke, Style } from "ol/style";
 import {showMarkerStyle} from './MarkerStyle'
 import {PopupUIComponent} from './PopupC'
 
-const getNodeIdsOnPath = (pathData) => {
+export const getNodeIdsOnPath = (pathData) => {
     let listOfNodeId = [];
     pathData.forEach((path, index) => {
-        listOfNodeId = path.map(n => n.node)
+        listOfNodeId = listOfNodeId.concat(path.map(n => n.node))
     });
+    listOfNodeId = Array.from(new Set(listOfNodeId)); // 중복된 값 제거
     return listOfNodeId
 }
 
 const getEdgeIdsOnPath = (pathData) => {
     let listOfEdgeId = [];
     pathData.forEach((path, index) => {
-        listOfEdgeId = path.map(e => e.edge);
+        listOfEdgeId = listOfEdgeId.concat(path.map(e => e.edge));
     });
+    listOfEdgeId = Array.from(new Set(listOfEdgeId));
     listOfEdgeId.pop()
     return listOfEdgeId
 }
@@ -82,7 +84,7 @@ const createInvisibleLinkObsLayer = (url) => {
     })
 }
 
-const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacleAvoidance}) => {
+export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, showObs, onObstacleAvoidance}) => {
     let [bumpLayer, setBumpLayer] = useState([]);
     let [bolLayer, setBolLayer] = useState([]);
     let [linkObsLayer, setLinkObsLayer] = useState([]);
