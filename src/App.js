@@ -88,6 +88,56 @@ const usePathfinding = () => {
   const [pathData, setPathData] = useState(null);
   const [showText4deco, setShowText4deco] = useState(true);
   const [obstacleIDs, setObstacleIDs] = useState({ObstacleNodeIDs: [], ObstacleLinkIDs: []});
+  const [legendState, setLegend] = useState({
+      stair: false,
+      unpaved: false,
+      slope: false,
+      indoor: false
+  });
+
+  const setExist = (key, value) => {
+    setLegend(prevState => ({
+      ...prevState,
+      [key]: value
+    }));
+  };
+
+  const initLegend = () => {    // 범례 상태 초기화
+    setLegend(prevState => {
+      const updatedState = {};
+      for (const [key, _] of Object.entries(prevState)) {
+        updatedState[key] = false;
+      }
+      return updatedState;
+    });
+  }
+
+  const handleLegendState = (pathData) => {
+    let stairFound = false;
+    let unpavedFound = false;
+    let slopeFound = false;
+    let indoorFound = false;
+
+    pathData.forEach((path, index) => {
+      path.forEach(item => {
+          if (!stairFound && item.link_att == 5) {   // 계단
+            setExist('stair',true)
+            stairFound = true
+          } else if (!unpavedFound && item.link_att == 4) {   // 비포장
+            setExist('unpaved',true)
+            unpavedFound = true
+          } else if (!slopeFound && item.link_att != 5 && item.grad_deg>=3.18){    // 경사로
+            setExist('slope',true)
+            slopeFound = true
+          } else if (!indoorFound && item.link_att == 6){    // 실내
+            setExist('indoor',true)
+            indoorFound = true
+          }
+      });
+      if (stairFound && unpavedFound && slopeFound && indoorFound )   // 이미 이전 path에서 다 존재 하는 거 확인했으면 종료
+       return
+    });
+  }
 
   const handlePathResult = (data) => {
     const calculatedTotalDistance = data.minAggCost;
@@ -108,6 +158,8 @@ const usePathfinding = () => {
     }
     if (shortestPath) {
       setPathData(shortestPath);
+      console.log(shortestPath)
+      handleLegendState(shortestPath)
     }
   };
 
@@ -211,6 +263,7 @@ const usePathfinding = () => {
     setFeatures(initialFeaturesState);
     setStart('');
     setEnd('');
+    initLegend();
     setSlopeD(3.18);
     setBolC(120);
     setBumpC(2);
@@ -227,6 +280,8 @@ const usePathfinding = () => {
     features,
     start,
     end,
+    legendState,
+    initLegend,
     slopeD,
     bolC,
     bumpC,
@@ -282,11 +337,6 @@ const App = () => {
     const [bump, setBump] = useState({})
     const [showObsOnPath, setShowObsOnPath] = useState(false)
 
-    const [stairExist, setStairExist] = useState(false)
-    const [unpavedExist, setunpavedExist] = useState(false)
-    const [slopeExist, setslopeExist] = useState(false)
-    const [inExist, setinExist] = useState(false)
-
     const handleShowObsOnPath = async() => {
         let data = await showReq({ReqType: 'bol', bolC: bolC});
         setBol({type: 'bol', data})
@@ -330,6 +380,8 @@ const App = () => {
       features,
       start,
       end,
+      legendState,
+      initLegend,
       slopeD,
       bolC,
       bumpC,
@@ -518,7 +570,7 @@ const App = () => {
                     <div className="button-row">
                         <button className="button-style" onClick={addStopover}>+ 경유지</button>
                         <button className="button-style" onClick={() => {handleInputReset();    initialObsState();}}>⟲ 다시입력</button>
-                        <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                        <button className="button-style" onClick={() => {initLegend(); handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                     </div>
                     {showText4deco && (
                         <div className="deco-text-style">
@@ -607,7 +659,7 @@ const App = () => {
                             {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
                                 <div className="button-row">
                                     <button className="button-style" onClick={() => {handleInputReset();    initialObsState();}}>⟲ 다시입력</button>
-                                    <button className="button-style" onClick={() => {handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
+                                    <button className="button-style" onClick={() => {initLegend(); handleFindPathClick(); initialObsState();}}>길찾기 결과 보기</button>
                                 </div>
                             )}
                             {showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
@@ -653,10 +705,10 @@ const App = () => {
                             {showObsOnPath && showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
                                 <div>
                                     {<img src={legend} alt="link_legend" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {unpavedExist && <img src={legend_unpaved} alt="link_legend_unpaved" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {stairExist && <img src={legend_stair} alt="link_legend_stair" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {slopeExist && <img src={legend_slope} alt="link_legend_slope" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
-                                    {inExist && <img src={legend_in} alt="link_legend_in" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {legendState.unpaved && <img src={legend_unpaved} alt="link_legend_unpaved" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {legendState.stair && <img src={legend_stair} alt="link_legend_stair" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {legendState.slope && <img src={legend_slope} alt="link_legend_slope" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
+                                    {legendState.indoor && <img src={legend_in} alt="link_legend_in" style={{ width: '50%', margin: '0 4mm 0 0' }} />}
                                 </div>
                             )}
                         </div>
@@ -689,7 +741,7 @@ const App = () => {
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
                 {activeTab === '3D'
-                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance} setStairExist={setStairExist} setunpavedExist={setunpavedExist} setslopeExist={setslopeExist} setinExist={setinExist}/>}
+                    && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );
