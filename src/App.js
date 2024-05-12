@@ -28,7 +28,7 @@ import {Icons} from './components/MarkerStyle'
 
 import { PopupUIComponent } from './components/PopupC';
 
-const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange, handleModeChange}) => {
+const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange, handleModeChange, BarrierFreeMode}) => {
     const inputRef = useRef(null);
     const handleKeyPress = (e) => {
         if (e.key === "Enter") { // Enter 키를 누르면 연결된 버튼을 클릭
@@ -40,7 +40,7 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
             <div style={{width: '100%'}}>
                 <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
             </div>
-            <div className = 'header-search-bar line' style={{width: '100%', display: "flex"}}>
+            <div className = 'header-search-bar-line' style={{width: '100%', display: "flex"}}>
                 <div className="search-bar">
                     <img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'2px', width:'19px'}}/>
                     <input type="text"
@@ -52,8 +52,8 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
                     />
                     <button ref={inputRef} onClick={handleSearch}>검색</button>
                 </div>
-                <div>
-                    <button onClick={handleModeChange} style={{fontFamily:'NEXON Lv1 Gothic OTF'}}>barrier free mode</button>
+                <div className="barrier-free-switch">
+                    <input type="checkbox" id="chk1" checked={BarrierFreeMode} onChange={handleModeChange}/><label htmlFor="chk1"></label>
                 </div>
             </div>
         </header>
@@ -376,7 +376,7 @@ const App = () => {
         <div className='container' >
             {toggleLeftSide && (
             <div className="main-left-side">
-                <Header handleSearch={() => {setKeyword(searchTerm);}} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleModeChange={handleModeChange}/>
+                <Header handleSearch={() => {setKeyword(searchTerm);}} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleModeChange={handleModeChange} BarrierFreeMode={BarrierFreeMode}/>
                 <div className='menu'>
                   <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>

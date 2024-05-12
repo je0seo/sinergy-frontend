@@ -117,13 +117,68 @@ background-color: #FFFEF4;
   width: 14%;
   height: 30px;
 }
+/*barrier free mode 전환 스위치*/
+.barrier-free-switch{
+  padding: 5px 0 2px 3px;
+}
+.barrier-free-switch input[type="checkbox"] {
+  display: none;
+}
+.barrier-free-switch label {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  height: 25px;
+  background-color: #a49c9c;/*회색*/
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.barrier-free-switch label::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background-color: #FFCD4A; /*메인색*/
+  transform: translateY(-50%);
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s;
+}
+.barrier-free-switch label::before {
+  content: "OFF";
+  font-size: 10px;
+  font-family: 'NEXON Lv1 Gothic OTF';
+  position: absolute;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.4s;
+}
+.barrier-free-switch input[type="checkbox"]:checked + label {
+  background: #FFCD4A; /*메인색*/
+}
+.barrier-free-switch input[type="checkbox"]:checked + label::after {
+  left: 28px;
+}
+.barrier-free-switch input[type="checkbox"]:checked + label::before {
+  content: "ON";
+  color: #ff0000;
+  left: 10px;
+}
+.header-search-bar-line{
+  justify-content: center; /* 수직 정중앙 정렬 */
+  align-items: center; /* 수직 정중앙 정렬 */
+  display: flex;
+}
 /*탭 구성*/
 .menu {
   width: 100%;
   display: flex;
   justify-content: space-around;
   margin:0px 0px 1% 1%;
-  background-color: 한
+  background-color: #FFFEF4; /*배경색*/
 }
 .menu-tab {
   font-family: 'NEXON Lv1 Gothic OTF';
