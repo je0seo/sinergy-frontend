@@ -490,7 +490,7 @@ const App = () => {
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.sportsIcon} alt="Sports Icon" className="iconImage" /></button>△운동시설</div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={Icons.basketballIcon} alt="Basketball Icon" className="iconImage" /></button>농구장</div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('tennis')}><img src={Icons.tennisIcon} alt="Tennis Icon" className="iconImage" /></button>테니스장</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('tennis')}><img src={Icons.squashIcon} alt="Squash Icon" className="iconImage" /></button>스쿼시장</div>
+                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('squash')}><img src={Icons.squashIcon} alt="Squash Icon" className="iconImage" /></button>스쿼시장</div>
                                         <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('gym')}><img src={Icons.gymIcon} alt="Gym Icon" className="iconImage" /></button>헬스장</div>
                                     </div>
                                 )}
