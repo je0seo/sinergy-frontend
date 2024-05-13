@@ -290,7 +290,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         width: 2
                     })
                 }),
-                zIndex: 4
+                zIndex: 3
             });
 
             map.addLayer(shortestPathLayer);
