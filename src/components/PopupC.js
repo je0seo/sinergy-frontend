@@ -48,7 +48,14 @@ export const usePopup = (category, map, layer) => {
     }
     const setInfoPagePopup = (index) => {
         setImage(category.data.images[index]);
-        setContent(category.data.info[index]);
+        if (category.type == 'slope' || category.type == 'unpaved' || category.type == 'stairs') {
+            setContent(null)    // 이전에 클릭한 객체 info가 남아있는 경우 방지
+            if (category.data.info[index] > 0) {    //
+                setContent('경사도[degree] <br>'+category.data.info[index]);
+            }
+        } else {
+            setContent(category.data.info[index]);
+        }
     }
     const setPathFinderPagePopup = (feature) => {
         let bumpExist = layer[0].getSource().getFeatures().includes(feature)
@@ -135,7 +142,6 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
           <div>{ObstacleID}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
-            {(type === 'unpaved' || type === 'stairs' || type === 'slope') && <>경사도[degree]</>}
             {type === 'bump' && <>도로턱 높이[cm]</>}
             {type === 'bol' && <>볼라드 간격[cm]</>}
             <div dangerouslySetInnerHTML={{__html: content}} />
