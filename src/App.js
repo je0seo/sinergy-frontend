@@ -147,29 +147,28 @@ const usePathfinding = () => {
   }
 
   const handlePathResult = (data) => {
-    const calculatedTotalDistance = data.minAggCost;
-    setTotalDistance(calculatedTotalDistance);
-    setShowShortestPathText(true);
-    setShowText4deco(false);
-    const shortestPath = data.shortestPath;
-    //console.log("data.userReqNum:", data.userReqNum);
-    if (data.userReqNum.length === 1 && data.userReqNum[0] === 0){
-        setStartEndNormalCheckMessage("출발지 오류입니다. 다시한번 확인해주세요");
-        setPathData(null);
-        //console.log("출발지 오류입니다. 다시한번 확인해주세요");
+    if (data.StartEndNormalCheckMessage){
+        setStartEndNormalCheckMessage(data.StartEndNormalCheckMessage);
+        console.log(StartEndNormalCheckMessage);
     }
-    if (data.userReqNum.length === 2 && data.userReqNum[0] === 0 && data.userReqNum[1] === 0){
-        setStartEndNormalCheckMessage("도착지 오류입니다. 다시한번 확인해주세요");
-        setPathData(null);
-        //console.log("도착지 오류입니다. 다시한번 확인해주세요");
+    else{
+        const calculatedTotalDistance = data.minAggCost;
+        setTotalDistance(calculatedTotalDistance);
+        setShowShortestPathText(true);
+        setShowText4deco(false);
+        const shortestPath = data.shortestPath;
+        //console.log("data.userReqNum:", data.userReqNum);
+
+        if (shortestPath) {
+            setPathData(shortestPath);
+            handleLegendState(shortestPath)
+        }
     }
-    if (shortestPath) {
-      setPathData(shortestPath);
-      handleLegendState(shortestPath)
-    }
+
   };
 
   const handleFindPathClick = async () => {
+    setStartEndNormalCheckMessage('');
     try {
       const requestData = {
         start,
@@ -673,7 +672,7 @@ const App = () => {
                                 )}
                             </div>
                         )}
-                        {showShortestPathText && StartEndNormalCheckMessage!=='' && !pathData && (
+                        {StartEndNormalCheckMessage!=='' && (
                             <div>
                                 <div className="warning-result-text"> {StartEndNormalCheckMessage}</div>
                                 <div className="button-row">
