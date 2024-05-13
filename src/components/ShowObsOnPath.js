@@ -150,7 +150,7 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
                         serverType: 'geoserver',
                         visible: true,
                     }),
-                    zIndex: 3
+                    zIndex: 4
                 });
                 map.addLayer(legendLayer);
             })
@@ -172,7 +172,6 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
                         const feature = map.forEachFeatureAtPixel([pixel[0] + dx, pixel[1] + dy], function(feature, layer) {
                             if (layer.get('title') === 'bumpOnPath Layer' || layer.get('title') === 'bolOnPath Layer'
                             || layer.get('title') === 'slopeOnPath Layer' || layer.get('title') === 'stairOnPath Layer' || layer.get('title') === 'unpavedOnPath Layer') {
-                                console.log(layer.get('title'));
                                 map.getViewport().style.cursor = 'pointer';
                                 return feature;
                             }
