@@ -9,13 +9,13 @@
 }
 
 .container {
-  /font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'NEXON Lv1 Gothic OTF';
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
 .main-left-side {
-  width: 12cm; /*맥북 기준: , 해상도 2560*11440 컴퓨터 기준: 460*/
+  width: 453px; /*맥북 기준: , 해상도 2560*11440 컴퓨터 기준: 460*/
   background-color: #FFFEF4; /*배경색*/
   padding: 0px;
   height: 100%;
@@ -24,13 +24,13 @@
   transition: all 0.4s ease;
 }
 .main-left-side::-webkit-scrollbar {
-    width: 20px;  /* 세로축 스크롤바 폭 너비 */
+    width: 15px;  /* 세로축 스크롤바 폭 너비 */
 }
 .main-left-side::-webkit-scrollbar-thumb {
    max-height: 5px;
    background: #C1C1C1; /* 스크롤바 막대 색상 */
    border-radius: 12px 12px 12px 12px;
-   border: 7.5px solid #FFFEF4;
+   border: 6px solid #FFFEF4;
 }
 .main-left-side::-webkit-scrollbar-thumb:hover {
     background-color: #A7A7A7;
@@ -39,7 +39,7 @@
     background-color: #787878;
 }
 .main-left-side::-webkit-scrollbar-track {  /*스크롤바 배경*/
-background-color: #FFFEF4;
+    background-color: #FFFEF4;
 }
 .main-left-side::-webkit-scrollbar-button {
   background: #FFFEF4;
@@ -48,7 +48,7 @@ background-color: #FFFEF4;
 .main-left-side::-webkit-scrollbar-button:vertical:start:decrement,
 .main-left-side::-webkit-scrollbar-button:vertical:start:increment {
    display: block;
-   height: 120px;
+   height: 98px;
 }
 .main-left-side::-webkit-scrollbar-button:vertical:end:decrement {
      display: block;
@@ -56,7 +56,7 @@ background-color: #FFFEF4;
 }
 
 .ToggleLeftSide {
-  width:18px;
+  width:12px;
   height: 100vh;
   justify-content: center; /* 수직 정중앙 정렬 */
   align-items: center; /* 수직 정중앙 정렬 */
@@ -64,9 +64,10 @@ background-color: #FFFEF4;
   background-color: #FFFEF4; /*배경색*/
 }
 .ToggleLeftSideBtn {
-  width: 18px;
-  height: 100px;
+  width: 12px;
+  height: 150px;
   text-align: center;
+  font-family: 'NEXON Lv1 Gothic OTF';
   display: flex;
   justify-self: center;
   justify-content: center; /* 수평 정중앙 정렬 */
@@ -236,14 +237,14 @@ background-color: #FFFEF4;
 }
 .option-button-row {
   display: flex;
-  margin: 0 0 0 1%;
+  margin: 0 0 0 0;
   padding: 0;
   justify-content: space-between;
 }
 .option-button{
   padding: 1mm 2mm 1mm 2mm;
   height: 9mm;
-  font-size: 13.5px;
+  font-size: 13px;
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid; 
@@ -260,7 +261,7 @@ background-color: #FFFEF4;
 .selected-button {
   background-color: #FFCD4A; /*메인색*/
   height: 9mm;
-  font-size: 13.5px;
+  font-size: 13px;
   color: black;
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
   border-width: 1px; /* 버튼의 테두리 두께 */
@@ -281,6 +282,7 @@ background-color: #FFFEF4;
   height:26px;
   width:26px;
   font-size:10px;
+  font-family: 'NEXON Lv1 Gothic OTF';
   font-weight: 700; /* 보다 굵은 굵기 */
   border: #a49c9c solid 1px;/*회색*/
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
@@ -304,6 +306,7 @@ background-color: #FFFEF4;
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
   background-color: #FFFEF4; /*배경색*/
   transition: background-color 0.1s ease;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .stopover-add-button:hover {
   color: #FFCD4A;
@@ -343,7 +346,6 @@ background-color: #FFFEF4;
   justify-content: flex-end;
   margin-top: 5px;
   margin-bottom: 5px;
-  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .button-style{
   margin: 0 0 0 4mm;
@@ -353,6 +355,7 @@ background-color: #FFFEF4;
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
   background-color: #FFFEF4; /*배경색*/
   transition: background-color 0.1s ease;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .button-style:hover {
   color: #FFCD4A; /*배경색*/
@@ -364,14 +367,17 @@ background-color: #FFFEF4;
   font-size:16px;
   display: flex;
   flex-direction: column;
+  text-align: center;
   padding: 2mm;
   gap: 5px;
-  margin: 0 0 2mm 4mm;
+  margin: 10px 3px 10px 15px;
   color: #FD5230;
   border: 2px solid #FD5230;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .shortest-path-text{
   font-size:16px;
+  font-family: 'NEXON Lv1 Gothic OTF';
   display: flex;
   flex-direction: column;
   padding: 4mm;
@@ -437,6 +443,24 @@ background-color: #FFFEF4;
   margin: 0 2px 0 0;
 }
 .obstacle-remove-button:hover {
+  color: #FFCD4A;
+  background-color: #FFFEF4; /*배경색*/
+  border: #FFCD4A;
+  outline: #FFCD4A solid 0.5px;
+  cursor: pointer;
+}
+.individual-obstacles-button {
+  font-family: 'NEXON Lv1 Gothic OTF';
+  margin: 2px;
+  height:20px;
+  font-size: 15px;
+  border-radius: 2px; /* 테두리의 모서리를 둥글게 설정 */
+  border: #a49c9c solid 1px; /*회색*/
+  color:black;
+  background-color: #FFCD4A;
+
+}
+.individual-obstacles-button:hover {
   color: #FFCD4A;
   background-color: #FFFEF4; /*배경색*/
   border: #FFCD4A;
@@ -561,7 +585,13 @@ background-color: #FFFEF4;
   flex-direction: column;
 }
 .legend-individual {
-  width: 200px;
-  margin: 0 0 0 15px; /*위 오 아래 왼*/
+  margin-left: 15px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
-
+.legend-img {
+  width: 160px
+}
