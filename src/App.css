@@ -249,6 +249,7 @@ background-color: #FFFEF4;
   border-style: solid; 
   border-color: #FFCD4A; /*메인색*/
   background-color: #FFFEF4; /*배경색*/
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .option-button:hover {
   color: black;
@@ -265,6 +266,7 @@ background-color: #FFFEF4;
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid;
   border-color: #FFCD4A;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
 .irumarkerImage {
   height: 33px;
