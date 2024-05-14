@@ -537,11 +537,11 @@ const App = () => {
                     {/*<a href="https://www.uos.ac.kr/main.do?epTicket=INV">
                         <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
                     </a>*/}
-                    {showText4deco && keyword == '' && (
+                    {/*{showText4deco && keyword == '' && (
                         <div className="deco-text-style">
                             <p>서울시립대학교를 탐색해보세요!</p>
                         </div>
-                    )}
+                    )}*/}
                 </div>}
                 {activeTab === '길찾기' && (
                     <div>
