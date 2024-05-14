@@ -650,14 +650,14 @@ const App = () => {
                             )}
                             {showObsOnPath && showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
                                 <div className="legend">
-                                    <img src={legend_sidewalk} alt="link_legend_sidewalk" className="legend-individual" />
-                                    <img src={legend_mixed} alt="link_legend_mixed" className="legend-individual" />
-                                    <img src={legend_crosswalk} alt="link_legend_crosswalk" className="legend-individual" />
-                                    <img src={legend_wheelchair} alt="link_legend_wheelchair" className="legend-individual" />
-                                    {legendState.unpaved && <img src={legend_unpaved} alt="link_legend_unpaved" className="legend-individual" />}
-                                    {legendState.stair && <img src={legend_stair} alt="link_legend_stair" className="legend-individual" />}
-                                    {legendState.slope && <img src={legend_slope} alt="link_legend_slope" className="legend-individual" />}
-                                    {legendState.indoor && <img src={legend_in} alt="link_legend_in" className="legend-individual" />}
+                                    <div className="legend-individual"><img src={legend_sidewalk} alt="link_legend_sidewalk" className="legend-img"/>보도</div>
+                                    <div className="legend-individual"><img src={legend_mixed} alt="link_legend_mixed" className="legend-img"/>보차혼용</div>
+                                    <div className="legend-individual"><img src={legend_crosswalk} alt="link_legend_crosswalk" className="legend-img"/>횡단보도</div>
+                                    <div className="legend-individual"><img src={legend_wheelchair} alt="link_legend_wheelchair" className="legend-img"/>휠체어진입로</div>
+                                    {legendState.unpaved && <div className="legend-individual"><img src={legend_unpaved} alt="link_legend_unpaved" className="legend-img"/>비포장도로</div>}
+                                    {legendState.stair && <div className="legend-individual"><img src={legend_stair} alt="link_legend_stair" className="legend-img"/>계단</div>}
+                                    {legendState.slope && <div className="legend-individual"><img src={legend_slope} alt="link_legend_slope" className="legend-img"/>경사로</div>}
+                                    {legendState.indoor && <div className="legend-individual"><img src={legend_in} alt="link_legend_in" className="legend-img"/>실내</div>}
                                 </div>
                             )}
                         </div>

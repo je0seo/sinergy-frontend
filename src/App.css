@@ -449,6 +449,24 @@
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
 }
+.individual-obstacles-button {
+  font-family: 'NEXON Lv1 Gothic OTF';
+  margin: 2px;
+  height:20px;
+  font-size: 15px;
+  border-radius: 2px; /* 테두리의 모서리를 둥글게 설정 */
+  border: #a49c9c solid 1px; /*회색*/
+  color:black;
+  background-color: #FFCD4A;
+
+}
+.individual-obstacles-button:hover {
+  color: #FFCD4A;
+  background-color: #FFFEF4; /*배경색*/
+  border: #FFCD4A;
+  outline: #FFCD4A solid 0.5px;
+  cursor: pointer;
+}
 /*사용자 설정*/
 .option-add{
   display: flex;
@@ -567,7 +585,13 @@
   flex-direction: column;
 }
 .legend-individual {
-  width: 200px;
-  margin: 0 0 0 15px; /*위 오 아래 왼*/
+  margin-left: 15px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  font-family: 'NEXON Lv1 Gothic OTF';
 }
-
+.legend-img {
+  width: 160px
+}

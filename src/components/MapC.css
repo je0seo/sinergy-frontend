@@ -49,11 +49,13 @@
     background-color: rgba(255,248,230,0.5);
     cursor: pointer;
     font-size: 14px;
+    font-family: 'NEXON Lv1 Gothic OTF';
     border-color: #ffde84;
     border-style: solid;
 }
 .closer-button:hover {
-  background-color: rgba(255,248,230,0.9);
-  border-color: #ffde84;
-  transition: background-color 0.5s ease;
+    background-color: rgba(255,248,230,0.9);
+    border-color: #ffde84;
+    transition: background-color 0.5s ease;
+    font-family: 'NEXON Lv1 Gothic OTF';
 }
