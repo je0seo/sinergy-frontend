@@ -139,7 +139,7 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
     return (
         <div ref={containerRef} className="ol-popup">
           {<button ref={closerRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>}
-          <div>{ObstacleID}</div>
+            {onPath && (<div>{ObstacleID}</div>)}
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
             {type === 'bump' && <>도로턱 높이[cm]</>}
