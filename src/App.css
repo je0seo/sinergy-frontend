@@ -7,16 +7,22 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
 
 .container {
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
 .main-left-side {
-  width: 453px; /*맥북 기준: , 해상도 2560*11440 컴퓨터 기준: 460*/
-  background-color: #FFFEF4; /*배경색*/
+  width: 380px; /*맥북 기준: , 해상도 2560*11440 컴퓨터 기준: 460*/
+  background-color: white;/*배경색: #FFFEF4 */
   padding: 0px;
   height: 100%;
   overflow-x: hidden;
@@ -24,13 +30,13 @@
   transition: all 0.4s ease;
 }
 .main-left-side::-webkit-scrollbar {
-    width: 15px;  /* 세로축 스크롤바 폭 너비 */
+    width: 8px;  /* 세로축 스크롤바 폭 너비 */
 }
 .main-left-side::-webkit-scrollbar-thumb {
    max-height: 5px;
    background: #C1C1C1; /* 스크롤바 막대 색상 */
    border-radius: 12px 12px 12px 12px;
-   border: 6px solid #FFFEF4;
+   border: 2px solid  white;/*배경색: #FFFEF4 */
 }
 .main-left-side::-webkit-scrollbar-thumb:hover {
     background-color: #A7A7A7;
@@ -39,10 +45,10 @@
     background-color: #787878;
 }
 .main-left-side::-webkit-scrollbar-track {  /*스크롤바 배경*/
-    background-color: #FFFEF4;
+    background-color:  white;/*배경색: #FFFEF4 */
 }
 .main-left-side::-webkit-scrollbar-button {
-  background: #FFFEF4;
+  background:  white;/*배경색: #FFFEF4 */
   height: 15px;
 }
 .main-left-side::-webkit-scrollbar-button:vertical:start:decrement,
@@ -61,34 +67,33 @@
   justify-content: center; /* 수직 정중앙 정렬 */
   align-items: center; /* 수직 정중앙 정렬 */
   display: flex;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
 }
 .ToggleLeftSideBtn {
   width: 12px;
   height: 150px;
   text-align: center;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   display: flex;
   justify-self: center;
   justify-content: center; /* 수평 정중앙 정렬 */
   align-items: center; /* 수직 정중앙 정렬 */
   border-style: none;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
 }
 .ToggleLeftSideBtn:hover {
   background-color: #FFCD4A; /*메인색*/ /* 마우스 호버 시 배경색 변경, 불투명도 50% */
 }
-
 .main-right-side {
   flex: 1;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
 }
 /*Header부분*/
 .header {
   display: flex;
   flex-direction: column;
-  padding: 5px;
-  background-color: #FFFEF4; /*배경색*/
+  padding: 5px 0 5px 15px;
+  background-color: white;/*배경색: #FFFEF4 */
   color: #fff; /* 헤더 텍스트 색상 */
   justify-content: space-between;
   align-items: center;
@@ -99,29 +104,34 @@
   border: 1px solid #FFCD4A; /*메인색*/
   border-radius: 80px;
   padding: 2px;
-  background-color: #FFFEF4; /*배경색*/
-  width: 300px;
-  margin: 0px 0px 0px 0px;
+  background-color: white;/*배경색: #FFFEF4 */
+  width: 65%;
+  margin: 2px 0 0 0;
 }
 .search-bar input {
   flex: 2;
   border: none;
   outline: none;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .search-bar button {
   background-color: #FFCD4A; /*메인색*/
-  color: #FFFEF4; /*배경색*/
+  color: white;/*배경색: #FFFEF4 */
   border: none;
-  border-radius: 15px 15px 15px 15px;
+  border-radius: 100%;
   cursor: pointer;
-  width: 14%;
-  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /*barrier free mode 전환 스위치*/
 .barrier-free-switch{
-  margin: 3px 0 1px 4px;
-  padding:2px 2px 2px 2px; /*위 오 아래 왼*/
+  margin: 0 0 2px 5px;
+  padding:0 0 0 5px; /*위 오 아래 왼*/
+  display: flex;
+  flex-direction: column;
+
 }
 .barrier-free-switch input[type="checkbox"] {
   display: none;
@@ -135,8 +145,8 @@
   position: relative;
   background-color: #a49c9c;/*회색*/
   cursor: pointer;
-  width: 55px;
-  height: 25px;
+  width: 50px;
+  height: 20px;
   border-radius: 20px;
   transition: 0.2s;
 }
@@ -144,19 +154,19 @@
   background: #ffe8b0;
 }
 .barrier-free-switch label::after {
-  content: "BF";
+  content: "";
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   color: #313030;
   position: absolute;
-  left: 0px;
+  left: 2px;
   top: 50%;
-  width: 30px;
-  height: 30px;
+  width: 16px;
+  height: 16px;
   border-radius: 100%;
-  background-color: #FFCD4A; /*메인색*/
+  background-color: white; /*학교 남색*/
   transform: translateY(-50%);
   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.4s;
@@ -164,29 +174,29 @@
 .barrier-free-switch label::before {
   content: "OFF";
   font-size: 9px;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   position: absolute;
-  left: 31.5px;
+  left: 25px;
   top: 50%;
   transform: translateY(-50%);
   transition: all 0.4s;
 }
 .barrier-free-switch input[type="checkbox"]:checked + label {
-  background: #FFCD4A; /*메인색*/
+  background: #FFCD4A; /*메인색 #FFCD4A*/
 }
 .barrier-free-switch input[type="checkbox"]:checked + label::after {
-  left: 28px;
+  left: 33px;
 }
 .barrier-free-switch input[type="checkbox"]:checked + label::before {
   content: "ON";
-  color: #ff0000;
-  font-family: 'NEXON Lv1 Gothic OTF';
-  left: 9px;
+  color: #004094; /* #004094*/
+  font-family: 'Pretendard-Regular';
+  font-size: 12px;
+  left: 11px;
 }
-
 .header-search-bar-line{
-  justify-content: center; /* 수직 정중앙 정렬 */
-  align-items: center; /* 수직 정중앙 정렬 */
+  justify-content: flex-end; /* 수직 정중앙 정렬 */
+  align-items: flex-end; /* 수직 정중앙 정렬 */
   display: flex;
 }
 /*탭 구성*/
@@ -195,10 +205,10 @@
   display: flex;
   justify-content: space-around;
   margin:0px 0px 1% 1%;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
 }
 .menu-tab {
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   width: 50%;
   height: 9mm;
   background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
@@ -209,14 +219,14 @@
   padding: 0 0 0 0;
   text-decoration: none;
   border-radius: 0px;
-  transition: background-color 1s ease;
+  transition: background-color 0.8s ease;
 }
 .menu-tab:hover {
   background-color: #555; /* 마우스 호버 시 배경색 변경 */
 }
 /*홈화면 좌측 패널*/
 .home-left {
-  background-color: #FFFEF4; /*배경색 */
+  background-color: white;/*배경색: #FFFEF4 */
   margin:0 1% 0% 1%;
   justify-content: space-around;
   width: 99%;
@@ -225,7 +235,7 @@
 .info-page{
   border-style: solid;
   border-color: #FFCD4A; /*메인색*/
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   margin: 3px 0px 5px 0px; /*위 오 아래 왼*/
   padding-left: 0px;
   padding-right: 0px;
@@ -233,7 +243,7 @@
 /*pathfinder-page*/
 .pathfinder-page {
   flex: 1;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
 }
 .option-button-row {
   display: flex;
@@ -249,8 +259,8 @@
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid; 
   border-color: #FFCD4A; /*메인색*/
-  background-color: #FFFEF4; /*배경색*/
-  font-family: 'NEXON Lv1 Gothic OTF';
+  background-color: white;/*배경색: #FFFEF4 */
+  font-family: 'Pretendard-Regular';
 }
 .option-button:hover {
   color: black;
@@ -267,7 +277,7 @@
   border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid;
   border-color: #FFCD4A;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .irumarkerImage {
   height: 33px;
@@ -282,17 +292,17 @@
   height:26px;
   width:26px;
   font-size:10px;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   font-weight: 700; /* 보다 굵은 굵기 */
   border: #a49c9c solid 1px;/*회색*/
   border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   transition: background-color 0.1s ease;
   align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
 }
 .stopover-remove-button:hover {
   color: #FFCD4A;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   border: #FFCD4A;
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
@@ -304,13 +314,13 @@
   font-size:15px;
   border: #a49c9c solid 1px;/*회색*/
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   transition: background-color 0.1s ease;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .stopover-add-button:hover {
   color: #FFCD4A;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   border: #FFCD4A;
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
@@ -318,7 +328,7 @@
 .input{
   display: flex;
   flex-wrap: nowrap;
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
 }
 .input-box{
   height: 30px;
@@ -326,7 +336,7 @@
   margin: 2px 0 2px 0;
   border: #a49c9c solid 1px; /*회색*/
   border-radius: 2px;
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
   display: flex;
   align-items: center;
 }
@@ -336,9 +346,9 @@
   margin: 0 0 0 4px;
   border-style: none;
   outline: none; /* 포커스 스타일 제거 */
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
   cursor: text;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .button-row {
   display: flex;
@@ -353,9 +363,9 @@
   font-size:13px;
   border: #a49c9c solid 1px;/*회색*/
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   transition: background-color 0.1s ease;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .button-style:hover {
   color: #FFCD4A; /*배경색*/
@@ -373,11 +383,11 @@
   margin: 10px 3px 10px 15px;
   color: #FD5230;
   border: 2px solid #FD5230;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .shortest-path-text{
   font-size:16px;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   display: flex;
   flex-direction: column;
   padding: 4mm;
@@ -404,7 +414,7 @@
   padding:2mm;
   margin: 0 0 2mm 4mm;
   color: black;
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
   justify-content: space-between;
 }
 .obstacles-node-list{
@@ -438,19 +448,19 @@
   font-size:10px;
   border: #a49c9c solid 1px;/*회색*/
   border-radius: 100%; /* 테두리의 모서리를 둥글게 설정 */
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   align-items: center; /* 요소를 수직으로 중앙 정렬합니다. */
   margin: 0 2px 0 0;
 }
 .obstacle-remove-button:hover {
   color: #FFCD4A;
-  background-color: #FFFEF4; /*배경색*/
+  background-color:white;/*배경색: #FFFEF4 */
   border: #FFCD4A;
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
 }
 .individual-obstacles-button {
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   margin: 2px;
   height:20px;
   font-size: 15px;
@@ -462,7 +472,7 @@
 }
 .individual-obstacles-button:hover {
   color: #FFCD4A;
-  background-color: #FFFEF4; /*배경색*/
+  background-color: white;/*배경색: #FFFEF4 */
   border: #FFCD4A;
   outline: #FFCD4A solid 0.5px;
   cursor: pointer;
@@ -473,10 +483,10 @@
   flex-direction: column;
 }
 .option-input{
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   display: flex;
   flex-direction: column;
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
   margin: 5px 0 0 10px;
   gap: 2px;
 }
@@ -486,7 +496,7 @@
   margin: 2px 0 2px 0;
   border: #a49c9c solid 1px; /*회색*/
   border-radius: 2px;
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
   display: flex;
   align-items: center;
 }
@@ -496,7 +506,7 @@
   margin: 0 0 0 4px;
   border-style: none;
   outline: none; /* 포커스 스타일 제거 */
-  background: #FFFEF4; /*배경색*/
+  background: white;/*배경색: #FFFEF4 */
   cursor: text;
 }
 .user-obs-option-setting{
@@ -512,7 +522,7 @@
   align-items: center;
   background: #ffe8b0; /*메인색 연하게 응용*/
   border: #ffe8b0 solid 1px;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .option-toggle-btn:hover{
   background-color: #FFCD4A;
@@ -521,7 +531,7 @@
 
 /*버튼 설정 */
 .showingBtn{ /*장애물 버튼 설정 */
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   margin: 3px;
   height:35px;
   font-size: 15px;
@@ -535,13 +545,13 @@
   background-color: #FFCD4A; /*메인색 마우스 호버 시 배경색 변경 */
 }
 .showingObstacleBtns {
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   display: flex;
   margin-top: 5px;
   justify-content: space-between;
 }
 .showingFacBtnT {
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
   font-size: 13px;
   text-align: center;
   padding: 5px;
@@ -590,7 +600,7 @@
   flex-direction: row;
   text-align: center;
   align-items: center;
-  font-family: 'NEXON Lv1 Gothic OTF';
+  font-family: 'Pretendard-Regular';
 }
 .legend-img {
   width: 160px

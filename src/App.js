@@ -5,6 +5,7 @@ import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
 import fullKLogo from './components/images/fullKLogo.png';
 import SLogo from './components/images/SLogo.png';
+import searchicon from './components/images/search.png';
 import GLogo from './components/images/logo_G_red.png';
 import YLogo from './components/images/logo_Y_yellow.png';
 import './App.css'; // App.css 파일을 import
@@ -42,23 +43,21 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
     };
     return (
         <header className='header'>
-            <div style={{width: '100%'}}>
-                <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '200px',display: 'block',margin: '0 auto'}} />
-            </div>
+            <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '180px', display: 'flex',margin: ' 0 auto'}} />
             <div className = 'header-search-bar-line' style={{width: '100%', display: "flex"}}>
                 <div className="search-bar">
-                    <img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'2px', width:'19px'}}/>
+                    <img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'20px'}}/>
                     <input type="text"
                            placeholder="검색어를 입력하세요"
                            value={searchTerm}
                            onChange={(e) => setSearchTerm(e.target.value)}
-                           style={{margin: '0 Auto'}}
+                           style={{margin: '1px Auto'}}
                            onKeyPress={handleKeyPress}
                     />
-                    <button ref={inputRef} onClick={handleSearch}>검색</button>
+                    <button ref={inputRef} onClick={handleSearch} style={{fontSize: '20%'}}><img src={searchicon} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'17px'}}/></button>
                 </div>
                 <div className="barrier-free-switch">
-                    {/* <a style={{fontSize: '10px', color: 'black'}}>barrier-free</a>*/}
+                    <a style={{fontSize: '10px', color: '#004094', marginBottom: '5px', textAlign:"center"}}>barrier-free</a>
                     <input type="checkbox" id="switch" checked={BarrierFreeMode} onChange={handleModeChange}/><label htmlFor="switch">
                 </label>
                 </div>
@@ -450,7 +449,7 @@ const App = () => {
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
                             <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', marginBottom: '5px'}}>
-                                <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px', fontFamily: 'NEXON Lv1 Gothic OTF'}}>---보행 장애물 위치 보기---</div>
+                                <div style={{fontSize: '13px', textAlign: 'center', marginTop: '5px', fontFamily: 'NEXON Lv1 Gothic OTF'}}>---보행 장애물 위치 보기---</div>
                                 <div className='showingObstacleBtns'>
                                     {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
                                     <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={Icons.unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
