@@ -278,7 +278,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
     };
 
     const createShortestPathLayer = (pathData) => {
-        console.log("pathData:", pathData);
+        //console.log("pathData:", pathData);
         const colorPalette = ['#FD5230', '#007AC5', '#FFCD4A','#44EAC5','blue','orange', 'purple', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
