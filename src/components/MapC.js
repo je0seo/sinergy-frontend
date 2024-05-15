@@ -344,12 +344,12 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
             // 출발, 도착, 경유 노드 마커 표시
             if (locaArray && locaArray.length >= 2) {
-                let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
+                /*let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
                    condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
                    layers: createNAddNodeLayersFrom(locaArray)
                 });
                 map.addInteraction(selectSingleClick);
-                markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
+                markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트*/
 
                 getPositionOf(locaArray)
             }
