@@ -77,8 +77,11 @@ const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
 
     if (resultExistence == false)
         return (
-            <div>
-                <h3> 검색 결과가 존재하지 않습니다.</h3>
+            <div style={{textAlign: 'center', position: 'relative'}}>
+                <h3>검색 결과가 존재하지 않습니다.
+                <button className='closer-button' style={{position: 'absolute',right: '23px'}}
+                onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>
+                </h3>
             </div>
         )
     if (candidatesExist == true) {

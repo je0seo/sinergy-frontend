@@ -12,7 +12,7 @@ import {makeCrsFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
-import {Circle, Fill, Stroke, Style} from "ol/style";
+import {Circle, Fill, Stroke, Style, Text} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 import {basicMarkerStyle, clickedMarkerStyle} from './MarkerStyle'
@@ -80,6 +80,37 @@ const UOSorthoTile = new TileLayer({
         }),
         zIndex: 1
     });
+
+const satellitePoiText = () => {
+    const poiPointText = new VectorSource({ // feature들이 담겨있는 vector source
+         format: new GeoJSON({
+             dataProjection: 'EPSG:5181'
+         }),
+         url: function(extent) {
+             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                 '&request=GetFeature&typeName=gp%3Apoi_point&outputFormat=application%2Fjson'
+         },
+         serverType: 'geoserver'
+     });
+    return new VectorLayer({
+         title: 'satellite_poi',
+         visible: true,
+         source: poiPointText,
+         zIndex: 10,
+         style: feature => new Style({
+             text: new Text({
+                 font: '0.8rem sans-serif',
+                 fill: new Fill({ color: 'white' }),
+                 stroke: new Stroke({
+                     color: 'rgba(0, 0, 0, 1)',
+                     width: 6
+                 }),
+                 text: feature.get('bg_name')
+             })
+         })
+    });
+}
+
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
@@ -177,32 +208,15 @@ const markerClickEventWith = (locaArray, selectClick) => {
 }
 
 const createIndoorLayer = (buildingName, floor) => {
-    console.log(buildingName)
-    let cqlFilter = encodeURIComponent("build_name ='"+buildingName+"'"+" AND floor="+floor);
-    return new VectorLayer({
-        title: 'indoor',
-        visible: true,
-        source: new VectorSource({ // feature들이 담겨있는 vector source
-            format: new GeoJSON({
-                dataProjection: 'EPSG:5181'
-            }),
-            url: function(extent) {
-                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0'+
-                '&request=GetFeature&typeName=gp%3Abd_in&maxFeatures=50&outputFormat=application%2Fjson'+
-                '&CQL_FILTER='+cqlFilter
-            },
-            serverType: 'geoserver'
+    const cqlFilter = `build_name = '${buildingName}' AND floor = '${floor}'`;
+
+    return new TileLayer({
+        source: new TileWMS({
+            url: 'http://localhost:8080/geoserver/gp/wms',
+            params: { 'LAYERS': 'gp:bd_in','CQL_FILTER': cqlFilter, 'STYLES': 'bd_in'}, // bd_in 스타일 발행 필요
+            serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
         }),
-        zIndex: 2,
-        style: new Style({
-            stroke: new Stroke({
-                color: '#d5bfa5', // 선의 색상
-                width: 3 // 선의 두께
-            }),
-            fill: new Fill({
-                color: '#f7ebac' // 노랑
-            })
-        })
+        zIndex: 2
     });
 }
 
@@ -243,7 +257,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
     const handlePositions = (data) => {
         for (let i=0;i<data.length;i++){
-            console.log(data[i].bulid_name,data[i].floor,'층')
+            //console.log(data[i].bulid_name,data[i].floor,'층')
             const indoorLayer = createIndoorLayer(data[i].bulid_name,data[i].floor)
             map.addLayer(indoorLayer)
         }
@@ -264,7 +278,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
     };
 
     const createShortestPathLayer = (pathData) => {
-        console.log("pathData:", pathData);
+        //console.log("pathData:", pathData);
         const colorPalette = ['#FD5230', '#007AC5', '#FFCD4A','#44EAC5','blue','orange', 'purple', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
@@ -339,6 +353,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         map.getLayers().clear();
                         map.addLayer(vworldSatelliteLayer);
                         map.addLayer(UOSorthoTile);
+                        map.addLayer(satellitePoiText());
                         break;
                     default:
                         map.getLayers().clear();
@@ -346,7 +361,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         break;
                 }
             }
-
 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
@@ -361,15 +375,13 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
             // 출발, 도착, 경유 노드 마커 표시
             if (locaArray && locaArray.length >= 2) {
-                let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
+                /*let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
                    condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
                    layers: createNAddNodeLayersFrom(locaArray)
                 });
                 map.addInteraction(selectSingleClick);
-                markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
+                markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트*/
 
-                // 1. locaArray의 id 튜플의 floor is not null이면 locaArray 튜플의 floor값이랑 bulid_name값을 넘겨줌
-                // 2. build_name의 값이 bulid_name 값이랑 같고 floor값이 받은 floor값이랑 같은 폴리곤을 조회
                 getPositionOf(locaArray)
             }
         }
