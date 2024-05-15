@@ -177,32 +177,15 @@ const markerClickEventWith = (locaArray, selectClick) => {
 }
 
 const createIndoorLayer = (buildingName, floor) => {
-    console.log(buildingName)
-    let cqlFilter = encodeURIComponent("build_name ='"+buildingName+"'"+" AND floor="+floor);
-    return new VectorLayer({
-        title: 'indoor',
-        visible: true,
-        source: new VectorSource({ // feature들이 담겨있는 vector source
-            format: new GeoJSON({
-                dataProjection: 'EPSG:5181'
-            }),
-            url: function(extent) {
-                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0'+
-                '&request=GetFeature&typeName=gp%3Abd_in&maxFeatures=50&outputFormat=application%2Fjson'+
-                '&CQL_FILTER='+cqlFilter
-            },
-            serverType: 'geoserver'
+    const cqlFilter = `build_name = '${buildingName}' AND floor = '${floor}'`;
+
+    return new TileLayer({
+        source: new TileWMS({
+            url: 'http://localhost:8080/geoserver/gp/wms',
+            params: { 'LAYERS': 'gp:bd_in','CQL_FILTER': cqlFilter, 'STYLES': 'bd_in'}, // bd_in 스타일 발행 필요
+            serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
         }),
-        zIndex: 2,
-        style: new Style({
-            stroke: new Stroke({
-                color: '#d5bfa5', // 선의 색상
-                width: 3 // 선의 두께
-            }),
-            fill: new Fill({
-                color: '#f7ebac' // 노랑
-            })
-        })
+        zIndex: 2
     });
 }
 
@@ -243,7 +226,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
     const handlePositions = (data) => {
         for (let i=0;i<data.length;i++){
-            console.log(data[i].bulid_name,data[i].floor,'층')
+            //console.log(data[i].bulid_name,data[i].floor,'층')
             const indoorLayer = createIndoorLayer(data[i].bulid_name,data[i].floor)
             map.addLayer(indoorLayer)
         }
@@ -368,8 +351,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 map.addInteraction(selectSingleClick);
                 markerClickEventWith(locaArray, selectSingleClick); // 노드 마커 클릭 이벤트
 
-                // 1. locaArray의 id 튜플의 floor is not null이면 locaArray 튜플의 floor값이랑 bulid_name값을 넘겨줌
-                // 2. build_name의 값이 bulid_name 값이랑 같고 floor값이 받은 floor값이랑 같은 폴리곤을 조회
                 getPositionOf(locaArray)
             }
         }
