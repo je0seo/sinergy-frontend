@@ -12,7 +12,7 @@ import {makeCrsFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
-import {Circle, Fill, Stroke, Style} from "ol/style";
+import {Circle, Fill, Stroke, Style, Text} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
 import {basicMarkerStyle, clickedMarkerStyle} from './MarkerStyle'
@@ -80,6 +80,37 @@ const UOSorthoTile = new TileLayer({
         }),
         zIndex: 1
     });
+
+const satellitePoiText = () => {
+    const poiPointText = new VectorSource({ // feature들이 담겨있는 vector source
+         format: new GeoJSON({
+             dataProjection: 'EPSG:5181'
+         }),
+         url: function(extent) {
+             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                 '&request=GetFeature&typeName=gp%3Apoi_point&outputFormat=application%2Fjson'
+         },
+         serverType: 'geoserver'
+     });
+    return new VectorLayer({
+         title: 'satellite_poi',
+         visible: true,
+         source: poiPointText,
+         zIndex: 10,
+         style: feature => new Style({
+             text: new Text({
+                 font: '0.8rem sans-serif',
+                 fill: new Fill({ color: 'white' }),
+                 stroke: new Stroke({
+                     color: 'rgba(0, 0, 0, 1)',
+                     width: 6
+                 }),
+                 text: feature.get('bg_name')
+             })
+         })
+    });
+}
+
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
@@ -322,6 +353,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         map.getLayers().clear();
                         map.addLayer(vworldSatelliteLayer);
                         map.addLayer(UOSorthoTile);
+                        map.addLayer(satellitePoiText());
                         break;
                     default:
                         map.getLayers().clear();
@@ -329,7 +361,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         break;
                 }
             }
-
 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
