@@ -4,6 +4,7 @@ import UOSLogo from './components/images/uosMark.png';
 import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
 import fullKLogo from './components/images/fullKLogo.png';
+import fullKLogoG from './components/images/fullKLogoG.png';
 import SLogo from './components/images/SLogo.png';
 import searchicon from './components/images/search.png';
 import GLogo from './components/images/logo_G_red.png';
@@ -41,9 +42,16 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
             inputRef.current.click();
         }
     };
+    let Logo;
+    if (BarrierFreeMode){
+        Logo = fullKLogoG;
+    }
+    else if (!BarrierFreeMode){
+        Logo = fullKLogo;
+    }
     return (
         <header className='header'>
-            <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '154px', display: 'flex',margin: ' 0 auto'}} />
+            <img src={Logo} alt="SㅣnerGY FLogo" style={{width: '154px', display: 'flex',margin: ' 0 auto'}} />
             <div className = 'header-search-bar-line' style={{width: '100%', display: "flex"}}>
                 <div className="search-bar">
                     <img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'20px'}}/>
@@ -437,10 +445,12 @@ const App = () => {
         <div className='container' >
             {toggleLeftSide && (
             <div className="main-left-side">
+                <div className = 'fixed-bar'>
                 <Header handleSearch={() => {setKeyword(searchTerm);}} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleModeChange={handleModeChange} BarrierFreeMode={BarrierFreeMode}/>
                 <div className='menu'>
                   <button onClick={() => handleTabChange('')} className={`menu-tab ${activeTab === '' ? 'active' : ''}`}>INFO</button>
                   <button onClick={() => handleTabChange('길찾기')} className={`menu-tab ${activeTab === '길찾기' ? 'active' : ''}`}>길찾기</button>
+                </div>
                 </div>
                 {activeTab === '' && <div className='home-left'>
                     <div>
@@ -453,8 +463,8 @@ const App = () => {
                         */}
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
-                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 0 5px 7px'}}>
-                                <div style={{fontSize: '13px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'NEXON Lv1 Gothic OTF'}}>캠퍼스 내 장애물 위치 보기</div>
+                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 5px 5px 7px'}}>
+                                <div style={{fontSize: '14px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>캠퍼스 내 장애물 위치 보기</div>
                                 <div className='showingObstacleBtns'>
                                     <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
                                     <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={Icons.unpavedIcon} alt="Unpaved Road Icon" className="iconImage"/></button>비포장도로</div>
@@ -491,8 +501,8 @@ const App = () => {
                                 )}
                             </div>
                         )}
-                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 0 5px 7px'}}>
-                        <div style={{fontSize: '13px', textAlign: 'center', marginTop: '5px', marginBottom: '0px', display: 'flex', flexDirection: 'column',alignItems: 'center', fontFamily: 'NEXON Lv1 Gothic OTF'}}>편의시설 둘러보기</div>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 5px 5px 7px'}}>
+                        <div style={{fontSize: '14px', textAlign: 'center', marginTop: '5px', marginBottom: '0px', display: 'flex', flexDirection: 'column',alignItems: 'center', fontFamily: 'Pretendard-Regular'}}>편의시설 둘러보기</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
@@ -561,8 +571,8 @@ const App = () => {
                     <div>
                         <div className="pathfinder-page">
                             {BarrierFreeMode && (
-                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 0 5px 10px'}}>
-                                    <div style={{fontSize: '13px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'NEXON Lv1 Gothic OTF'}}>길찾기 경로 옵션</div>
+                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 5px 5px 10px'}}>
+                                    <div style={{fontSize: '15px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>길찾기 경로 옵션</div>
                                     <div className="option-button-row">
                                         <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
                                         <button className={`option-button ${features.unpaved ? 'selected-button' : ''}`} onClick={() => toggleFeature('unpaved')} ><div className='option-buttonT'><img src={Icons.unpavedIcon} alt="NO Unpaved Icon" className="iconImage"/>비포장도로<br></br>제외</div></button>
@@ -707,8 +717,8 @@ const App = () => {
                 )}
             </div>
             )}
-            <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
             <div className='main-right-side'>
+                <button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}

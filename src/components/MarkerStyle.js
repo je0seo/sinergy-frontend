@@ -91,6 +91,19 @@ export const Icons = {
     sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier, rooftopIcon, cafestoreIcon, diningIcon, restaurantIcon, showerRoomIcon, sportsIcon, squashIcon, unmannedIcon, settingsIcon, NoBumpIcon, NoBolIcon, NoUnpavedIcon, NoSlopeIcon, NoStairsIcon
 }
 
+export const entryMarkerStyle = new Style({
+    image: new Circle({
+        fill: new Fill({
+            color: '#ffffff'
+    }),
+    stroke: new Stroke({
+        color: '#09d1d4', // 선의 색상
+        width: 3 // 선의 두께
+    }),
+    radius: 4,
+    })
+})
+
 export const clickedLinkStyle = new Style({
      stroke: new Stroke({
          color: 'rgba(255, 255, 255, 1)',
@@ -116,7 +129,7 @@ export const clickedMarkerStyle = (irumarker) => {
       image: new Icon({
           src: irumarker, // 이미지 파일의 경로를 설정합니다.
           scale: 0.08, // 이미지의 크기를 조절합니다. 필요에 따라 조절하세요.
-          opacity: 0.7, // 이미지의 투명도를 조절합니다.
+          opacity: 0.35, // 이미지의 투명도를 조절합니다.
           rotateWithView: false, // 지도 회전에 따라 이미지를 회전할지 여부를 설정합니다.
           rotation: 0, // 이미지의 초기 회전 각도를 설정합니다.
           anchor: [0.5, 1], // 아이콘의 중심을 아이콘 이미지의 아래 중앙으로 이동
