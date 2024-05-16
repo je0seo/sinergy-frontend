@@ -15,7 +15,7 @@ import VectorLayer from "ol/layer/Vector";
 import {Circle, Fill, Stroke, Style, Text} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
-import {basicMarkerStyle, clickedMarkerStyle} from './MarkerStyle'
+import {basicMarkerStyle, clickedMarkerStyle, entryMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
@@ -81,36 +81,23 @@ const UOSorthoTile = new TileLayer({
         zIndex: 1
     });
 
-const satellitePoiText = () => {
-    const poiPointText = new VectorSource({ // feature들이 담겨있는 vector source
-         format: new GeoJSON({
-             dataProjection: 'EPSG:5181'
-         }),
-         url: function(extent) {
-             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
-                 '&request=GetFeature&typeName=gp%3Apoi_point&outputFormat=application%2Fjson'
-         },
-         serverType: 'geoserver'
-     });
-    return new VectorLayer({
-         title: 'satellite_poi',
-         visible: true,
-         source: poiPointText,
-         zIndex: 10,
-         style: feature => new Style({
-             text: new Text({
-                 font: '0.8rem sans-serif',
-                 fill: new Fill({ color: 'white' }),
-                 stroke: new Stroke({
-                     color: 'rgba(0, 0, 0, 1)',
-                     width: 6
-                 }),
-                 text: feature.get('bg_name')
-             })
-         })
-    });
-}
+const basePoiText = new TileLayer({
+    source: new TileWMS({
+        url: 'http://localhost:8080/geoserver/gp/wms',
+        params: { 'LAYERS': 'gp:poi_point'}, // 해당 스타일 발행 필요
+        serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
+    }),
+    zIndex: 5
+});
 
+const satellitePoiText = new TileLayer({
+    source: new TileWMS({
+        url: 'http://localhost:8080/geoserver/gp/wms',
+        params: { 'LAYERS': 'gp:poi_point','STYLES': 'orthomosaic_poi_point'}, // 해당 스타일 발행 필요
+        serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
+    }),
+    zIndex: 5
+});
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
@@ -186,6 +173,7 @@ const createEntryMarkerLayer = (pathNodeIds) => {
             },
             serverType: 'geoserver'
         }),
+        style: entryMarkerStyle,
         zIndex: 5
     });
 }
@@ -348,12 +336,13 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         map.getLayers().clear();
                         map.addLayer(vworldBaseLayer);
                         map.addLayer(UOSbasemapTile);
+                        map.addLayer(basePoiText);
                         break;
                     case 'base-satellite':
                         map.getLayers().clear();
                         map.addLayer(vworldSatelliteLayer);
                         map.addLayer(UOSorthoTile);
-                        map.addLayer(satellitePoiText());
+                        map.addLayer(satellitePoiText);
                         break;
                     default:
                         map.getLayers().clear();
@@ -375,7 +364,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
             // 출발, 도착, 경유 노드 마커 표시
             if (locaArray && locaArray.length >= 2) {
-                /*let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
+                let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
                    condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
                    layers: createNAddNodeLayersFrom(locaArray)
                 });
