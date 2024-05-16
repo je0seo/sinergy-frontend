@@ -274,6 +274,7 @@
 }
 .selected-button {
   background-color: #FFCD4A; /*메인색*/
+  border-color: #FFCD4A;
 }
 .option-buttonT{
   margin: 0 0 0 0;
