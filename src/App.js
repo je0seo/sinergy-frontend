@@ -4,6 +4,7 @@ import UOSLogo from './components/images/uosMark.png';
 import {MapC as Map} from './components/MapC';
 import ThreeDContent from './components/ThreeDContent';
 import fullKLogo from './components/images/fullKLogo.png';
+import fullKLogoG from './components/images/fullKLogoG.png';
 import SLogo from './components/images/SLogo.png';
 import searchicon from './components/images/search.png';
 import GLogo from './components/images/logo_G_red.png';
@@ -41,9 +42,16 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
             inputRef.current.click();
         }
     };
+    let Logo;
+    if (BarrierFreeMode){
+        Logo = fullKLogoG;
+    }
+    else if (!BarrierFreeMode){
+        Logo = fullKLogo;
+    }
     return (
         <header className='header'>
-            <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '154px', display: 'flex',margin: ' 0 auto'}} />
+            <img src={Logo} alt="SㅣnerGY FLogo" style={{width: '154px', display: 'flex',margin: ' 0 auto'}} />
             <div className = 'header-search-bar-line' style={{width: '100%', display: "flex"}}>
                 <div className="search-bar">
                     <img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'20px'}}/>
