@@ -100,10 +100,10 @@ const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
         return (
             <div style={{margin: '0 auto'}}>
                 {bgImage && <img className="bg-image" src={bgImage} alt="Building Image" style={{width: '350px',height: '250px',display: 'block',margin: '0 auto'}}/>}
+                <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A', textAlign: 'center'}}> {bgName}({engName})
+                     <button className='closer-button' onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>
+                </h3>
                 <div className="info-content">
-                    <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName})
-                        {<button className='closer-button' onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>}
-                    </h3>
                     <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} {(type === '건물') && (<> | No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
                     {loungeCnt && <>라운지 수 : {loungeCnt}</>}
                     <p style={{marginTop: '5px', marginBottom: '0px'}}> {bgSummary} </p>
