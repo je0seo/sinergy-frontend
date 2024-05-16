@@ -389,12 +389,12 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             const poiMarkerLayer = createPoiMarkerLayer(cqlFilter)
             map.addLayer(poiMarkerLayer)
 
-            /*let selectBuildClick = new Select({
+            let selectBuildClick = new Select({
                condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
                layers: [poiMarkerLayer]
             });
-            map.addInteraction(selectBuildClick);*/
-           // poiMarkerClickEventWith(keyword,selectBuildClick); // 건물 마커 클릭 이벤트
+            map.addInteraction(selectBuildClick);
+            poiMarkerClickEventWith(keyword,selectBuildClick); // 건물 마커 클릭 이벤트
 
            return () => {
                 map.removeLayer(poiMarkerLayer);
