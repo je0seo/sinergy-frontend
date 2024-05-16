@@ -15,7 +15,7 @@ import VectorLayer from "ol/layer/Vector";
 import {Circle, Fill, Stroke, Style, Text} from "ol/style";
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
-import {basicMarkerStyle, clickedMarkerStyle} from './MarkerStyle'
+import {basicMarkerStyle, clickedMarkerStyle, entryMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
 import { click, pointerMove } from 'ol/events/condition';
@@ -81,13 +81,22 @@ const UOSorthoTile = new TileLayer({
         zIndex: 1
     });
 
+const basePoiText = new TileLayer({
+    source: new TileWMS({
+        url: 'http://localhost:8080/geoserver/gp/wms',
+        params: { 'LAYERS': 'gp:poi_point'}, // 해당 스타일 발행 필요
+        serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
+    }),
+    zIndex: 5
+});
+
 const satellitePoiText = new TileLayer({
     source: new TileWMS({
         url: 'http://localhost:8080/geoserver/gp/wms',
         params: { 'LAYERS': 'gp:poi_point','STYLES': 'orthomosaic_poi_point'}, // 해당 스타일 발행 필요
         serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
     }),
-    zIndex: 8
+    zIndex: 5
 });
 
 const makelocaArrayFromNodes = (pathData, locaArray) => {
@@ -164,6 +173,7 @@ const createEntryMarkerLayer = (pathNodeIds) => {
             },
             serverType: 'geoserver'
         }),
+        style: entryMarkerStyle,
         zIndex: 5
     });
 }
@@ -326,6 +336,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         map.getLayers().clear();
                         map.addLayer(vworldBaseLayer);
                         map.addLayer(UOSbasemapTile);
+                        map.addLayer(basePoiText);
                         break;
                     case 'base-satellite':
                         map.getLayers().clear();
@@ -353,7 +364,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
             // 출발, 도착, 경유 노드 마커 표시
             if (locaArray && locaArray.length >= 2) {
-                /*let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
+                let selectSingleClick = new Select({ //feature 클릭 가능한 select 객체
                    condition: click, // click 이벤트. condition: Select 객체 사용시 click, move 등의 이벤트 설정
                    layers: createNAddNodeLayersFrom(locaArray)
                 });
