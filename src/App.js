@@ -463,8 +463,8 @@ const App = () => {
                         */}
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
-                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 0 5px 7px'}}>
-                                <div style={{fontSize: '15px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>캠퍼스 내 장애물 위치 보기</div>
+                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 5px 5px 7px'}}>
+                                <div style={{fontSize: '14px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>캠퍼스 내 장애물 위치 보기</div>
                                 <div className='showingObstacleBtns'>
                                     <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
                                     <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={Icons.unpavedIcon} alt="Unpaved Road Icon" className="iconImage"/></button>비포장도로</div>
@@ -501,8 +501,8 @@ const App = () => {
                                 )}
                             </div>
                         )}
-                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 0 5px 7px'}}>
-                        <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px', marginBottom: '0px', display: 'flex', flexDirection: 'column',alignItems: 'center', fontFamily: 'Pretendard-Regular'}}>편의시설 둘러보기</div>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 5px 5px 7px'}}>
+                        <div style={{fontSize: '14px', textAlign: 'center', marginTop: '5px', marginBottom: '0px', display: 'flex', flexDirection: 'column',alignItems: 'center', fontFamily: 'Pretendard-Regular'}}>편의시설 둘러보기</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
@@ -571,7 +571,7 @@ const App = () => {
                     <div>
                         <div className="pathfinder-page">
                             {BarrierFreeMode && (
-                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 0 5px 10px'}}>
+                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 5px 5px 10px'}}>
                                     <div style={{fontSize: '15px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>길찾기 경로 옵션</div>
                                     <div className="option-button-row">
                                         <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
@@ -717,8 +717,8 @@ const App = () => {
                 )}
             </div>
             )}
-            <div className='ToggleLeftSide'><button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button></div>
             <div className='main-right-side'>
+                <button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
                 && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
