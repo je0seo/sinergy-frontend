@@ -468,14 +468,13 @@
 }
 .individual-obstacles-button {
   font-family: 'Pretendard-Regular';
-  margin: 2px;
-  height:20px;
+  margin: 2px 0px 0 35px;
+  height:30px;
   font-size: 15px;
   border-radius: 2px; /* 테두리의 모서리를 둥글게 설정 */
   border: #a49c9c solid 1px; /*회색*/
   color:black;
-  background-color: #FFCD4A;
-
+  background-color: white;
 }
 .individual-obstacles-button:hover {
   color: #FFCD4A;

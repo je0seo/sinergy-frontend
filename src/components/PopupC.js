@@ -51,7 +51,7 @@ export const usePopup = (category, map, layer) => {
         if (category.type == 'slope' || category.type == 'unpaved' || category.type == 'stairs') {
             setContent(null)    // 이전에 클릭한 객체 info가 남아있는 경우 방지
             if (category.data.info[index] > 0) {    //
-                setContent('경사도[degree] <br>'+category.data.info[index]);
+                setContent('경사도:  '+category.data.info[index]+' [°]');
             }
         } else {
             setContent(category.data.info[index]);
@@ -63,14 +63,14 @@ export const usePopup = (category, map, layer) => {
         let linkExist = layer[2].getSource().getFeatures().includes(feature)
         if (bumpExist) {
             setImage(feature.get('image_nobs'))
-            setContent('도로턱 높이[cm] <br>'+feature.get('bump_hei'))
+            setContent('도로턱 높이:  '+feature.get('bump_hei')+' [cm]')
         } else if (bolExist) {
             setImage(feature.get('image_nobs'))
-            setContent('볼라드 간격[cm] <br>'+feature.get('bol_width'))
+            setContent('볼라드 간격:  '+feature.get('bol_width')+ ' [cm]')
         } else {    // linkExist
             setImage(feature.get('image_lobs'))
             if (feature.get('grad_deg') > 0)
-                setContent('경사도[degree] <br>'+feature.get('grad_deg'))
+                setContent('경사도: '+feature.get('grad_deg')+' [°]')
         }
     }
 
@@ -142,8 +142,8 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
             {onPath && (<div>{ObstacleID}</div>)}
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div ref={contentRef} className="ol-popup-content">
-            {type === 'bump' && <>도로턱 높이[cm]</>}
-            {type === 'bol' && <>볼라드 간격[cm]</>}
+            {type === 'bump' && <>도로턱 높이[cm]: </>}
+            {type === 'bol' && <>볼라드 간격[cm]: </>}
             <div dangerouslySetInnerHTML={{__html: content}} />
           </div>
             {onPath && (
