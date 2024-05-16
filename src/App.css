@@ -95,7 +95,6 @@
 .main-right-side {
   flex: 1;
   background-color: white;/*배경색: #FFFEF4 */
-  cursor: grab;
 }
 /*Header부분*/
 .header {
@@ -609,23 +608,25 @@
   font-family: 'Pretendard-Regular';
   font-size: 12px;
   text-align: center;
-  width: 75px;
+  width: 67px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
 }
 .showingFacBtnText {
   font-family: 'Pretendard-Regular';
-  font-size: 13px;
-  width: 50px;
-  margin: 18px 0 0 5px;
+  font-size: 12px;
+  width: 35px;
+  margin: 0 0 0 5px;
+  display: flex;
+  align-items: center;
   text-align: center;
   font-weight: bold;
 }
 .showingFacBtn-category {
   display: flex;
   flex-direction: row;
-  padding: 5px;
+  padding: 2px 0 2px 0;
   border-top: #FFCD4A solid 0.5px ;
 }
 .showingFacilitiesBtns {
@@ -633,7 +634,7 @@
   flex-wrap: wrap;
   margin-top: 5px;
   flex-direction: column;
-  margin-inline: 3px;
+  margin-inline: 2px;
 }
 
 .legend {

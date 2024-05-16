@@ -508,11 +508,11 @@ const App = () => {
                                 {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
                                 {/*<button className='showingBtn' onClick={() => handleShowReq('facilities')}><div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div></button> */}
                                 {BarrierFreeMode && (<div className='showingFacBtn-category'>
-                                    <div className='showingFacBtnText'>장애인<br></br>지원시설</div>
+                                    <div className='showingFacBtnText'>지원<br></br>시설</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('toilet')}><img src={Icons.toiletIcon} alt="toiletIcon" className="showingFacBtn-iconImage" /></button>장애인 화장실</div>
                                 </div>)}
                                 <div className='showingFacBtn-category'>
-                                    <div className='showingFacBtnText'>운동시설</div>
+                                    <div className='showingFacBtnText'>운동<br></br>시설</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={Icons.basketballIcon} alt="Basketball Icon" className="showingFacBtn-iconImage" /></button>농구장</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('squash')}><img src={Icons.squashIcon} alt="Squash Icon" className="showingFacBtn-iconImage" /></button>스쿼시장</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('foot volley')}><img src={Icons.footvolleyballIcon} alt="foot volley ball Icon" className="showingFacBtn-iconImage" /></button>족구장</div>
@@ -528,7 +528,7 @@ const App = () => {
                                 </div>
                                 <div className='showingFacBtn-category'>
                                     <div className='showingFacBtnText'>업무</div>
-                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('unmanned civil service')}><img src={Icons.unmannedIcon} alt="Unmanned Icon" className="showingFacBtn-iconImage" /></button>무인민원발급기</div>
+                                    <div className='showingFacBtnT' style={{fontSize:'11px'}}><button className='showingFacBtn' onClick={() => handleShowReq('unmanned civil service')}><img src={Icons.unmannedIcon} alt="Unmanned Icon" className="showingFacBtn-iconImage"/></button>무인민원발급기</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('print')}><img src={Icons.printIcon} alt="Print Icon" className="showingFacBtn-iconImage" /></button>복사실</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('postoffice')}><img src={Icons.postOfficeIcon} alt="Post Office Icon" className="showingFacBtn-iconImage" /></button>우체국</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('atm')}><img src={Icons.atmIcon} alt="ATM Icon" className="showingFacBtn-iconImage" /></button>은행/ATM</div>
