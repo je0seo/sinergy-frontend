@@ -29,6 +29,13 @@
   overflow-y: auto;
   transition: all 0.4s ease;
 }
+.fixed-bar {
+  position: sticky;
+  top: 0;
+}
+.home-left::-webkit-scrollbar {
+    width: 8px;  /* 세로축 스크롤바 폭 너비 */
+}
 .main-left-side::-webkit-scrollbar {
     width: 8px;  /* 세로축 스크롤바 폭 너비 */
 }
