@@ -671,7 +671,7 @@ const App = () => {
                                     </div>
                                 </div>
                             )}
-                            {showObsOnPath && showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
+                            {BarrierFreeMode && showObsOnPath && showShortestPathText && pathData && totalDistance !== null && totalDistance !== 0 &&(
                                 <div className="legend">
                                     <div className="legend-individual"><img src={legend_sidewalk} alt="link_legend_sidewalk" className="legend-img"/>보도</div>
                                     <div className="legend-individual"><img src={legend_mixed} alt="link_legend_mixed" className="legend-img"/>보차혼용</div>
