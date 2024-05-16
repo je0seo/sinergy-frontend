@@ -77,11 +77,9 @@ const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
 
     if (resultExistence == false)
         return (
-            <div style={{textAlign: 'center', position: 'relative'}}>
-                <h3>검색 결과가 존재하지 않습니다.
-                <button className='closer-button' style={{position: 'absolute',right: '23px'}}
-                onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>
-                </h3>
+            <div style={{textAlign: 'center', padding:'10px 0 10px 0'}}>
+                <h3 style={{display:'inline'}}>검색 결과가 존재하지 않습니다.  </h3>
+                <button className='closer-button' onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>
             </div>
         )
     if (candidatesExist == true) {
@@ -100,11 +98,13 @@ const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
         return (
             <div style={{margin: '0 auto'}}>
                 {bgImage && <img className="bg-image" src={bgImage} alt="Building Image" style={{width: '350px',height: '250px',display: 'block',margin: '0 auto'}}/>}
+                <div style={{ backgroundColor: '#FFCD4A', textAlign: 'center',}}>
+                <h3 style={{display:'inline'}}> {bgName}({engName})
+                <button className='closer-button' onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>
+                </h3>
+                </div>
                 <div className="info-content">
-                    <h3 style={{margin: '0 auto', backgroundColor: '#FFCD4A'}}> {bgName}({engName})
-                        {<button className='closer-button' onClick={() => {setKeyword(''); setFinalKeyword('')}}>닫기</button>}
-                    </h3>
-                    <div style={{fontSize: '14px', marginTop: '5px'}}> [ {type} {(type === '건물') && (<> | No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
+                    <div style={{fontSize: '14px', marginBottom: '5px'}}> [ {type} {(type === '건물') && (<> | No.{bgId} | 총 {totalFloors}층 </>)} ] </div>
                     {loungeCnt && <>라운지 수 : {loungeCnt}</>}
                     <p style={{marginTop: '5px', marginBottom: '0px'}}> {bgSummary} </p>
                 </div>
