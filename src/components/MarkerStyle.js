@@ -35,7 +35,12 @@ import showerRoomIcon from './images/icons/showerroomIcon.png';
 import sportsIcon from './images/icons/sportsIcon.png';
 import squashIcon from './images/icons/squashIcon.png';
 import unmannedIcon from './images/icons/unmannedIcon.png';
-
+import settingsIcon from './images/icons/settingsIcon.png'
+import NoBumpIcon from './images/icons/NoBumpIcon.png';
+import NoBolIcon from './images/icons/NoBolIcon.png';
+import NoUnpavedIcon from './images/icons/NoUnpavedIcon.png';
+import NoStairsIcon from './images/icons/NoStairIcon.png';
+import NoSlopeIcon from './images/icons/NoSlopeIcon.png';
 
 import IrubumpIcon from './images/icons/Icon/bumpIcon.png';
 import IrubolIcon from './images/icons/Icon/bolIcon.png';
@@ -83,7 +88,7 @@ export const Icons = {
     bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
     bicycleIcon, smokingIcon, storeIcon, cafeIcon, postOfficeIcon, healthServiceIcon, cafeteriaIcon,
     printIcon, gymIcon, tennisIcon, basketballIcon, breakRoomIcon, loungeIcon, seminarRoomIcon,
-    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier, rooftopIcon, cafestoreIcon, diningIcon, restaurantIcon, showerRoomIcon, sportsIcon, squashIcon, unmannedIcon
+    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier, rooftopIcon, cafestoreIcon, diningIcon, restaurantIcon, showerRoomIcon, sportsIcon, squashIcon, unmannedIcon, settingsIcon, NoBumpIcon, NoBolIcon, NoUnpavedIcon, NoSlopeIcon, NoStairsIcon
 }
 
 export const clickedLinkStyle = new Style({
