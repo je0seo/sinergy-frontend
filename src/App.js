@@ -43,7 +43,7 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
     };
     return (
         <header className='header'>
-            <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '180px', display: 'flex',margin: ' 0 auto'}} />
+            <img src={fullKLogo} alt="SㅣnerGY FLogo" style={{width: '154px', display: 'flex',margin: ' 0 auto'}} />
             <div className = 'header-search-bar-line' style={{width: '100%', display: "flex"}}>
                 <div className="search-bar">
                     <img src={SLogo} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'20px'}}/>
@@ -336,6 +336,11 @@ const App = () => {
     const [toggleLeftSide, setToggleLeftSide] = useState(true);
     const [toggleLeftSideFeature, setToggleLeftSideFeature] = useState('<')
 
+    const handleChange = (e) => {
+        const value = parseFloat(e.target.value).toFixed(2);
+        setSlopeD(Number(value));
+    };
+
     const [showReqIdsNtype, setShowReqIdsNtype] = useState({});
     const [bol, setBol] = useState({})
     const [bump, setBump] = useState({})
@@ -448,87 +453,97 @@ const App = () => {
                         */}
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
-                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', marginBottom: '5px'}}>
-                                <div style={{fontSize: '13px', textAlign: 'center', marginTop: '5px', fontFamily: 'NEXON Lv1 Gothic OTF'}}>---보행 장애물 위치 보기---</div>
+                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 0 5px 7px'}}>
+                                <div style={{fontSize: '13px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'NEXON Lv1 Gothic OTF'}}>캠퍼스 내 장애물 위치 보기</div>
                                 <div className='showingObstacleBtns'>
-                                    {/*<button className='showingBtn' onClick={handleToggleObstacleMenu}>캠퍼스 내 장애물 보기 버튼 가리기</button>*/}
-                                    <button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={Icons.unpavedIcon} alt="Unpaved Road Icon" className="iconImage" />비포장도로</button>
-                                    <button className='showingBtn' onClick={() => handleShowReq('stairs')}><img src={Icons.stairsIcon} alt="Stairs Icon" className="iconImage" />계단</button>
-                                    <button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={Icons.slopeIcon} alt="Slope Icon" className="iconImage" />경사로</button>
-                                    <button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={Icons.bumpIcon} alt="Bump Icon" className="iconImage" />도로턱</button>
-                                    <button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={Icons.bolIcon} alt="Bollard Icon" className="iconImage" />볼라드</button>
+                                    <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
+                                    <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('unpaved')}><img src={Icons.unpavedIcon} alt="Unpaved Road Icon" className="iconImage"/></button>비포장도로</div>
+                                    <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('stairs')}><img src={Icons.stairsIcon} alt="Stairs Icon" className="iconImage" /></button>계단</div>
+                                    <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('slope')}><img src={Icons.slopeIcon} alt="Slope Icon" className="iconImage" /></button>경사로</div>
+                                    <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('bump')}><img src={Icons.bumpIcon} alt="Bump Icon" className="iconImage" /></button>도로턱</div>
+                                    <div className='showingBtnT'><button className='showingBtn' onClick={() => handleShowReq('bol')}><img src={Icons.bolIcon} alt="Bollard Icon" className="iconImage" /></button>볼라드</div>
                                 </div>
-                                <div className='user-obs-option-setting'>
-                                    {!showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>▽ 장애물 기준 설정창 열기 </button>)}
-                                    {showObstacleMenu && (
-                                        <div className="option-add">
-                                            <div className="option-input">
-                                                경사로 경사도 임계값 설정[단위: °]
-                                                <div className="option-input-box">
-                                                    <input className='op-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
-                                                </div>
+                                {showObstacleMenu && (
+                                    <div className='user-obs-option-setting'>
+                                        <div className="slidecontainer">
+                                            <input className='slider' type="range" min="1.00" max="6.00" step="0.001" value={slopeD} onChange={handleChange} placeholder="임계값"/>
+                                            <div className='option-setting'> 경사도
+                                                <input className='slider-result' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)}/>
+                                                [°] 이상 제외
                                             </div>
-                                            <div className="option-input">볼라드 간격 임계값 설정[단위: cm]<div className="option-input-box">
-                                                <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>
+                                        </div>
+                                        <div className="slidecontainer">
+                                            <input className='slider' type="range" min="40" max="200" value={bolC} onChange={(e) => setBolC(e.target.value)} placeholder="임계값"/>
+                                            <div className='option-setting'> 볼라드 간격
+                                                <input className='slider-result' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)}/>
+                                                [cm] 이하 제외
                                             </div>
-                                            <div className="option-input">도로턱 높이 임계값 설정[단위: cm]<div className="option-input-box">
-                                                <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>
+                                        </div>
+                                        <div className="slidecontainer">
+                                            <input className='slider' type="range" min="1" max="10" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                            <div className='option-setting'> 도로턱 높이
+                                                <input className='slider-result' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)}/>
+                                                [cm] 이상 제외
                                             </div>
-                                        </div>)}
-                                    {showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>△ 장애물 기준 설정창 닫기 </button>)}
-                                </div>
+                                        </div>
+                                        <div style={{fontSize: '13px'}}>* 초기값 ( <strong>경사도: 3.18°, 볼라드 간격: 120cm, 도로턱 높이: 2cm</strong> )<br/> 출처: 장애인·노인·임산부 등의 편의증진보장에 관한 법률 시행규칙</div>
+                                    </div>
+                                )}
                             </div>
                         )}
-                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A'}}>
-                        <div style={{fontSize: '15px', textAlign: 'center', marginTop: '5px', fontFamily: 'NEXON Lv1 Gothic OTF'}}>---편의 시설 위치 보기---</div>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 0 5px 7px'}}>
+                        <div style={{fontSize: '13px', textAlign: 'center', marginTop: '5px', marginBottom: '0px', display: 'flex', flexDirection: 'column',alignItems: 'center', fontFamily: 'NEXON Lv1 Gothic OTF'}}>편의시설 둘러보기</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
                                 {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
                                 {/*<button className='showingBtn' onClick={() => handleShowReq('facilities')}><div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div></button> */}
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('toilet')}><img src={Icons.toiletIcon} alt="toiletIcon" className="iconImage" /></button>장애인 화장실</div>
-                                {ToggBtnType!=='sports' && (<div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('sports').then(r => setToggBtnType('sports'))}><img src={Icons.sportsIcon} alt="Sports Icon" className="iconImage" /></button>▽운동시설</div>)}
-                                {ToggBtnType==='sports' &&(
-                                    <div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.sportsIcon} alt="Sports Icon" className="iconImage" /></button>△운동시설</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={Icons.basketballIcon} alt="Basketball Icon" className="iconImage" /></button>농구장</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('tennis')}><img src={Icons.tennisIcon} alt="Tennis Icon" className="iconImage" /></button>테니스장</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('squash')}><img src={Icons.squashIcon} alt="Squash Icon" className="iconImage" /></button>스쿼시장</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('gym')}><img src={Icons.gymIcon} alt="Gym Icon" className="iconImage" /></button>헬스장</div>
-                                    </div>
-                                )}
-                                {ToggBtnType!=='dining' && (<div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('dining').then(r => setToggBtnType('dining'))}><img src={Icons.diningIcon} alt="Dining Icon" className="iconImage" /></button>▽식당</div>)}
-                                {ToggBtnType==='dining' && (
-                                    <div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.diningIcon} alt="Dining Icon" className="iconImage" /></button>△식당</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafeteria')}><img src={Icons.cafeteriaIcon} alt="Cafeteria Icon" className="iconImage" /></button>학생식당</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('restaurant')}><img src={Icons.restaurantIcon} alt="Cafeteria Icon" className="iconImage" /></button>식당</div>
-                                    </div>
-                                )}
-                                {ToggBtnType!=='cafe&store' && (<div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafe&store').then(r => setToggBtnType('cafe&store'))}><img src={Icons.cafestoreIcon} alt="Cafestore Icon" className="iconImage" /></button>▽카페/편의점</div>)}
-                                {ToggBtnType==='cafe&store' && (
-                                    <div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => setToggBtnType('')}><img src={Icons.cafestoreIcon} alt="Cafestore Icon" className="iconImage" /></button>△카페/편의점</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafe')}><img src={Icons.cafeIcon} alt="Cafe Icon" className="iconImage" /></button>카페</div>
-                                        <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('store')}><img src={Icons.storeIcon} alt="Store Icon" className="iconImage" /></button>편의점</div>
-                                    </div>
-                                )}
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('unmanned civil service')}><img src={Icons.unmannedIcon} alt="Unmanned Icon" className="iconImage" /></button>무인민원발급기</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('print')}><img src={Icons.printIcon} alt="Print Icon" className="iconImage" /></button>복사실</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('postoffice')}><img src={Icons.postOfficeIcon} alt="Post Office Icon" className="iconImage" /></button>우체국</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('atm')}><img src={Icons.atmIcon} alt="ATM Icon" className="iconImage" /></button>은행/ATM</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('seminarroom')}><img src={Icons.seminarRoomIcon} alt="Seminar Room Icon" className="iconImage" /></button>세미나실</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('lounge')}><img src={Icons.loungeIcon} alt="Lounge Icon" className="iconImage" /></button>학생라운지</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('library')}><img src={Icons.libraryIcon} alt="libraryIcon" className="iconImage" /></button>도서관/서점</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('healthservice')}><img src={Icons.healthServiceIcon} alt="Health Service Icon" className="iconImage" /></button>보건소</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('rooftop garden')}><img src={Icons.rooftopIcon} alt="Rooftop Icon" className="iconImage" /></button>옥상정원</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('bench')}><img src={Icons.benchIcon} alt="Bench Icon" className="iconImage" /></button>벤치</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('shower room')}><img src={Icons.showerRoomIcon} alt="Shower Room Icon" className="iconImage" /></button>샤워실</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('breakroom')}><img src={Icons.breakRoomIcon} alt="Break Room Icon" className="iconImage" /></button>휴게실</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('Sbicycle')}><img src={Icons.sBicycleIcon} alt="S-Bicycle Icon" className="iconImage" /></button>따릉이 대여소</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('bicycle')}><img src={Icons.bicycleIcon} alt="Bicycle Icon" className="iconImage" /></button>자전거 거치대</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('vendingMachine')}><img src={Icons.vendingMachineIcon} alt="vendingMachineIcon" className="iconImage" /></button>자판기</div>
-                                <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('smoking')}><img src={Icons.smokingIcon} alt="Smoking Icon" className="iconImage" /></button>흡연구역</div>
+                                {BarrierFreeMode && (<div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'>장애인<br></br>지원시설</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('toilet')}><img src={Icons.toiletIcon} alt="toiletIcon" className="showingFacBtn-iconImage" /></button>장애인 화장실</div>
+                                </div>)}
+                                <div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'>운동시설</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('basketball')}><img src={Icons.basketballIcon} alt="Basketball Icon" className="showingFacBtn-iconImage" /></button>농구장</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('tennis')}><img src={Icons.tennisIcon} alt="Tennis Icon" className="showingFacBtn-iconImage" /></button>테니스장</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('squash')}><img src={Icons.squashIcon} alt="Squash Icon" className="showingFacBtn-iconImage" /></button>스쿼시장</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('gym')}><img src={Icons.gymIcon} alt="Gym Icon" className="showingFacBtn-iconImage" /></button>헬스장</div>
+                                </div>
+                                <div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'>식당</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafeteria')}><img src={Icons.cafeteriaIcon} alt="Cafeteria Icon" className="showingFacBtn-iconImage" /></button>학생식당</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('restaurant')}><img src={Icons.restaurantIcon} alt="Cafeteria Icon" className="showingFacBtn-iconImage" /></button>식당</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('cafe')}><img src={Icons.cafeIcon} alt="Cafe Icon" className="showingFacBtn-iconImage" /></button>카페</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('store')}><img src={Icons.storeIcon} alt="Store Icon" className="showingFacBtn-iconImage" /></button>편의점</div>
+                                </div>
+                                <div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'>업무</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('print')}><img src={Icons.printIcon} alt="Print Icon" className="showingFacBtn-iconImage" /></button>복사실</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('postoffice')}><img src={Icons.postOfficeIcon} alt="Post Office Icon" className="showingFacBtn-iconImage" /></button>우체국</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('atm')}><img src={Icons.atmIcon} alt="ATM Icon" className="showingFacBtn-iconImage" /></button>은행/ATM</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('unmanned civil service')}><img src={Icons.unmannedIcon} alt="Unmanned Icon" className="showingFacBtn-iconImage" /></button>무인민원발급기</div>
+                                </div>
+                                <div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'>학업</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('seminarroom')}><img src={Icons.seminarRoomIcon} alt="Seminar Room Icon" className="showingFacBtn-iconImage" /></button>세미나실</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('lounge')}><img src={Icons.loungeIcon} alt="Lounge Icon" className="showingFacBtn-iconImage" /></button>학생라운지</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('library')}><img src={Icons.libraryIcon} alt="libraryIcon" className="showingFacBtn-iconImage" /></button>도서관/서점</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('healthservice')}><img src={Icons.healthServiceIcon} alt="Health Service Icon" className="showingFacBtn-iconImage" /></button>보건소</div>
+                                </div>
 
+                                <div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'>휴식</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('vendingMachine')}><img src={Icons.vendingMachineIcon} alt="vendingMachineIcon" className="showingFacBtn-iconImage" /></button>자판기</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('bench')}><img src={Icons.benchIcon} alt="Bench Icon" className="showingFacBtn-iconImage" /></button>벤치</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('shower room')}><img src={Icons.showerRoomIcon} alt="Shower Room Icon" className="showingFacBtn-iconImage" /></button>샤워실</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('breakroom')}><img src={Icons.breakRoomIcon} alt="Break Room Icon" className="showingFacBtn-iconImage" /></button>휴게실</div>
+                                </div>
+                                <div className='showingFacBtn-category'>
+                                    <div className='showingFacBtnText'> 야외</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('rooftop garden')}><img src={Icons.rooftopIcon} alt="Rooftop Icon" className="showingFacBtn-iconImage" /></button>옥상정원</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('Sbicycle')}><img src={Icons.sBicycleIcon} alt="S-Bicycle Icon" className="showingFacBtn-iconImage" /></button>따릉이 대여소</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('bicycle')}><img src={Icons.bicycleIcon} alt="Bicycle Icon" className="showingFacBtn-iconImage" /></button>자전거 거치대</div>
+                                    <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('smoking')}><img src={Icons.smokingIcon} alt="Smoking Icon" className="showingFacBtn-iconImage" /></button>흡연구역</div>
+                                </div>
                             </div>
                         )}
                         </div>
@@ -546,33 +561,42 @@ const App = () => {
                     <div>
                         <div className="pathfinder-page">
                             {BarrierFreeMode && (
-                                <div>
+                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 0 5px 10px'}}>
+                                    <div style={{fontSize: '13px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'NEXON Lv1 Gothic OTF'}}>길찾기 경로 옵션</div>
                                     <div className="option-button-row">
-                                        <button className={`option-button ${features.unpaved ? 'selected-button' : ''}`} style={{ marginLeft: '5px' }} onClick={() => toggleFeature('unpaved')} >비포장도로 제외</button>
-                                        <button className={`option-button ${features.stairs ? 'selected-button' : ''}`} onClick={() => toggleFeature('stairs')}>계단 제외</button>
-                                        <button className={`option-button ${features.slope ? 'selected-button' : ''}`} onClick={() => toggleFeature('slope')}>경사로 제외</button>
-                                        <button className={`option-button ${features.bump ? 'selected-button' : ''}`} onClick={() => toggleFeature('bump')}>도로턱 제외</button>
-                                        <button className={`option-button ${features.bol ? 'selected-button' : ''}`} style={{ marginRight: '5px' }} onClick={() => toggleFeature('bol')} >볼라드 제외</button>
+                                        <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
+                                        <button className={`option-button ${features.unpaved ? 'selected-button' : ''}`} onClick={() => toggleFeature('unpaved')} ><div className='option-buttonT'><img src={Icons.unpavedIcon} alt="NO Unpaved Icon" className="iconImage"/>비포장도로<br></br>제외</div></button>
+                                        <button className={`option-button ${features.stairs ? 'selected-button' : ''}`} onClick={() => toggleFeature('stairs')}><div className='option-buttonT'><img src={Icons.stairsIcon} alt="NO Stairs Icon" className="iconImage"/>계단<br></br>제외</div></button>
+                                        <button className={`option-button ${features.slope ? 'selected-button' : ''}`} onClick={() => toggleFeature('slope')}><div className='option-buttonT'><img src={Icons.slopeIcon} alt="No Slope Icon" className="iconImage"/>경사로<br></br>제외</div></button>
+                                        <button className={`option-button ${features.bump ? 'selected-button' : ''}`} onClick={() => toggleFeature('bump')}><div className='option-buttonT'><img src={Icons.bumpIcon} alt="No bump Icon" className="iconImage"/>도로턱<br></br>제외</div></button>
+                                        <button className={`option-button ${features.bol ? 'selected-button' : ''}`} onClick={() => toggleFeature('bol')}><div className='option-buttonT'><img src={Icons.bolIcon} alt="No Bol Icon" className="iconImage"/>볼라드<br></br>제외</div></button>
                                     </div>
-                                    <div className='user-obs-option-setting'>
-                                        {!showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>▽ 장애물 기준 설정창 열기 </button>)}
-                                        {showObstacleMenu && (
-                                            <div className="option-add">
-                                                <div className="option-input">
-                                                    경사로 경사도 임계값 설정[단위: °]
-                                                    <div className="option-input-box">
-                                                        <input className='op-input-style' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)} />
-                                                    </div>
+                                    {showObstacleMenu && (
+                                        <div className='user-obs-option-setting'>
+                                            <div className="slidecontainer">
+                                                <input className='slider' type="range" min="1.00" max="6.00" step="0.001" value={slopeD} onChange={handleChange} placeholder="임계값"/>
+                                                <div className='option-setting'> 경사도
+                                                    <input className='slider-result' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)}/>
+                                                    [°] 이상 제외
                                                 </div>
-                                                <div className="option-input">볼라드 간격 임계값 설정[단위: cm]<div className="option-input-box">
-                                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)} /></div>
+                                            </div>
+                                            <div className="slidecontainer">
+                                                <input className='slider' type="range" min="40" max="200" value={bolC} onChange={(e) => setBolC(e.target.value)} placeholder="임계값"/>
+                                                <div className='option-setting'> 볼라드 간격
+                                                    <input className='slider-result' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)}/>
+                                                    [cm] 이하 제외
                                                 </div>
-                                                <div className="option-input">도로턱 높이 임계값 설정[단위: cm]<div className="option-input-box">
-                                                    <input className='pf-input-style' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)} /></div>
+                                            </div>
+                                            <div className="slidecontainer">
+                                                <input className='slider' type="range" min="1" max="10" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                                <div className='option-setting'> 도로턱 높이
+                                                    <input className='slider-result' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)}/>
+                                                    [cm] 이상 제외
                                                 </div>
-                                            </div>)}
-                                        {showObstacleMenu && (<button className='option-toggle-btn' onClick={handleToggleObstacleMenu}>△ 장애물 기준 설정창 닫기 </button>)}
-                                    </div>
+                                            </div>
+                                            <div style={{fontSize: '13px'}}>* 초기값 ( <strong>경사도: 3.18°, 볼라드 간격: 120cm, 도로턱 높이: 2cm</strong> )<br/> 출처: 장애인·노인·임산부 등의 편의증진보장에 관한 법률 시행규칙</div>
+                                        </div>
+                                    )}
                                 </div>
                             )} {/*배리어프리 모드 해당 끝*/}
                             <div className="input-row">
@@ -612,7 +636,7 @@ const App = () => {
                                     <div className="shortest-path-text">
                                         [최단 경로]
                                         <div>
-                                            <div id="total-distance">총 거리: {totalDistance.toFixed(4)} m  (예상 시간: 약 {(totalDistance / 64).toFixed(0)}분, {(totalDistance / 0.64).toFixed(0)} 걸음)</div>
+                                            <div id="total-distance">총 거리: <strong>{totalDistance.toFixed(2)}</strong> m  (예상 시간: 약  <strong> {(totalDistance / 64).toFixed(0)}</strong>분, <strong>{(totalDistance / 0.64).toFixed(0)}</strong>걸음)</div>
                                         </div>
                                     </div>
                                     {BarrierFreeMode && obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 &&(
@@ -662,7 +686,7 @@ const App = () => {
                         </div>
                         {showShortestPathText && StartEndNormalCheckMessage==='' && totalDistance !== null && totalDistance === 0 && (
                             <div>
-                                <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다. 조건을 바꿔 검색해주세요</div>
+                                <div className="warning-result-text">조건에 맞는 경로를 확인할 수 없습니다.<br></br>조건을 바꿔 검색해주세요</div>
                                 {BarrierFreeMode && !(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
                                     <div className="button-row">
                                         <button className="button-style" onClick={() => {handleInputReset(); initialObsState();}}>⟲ 다시입력</button>

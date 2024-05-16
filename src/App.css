@@ -23,7 +23,7 @@
 .main-left-side {
   width: 380px; /*맥북 기준: , 해상도 2560*11440 컴퓨터 기준: 460*/
   background-color: white;/*배경색: #FFFEF4 */
-  padding: 0px;
+  margin: 0 0 10px 0;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -54,11 +54,11 @@
 .main-left-side::-webkit-scrollbar-button:vertical:start:decrement,
 .main-left-side::-webkit-scrollbar-button:vertical:start:increment {
    display: block;
-   height: 98px;
+   height: 93px;
 }
 .main-left-side::-webkit-scrollbar-button:vertical:end:decrement {
      display: block;
-     height: 10px;
+     height: 2px;
 }
 
 .ToggleLeftSide {
@@ -106,12 +106,14 @@
   padding: 2px;
   background-color: white;/*배경색: #FFFEF4 */
   width: 65%;
+  height: 27px;
   margin: 2px 0 0 0;
 }
 .search-bar input {
   flex: 2;
   border: none;
   outline: none;
+  height: 20px;
   font-family: 'Pretendard-Regular';
 }
 .search-bar button {
@@ -120,7 +122,7 @@
   border: none;
   border-radius: 100%;
   cursor: pointer;
-  width: 30px;
+  width: 27px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,7 +212,7 @@
 .menu-tab {
   font-family: 'Pretendard-Regular';
   width: 50%;
-  height: 9mm;
+  height: 25px;
   background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
   color: black; /* 탭 텍스트 색상 */
   border: none;
@@ -246,21 +248,23 @@
   background-color: white;/*배경색: #FFFEF4 */
 }
 .option-button-row {
+  font-family: 'Pretendard-Regular';
   display: flex;
-  margin: 0 0 0 0;
-  padding: 0;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 3px;
 }
 .option-button{
-  padding: 1mm 2mm 1mm 2mm;
-  height: 9mm;
-  font-size: 13px;
-  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid; 
-  border-color: #FFCD4A; /*메인색*/
+  height: 77px;
+  width: 60px;
+  border: #dcdbd9 solid 1px;
   background-color: white;/*배경색: #FFFEF4 */
   font-family: 'Pretendard-Regular';
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 0;
+  align-items: center;
 }
 .option-button:hover {
   color: black;
@@ -270,14 +274,17 @@
 }
 .selected-button {
   background-color: #FFCD4A; /*메인색*/
-  height: 9mm;
-  font-size: 13px;
-  color: black;
-  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
-  border-style: solid;
-  border-color: #FFCD4A;
+}
+.option-buttonT{
+  margin: 0 0 0 0;
+  font-size: 12px;
+  width: 62px;
   font-family: 'Pretendard-Regular';
+  display: flex;
+  flex-direction: column;
+  row-gap: 3px;
+  align-items: center;
+  justify-content: center;
 }
 .irumarkerImage {
   height: 33px;
@@ -392,7 +399,7 @@
   flex-direction: column;
   padding: 4mm;
   gap: 5px;
-  margin: 0 0 2mm 4mm;
+  margin: 0 0 4px 10px;
   color: black; /*배경색*/
   border-bottom: 1px solid #FFCD4A; /*배경색*/
   border-top: 1px solid #FFCD4A;
@@ -412,7 +419,7 @@
   flex-direction: column;
   border: 1px solid #FFCD4A;
   padding:2mm;
-  margin: 0 0 2mm 4mm;
+  margin: 0 0 4px 10px;
   color: black;
   background: white;/*배경색: #FFFEF4 */
   justify-content: space-between;
@@ -515,81 +522,111 @@
   align-items: center;
   margin: 5px 2px 2px 2px;
   border: #FFCD4A dashed 1px;
-}
-.option-toggle-btn{
-  height: 25px;
-  width: 100%;
-  align-items: center;
-  background: #ffe8b0; /*메인색 연하게 응용*/
-  border: #ffe8b0 solid 1px;
-  font-family: 'Pretendard-Regular';
-}
-.option-toggle-btn:hover{
-  background-color: #FFCD4A;
-  cursor: pointer;
-}
 
+}
 /*버튼 설정 */
+
 .showingBtn{ /*장애물 버튼 설정 */
   font-family: 'Pretendard-Regular';
-  margin: 3px;
-  height:35px;
-  font-size: 15px;
-  border-radius: 3px; /* 테두리의 모서리를 둥글게 설정 */
-  border-width: 1px; /* 버튼의 테두리 두께 */
   border-style: solid;
   background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
   transition: background-color 0.1s ease;
+  width: 60px;
+  height: 40px;
+  border-width: 1px; /* 버튼의 테두리 두께 */
+  border-radius: 8px;
+  border-color: #dcdbd9;
+  padding: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.iconImage {
+  width: 56px;
+  height: 36px;
+  padding: 2px;
+}
+.showingBtnT {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family:'Pretendard-Regular';
+  font-size: 12px;
+  text-align: center;
+  display: inline-flex;
 }
 .showingBtn:hover {
   background-color: #FFCD4A; /*메인색 마우스 호버 시 배경색 변경 */
+  border: #FFCD4A;
 }
 .showingObstacleBtns {
   font-family: 'Pretendard-Regular';
   display: flex;
-  margin-top: 5px;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 3px;
 }
-.showingFacBtnT {
-  font-family: 'Pretendard-Regular';
-  font-size: 13px;
-  text-align: center;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
+.option-toggle-btn{
+  height: 30px;
+  width: 30px;
   align-items: center;
-  flex: 20% 0 0; /* 5개의 버튼이 균등하게 배치되도록 너비 설정 */
+  border: none;
+  padding: 2px;
+  background-color: #FFFFFF;
+}
+.option-toggle-btn:hover{
+  cursor: pointer;
 }
 
+/* 편의시설 버튼 */
+.showingFacBtn-iconImage {
+  width: 100%;
+  height: 100%;
+}
 .showingFacBtn {
   height: 50px;
   width: 50px;
-  border-radius: 50%;
+  border-radius: 10px;
   border-style: solid;
   border-color: #dcdbd9;
-  padding: 0px;
+  padding: 0;
+  background-color: white;
 }
-
-.showingFacBtn .iconImage {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
-
 .showingFacBtn:hover {
   border-color: #FFCD4A; /*메인색*/
 }
-
+.showingFacBtnT {
+  font-family: 'Pretendard-Regular';
+  font-size: 12px;
+  text-align: center;
+  width: 75px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.showingFacBtnText {
+  font-family: 'Pretendard-Regular';
+  font-size: 14px;
+  width: 50px;
+  margin: 18px 0 0 5px;
+  text-align: center;
+  font-weight: bold;
+}
+.showingFacBtn-category {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  border-top: #FFCD4A solid 0.5px ;
+}
 .showingFacilitiesBtns {
   display: inline-flex;
   flex-wrap: wrap;
   margin-top: 5px;
-  justify-content: space-between;
+  flex-direction: column;
+  margin-inline: 3px;
 }
-.iconImage {
-  width: 15px;
-  height: 15px;
-}
+
 .legend {
   display: flex;
   flex-direction: column;
@@ -604,4 +641,51 @@
 }
 .legend-img {
   width: 160px
+}
+.total-distance{
+  font-family: 'Pretendard-Regular';
+  font-weight: 800;
+}
+.slidecontainer{
+  width: 200px;
+  margin-top: 10px;
+}
+.slider {
+  /*-webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  width: 100%; /* 슬라이더 길이 */
+  height: 5px; /* 슬라이더 두께 */
+  border: #FFCD4A solid 1px;
+  border-radius: 5px; /* 슬라이더 모서리를 약간 둥글게 */
+  background: #ffe8b0; /* 슬라이더 색상 */
+  accent-color:#FFCD4A;
+  outline: none; /* 슬라이더 테두리 없이 */
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  width: 20px; /* 슬라이더 핸들 길이 */
+  height: 20px; /* 슬라이더 핸들 높이 */
+  border-radius: 50%; /* 핸들 모양을 원모양으로 만들기 위함 */
+  background: #FFCD4A; /* 슬라이더 핸들 색상 */
+  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+.slider::-moz-range-thumb {
+  width: 20px; /* 슬라이더 핸들 길이 */
+  height: 25px; /* 슬라이더 핸들 높이 */
+  border-radius: 50%; /* 핸들 모양을 원모양으로 만들기 위함 */
+  background: #FFCD4A; /* 슬라이더 핸들 색상 */
+  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+.slider-result {
+  width: 30px;
+  border: none;
+  margin-left: 5px;
+  font-family: 'Pretendard-Regular';
+  font-size: 14px;
+  align-items: flex-end;
+  text-align: left; /* 텍스트 좌측 정렬 */
+}
+.option-setting{
+  width: 300px;
+  margin: 5px 0 5px 0;
 }
