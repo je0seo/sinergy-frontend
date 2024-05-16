@@ -35,12 +35,11 @@ const getIdOf = (feature, category) => {
 export const usePopup = (category, map, layer) => {
     let [image, setImage] = useState('');
     let [content, setContent] = useState('');
+    let [location, setLocation] = useState('');
     let [ObstacleID, setObstacleID] = useState('');
     let [popupOverlay, setOverlay] = useState('');
     const containerRef = useRef(null);
-    const contentRef = useRef(null);
     const closerRef = useRef(null);
-    let clicked = false;
 
     const deletePopup = () =>{
         map.getOverlays().getArray()[0].setPosition(undefined); // 아이콘 클릭할 때마다 overlay 생성되는데 가장 최근 팝업이 overlay[0]임
@@ -54,6 +53,7 @@ export const usePopup = (category, map, layer) => {
                 setContent('경사도:  '+category.data.info[index]+' [°]');
             }
         } else {
+            setLocation(category.data.location[index])
             setContent(category.data.info[index]);
         }
     }
@@ -123,12 +123,13 @@ export const usePopup = (category, map, layer) => {
         }
     }, [layer])
 
-    return {image, content, ObstacleID: ObstacleID, containerRef, contentRef, closerRef, deletePopup};
+    return {image, location, content, ObstacleID: ObstacleID, containerRef, closerRef, deletePopup};
 }
 
 export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoidance}) => { //onPath: 길찾기 장애물 결과 보여주는 팝업인지 확인하는 불값
     let type = category.type;
-    const {image, content,ObstacleID, containerRef, contentRef, closerRef, deletePopup} = usePopup(category, map, layer);
+    const {image, location, content, ObstacleID, containerRef, closerRef, deletePopup}
+    = usePopup(category, map, layer);
 
     const handleObstacleAvoidance = () => {
         // "해당 장애물 회피" 버튼 클릭 시 실행되는 함수
@@ -140,8 +141,9 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
         <div ref={containerRef} className="ol-popup">
           {<button ref={closerRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>}
             {onPath && (<div>{ObstacleID}</div>)}
+          <div>{location}</div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
-          <div ref={contentRef} className="ol-popup-content">
+          <div className="ol-popup-content">
             {type === 'bump' && <>도로턱 높이[cm]: </>}
             {type === 'bol' && <>볼라드 간격[cm]: </>}
             <div dangerouslySetInnerHTML={{__html: content}} />
