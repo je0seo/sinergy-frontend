@@ -1,5 +1,5 @@
 //MapC.js
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import Map from 'ol/Map';
@@ -27,6 +27,9 @@ import PopupUIComponent from './PopupC'
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
 import irumarker2 from './images/IrumakerY.png';
+
+import layerBase from './images/layer-base.png';
+import layerDrone from './images/layer-drone.png';
 
 import axios from 'axios';
 import {NODE_BACKEND_URL} from "../constants/urls";
@@ -243,6 +246,9 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
 
+    const handleLayerClick = (layer) => {
+        setLayerState(layer);
+    }
     const handlePositions = (data) => {
         for (let i=0;i<data.length;i++){
             //console.log(data[i].bulid_name,data[i].floor,'층')
@@ -398,12 +404,15 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
     return (
         <div>
-            <div className="select-layer-wrap" style={{ position: 'relative' }}>
-                <select style={{ position: 'absolute', top: '4px', right: '4px', 'zIndex': '100', fontSize: '15px' }} value={layerState} onChange={(e) => setLayerState(e.target.value)}>
-                    <option value='base-osm'>OSM</option>
-                    <option value='base-base'>기본지도</option>
-                    <option value='base-satellite'>항공영상</option>
-                </select>
+            <div className="select-layer-wrap">
+                <button className={`select-layer-button ${layerState === 'base-base' ? 'selected' : ''}`} onClick={() => handleLayerClick('base-base')}>
+                    <img src={layerBase} alt="base layer img" className="layer-image" />
+                    <span className="layer-text">일반지도</span>
+                </button>
+                <button className={`select-layer-button ${layerState === 'base-satellite' ? 'selected' : ''}`} onClick={() => handleLayerClick('base-satellite')}>
+                    <img src={layerDrone} alt="drone layer img" className="layer-image" />
+                    <span className="layer-text">드론지도</span>
+                </button>
             </div>
             <div id="map" style={{ width, height }}></div>
             {map && category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
