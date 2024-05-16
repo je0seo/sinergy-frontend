@@ -200,7 +200,7 @@
 }
 .barrier-free-switch input[type="checkbox"]:checked + label::before {
   content: "ON";
-  color: #004094; /* #004094*/
+  color: #046307; /* #004094*/
   font-family: 'Pretendard-Regular';
   font-size: 12px;
   left: 11px;
@@ -247,7 +247,7 @@
   border-style: solid;
   border-color: #FFCD4A; /*메인색*/
   background-color: white;/*배경색: #FFFEF4 */
-  margin: 3px 0px 5px 0px; /*위 오 아래 왼*/
+  margin: 0px 10px 5px 7px;; /*위 오 아래 왼*/
   padding-left: 0px;
   padding-right: 0px;
 }
@@ -349,8 +349,8 @@
 }
 .input-box{
   height: 30px;
-  width: 90%;
-  margin: 2px 5px 2px 0;
+  width: 87%;
+  margin: 2px 7px 2px 0;
   border: #a49c9c solid 1px; /*회색*/
   border-radius: 2px;
   background: white;/*배경색: #FFFEF4 */
@@ -375,7 +375,7 @@
   margin-bottom: 5px;
 }
 .button-style{
-  margin: 0 5px 0 5px;
+  margin: 0 7px 0 3px;
   height:9mm;
   font-size:13px;
   border: #a49c9c solid 1px;/*회색*/

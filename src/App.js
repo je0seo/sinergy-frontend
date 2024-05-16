@@ -65,7 +65,7 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
                     <button ref={inputRef} onClick={handleSearch} style={{fontSize: '20%'}}><img src={searchicon} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'17px'}}/></button>
                 </div>
                 <div className="barrier-free-switch">
-                    <a style={{fontSize: '10px', color: '#004094', marginBottom: '5px', textAlign:"center"}}>barrier-free</a>
+                    <a style={{fontSize: '10px', color: '#61B29B', marginBottom: '5px', textAlign:"center", fontWeight: 'bold'}}>barrier-free</a>
                     <input type="checkbox" id="switch" checked={BarrierFreeMode} onChange={handleModeChange}/><label htmlFor="switch">
                 </label>
                 </div>
@@ -463,7 +463,7 @@ const App = () => {
                         */}
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
-                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 5px 5px 7px'}}>
+                            <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 10px 5px 7px'}}>
                                 <div style={{fontSize: '14px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>캠퍼스 내 장애물 위치 보기</div>
                                 <div className='showingObstacleBtns'>
                                     <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
@@ -501,7 +501,7 @@ const App = () => {
                                 )}
                             </div>
                         )}
-                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 5px 5px 7px'}}>
+                        <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 10px 5px 7px'}}>
                         <div style={{fontSize: '14px', textAlign: 'center', marginTop: '5px', marginBottom: '0px', display: 'flex', flexDirection: 'column',alignItems: 'center', fontFamily: 'Pretendard-Regular'}}>편의시설 둘러보기</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
@@ -571,7 +571,7 @@ const App = () => {
                     <div>
                         <div className="pathfinder-page">
                             {BarrierFreeMode && (
-                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 5px 5px 10px'}}>
+                                <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin:'0 7px 5px 7px'}}>
                                     <div style={{fontSize: '15px', textAlign: 'center',margin: '5px 0 5px 0', fontFamily: 'Pretendard-Regular'}}>길찾기 경로 옵션</div>
                                     <div className="option-button-row">
                                         <button className='option-toggle-btn' onClick={handleToggleObstacleMenu}><img src={Icons.settingsIcon} alt="Setting Icon" className="iconImage" style={{width: '25px', height: '25px'}}/></button>
