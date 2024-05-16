@@ -564,8 +564,8 @@
   display: inline-flex;
 }
 .showingBtn:hover {
-  background-color: #FFCD4A; /*메인색 마우스 호버 시 배경색 변경 */
-  border: #FFCD4A;
+  background-color: #ffe8b0; /*메인색 마우스 호버 시 배경색 변경 */
+  border-color: #FFCD4A;
 }
 .showingObstacleBtns {
   font-family: 'Pretendard-Regular';
