@@ -35,7 +35,12 @@ import showerRoomIcon from './images/icons/showerroomIcon.png';
 import sportsIcon from './images/icons/sportsIcon.png';
 import squashIcon from './images/icons/squashIcon.png';
 import unmannedIcon from './images/icons/unmannedIcon.png';
-import settingsIcon from './images/icons/settingsIcon.png'
+import settingsIcon from './images/icons/settingsIcon.png';
+import footvolleyballIcon from './images/icons/footvolleyballIcon.png';
+import bookstoreIcon from './images/icons/bookstoreIcon.png';
+import parkingIcon from './images/icons/parkingIcon.png';
+
+
 import NoBumpIcon from './images/icons/NoBumpIcon.png';
 import NoBolIcon from './images/icons/NoBolIcon.png';
 import NoUnpavedIcon from './images/icons/NoUnpavedIcon.png';
@@ -76,6 +81,10 @@ import IrushowerRoomIcon from './images/icons/Icon/showerroomIcon.png';
 import IrusportsIcon from './images/icons/Icon/sportsIcon.png';
 import IrusquashIcon from './images/icons/Icon/squashIcon.png';
 import IruunmannedIcon from './images/icons/Icon/unmannedIcon.png';
+import IrufootvolleyballIcon  from './images/icons/Icon/footvolleyballIcon.png';
+import IrubookstoreIcon  from './images/icons/Icon/bookstoreIcon.png';
+import IruparkingIcon  from './images/icons/Icon/parkingIcon.png';
+
 
 //import magnifier from './images/icons/magnifier.png';
 
@@ -88,7 +97,8 @@ export const Icons = {
     bumpIcon, bolIcon, unpavedIcon, stairsIcon, slopeIcon, facilitiesIcon, benchIcon, atmIcon,
     bicycleIcon, smokingIcon, storeIcon, cafeIcon, postOfficeIcon, healthServiceIcon, cafeteriaIcon,
     printIcon, gymIcon, tennisIcon, basketballIcon, breakRoomIcon, loungeIcon, seminarRoomIcon,
-    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier, rooftopIcon, cafestoreIcon, diningIcon, restaurantIcon, showerRoomIcon, sportsIcon, squashIcon, unmannedIcon, settingsIcon, NoBumpIcon, NoBolIcon, NoUnpavedIcon, NoSlopeIcon, NoStairsIcon
+    sBicycleIcon, vendingMachineIcon, libraryIcon, toiletIcon, magnifier, rooftopIcon, cafestoreIcon, diningIcon,
+    restaurantIcon, showerRoomIcon, sportsIcon, squashIcon, footvolleyballIcon,bookstoreIcon, parkingIcon, unmannedIcon, settingsIcon, NoBumpIcon, NoBolIcon, NoUnpavedIcon, NoSlopeIcon, NoStairsIcon
 }
 
 export const entryMarkerStyle = new Style({
@@ -169,6 +179,9 @@ export const showMarkerStyle = (markertype) => {
         case 'squash': markerimg = IrusquashIcon; break;
         case 'dining': markerimg = IrudiningIcon; break;
         case 'cafe&store': markerimg = IrucafestoreIcon; break;
+        case 'foot volley': markerimg =   IrufootvolleyballIcon; break;
+        case 'book store': markerimg =   IrubookstoreIcon; break;
+        case 'parking': markerimg =   IruparkingIcon; break;
         case 'bump': markerimg = IrubumpIcon; break;
         case 'bol': markerimg = IrubolIcon; break;
         case 'unpaved':
