@@ -156,7 +156,7 @@ const createPoiMarkerLayer = (cqlFilter) => {
         visible: true,
         source: poiSource,
         style: basicMarkerStyle(irumarker2),
-        zIndex: 4
+        zIndex: 5
     });
 
     return poiMarkerLayer;
