@@ -29,7 +29,7 @@ import Search from './components/Search';
 //
 import irumarkerS from './components/images/IrumakerS.png';
 import irumarkerE from './components/images/IrumakerE.png';
-import irumarkerY from './components/images/IrumakerY.png';
+import irumarkerG from './components/images/IrumakerG.png';
 //
 import {Icons} from './components/MarkerStyle'
 
@@ -616,7 +616,7 @@ const App = () => {
                                 <div>
                                     {!(stopovers.length>STOPOVER_MAX_INDEX) && stopovers.map((stopover, index) => (
                                         <div className="input" key={index}>
-                                            <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
+                                            <img src={irumarkerG} alt="stopover irumarker" className="irumarkerImage"/>
                                             <div className="input-box">
                                                 <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
                                                 <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>―</button>

@@ -27,7 +27,7 @@ import PopupUIComponent from './PopupC'
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
-import irumarker2 from './images/IrumakerY.png';
+import irumarker2 from './images/IrumakerG.png';
 
 import layerBase from './images/layer-base.png';
 import layerDrone from './images/layer-drone.png';
