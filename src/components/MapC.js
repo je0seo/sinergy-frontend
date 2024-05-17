@@ -103,15 +103,6 @@ const satellitePoiText = new TileLayer({
     zIndex: 5
 });
 
-const studentHallText = new TileLayer({
-    source: new TileWMS({
-        url: 'http://localhost:8080/geoserver/gp/wms',
-        params: { 'LAYERS': 'gp:poi_point_s'}, // 해당 스타일 발행 필요
-        serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
-    }),
-    zIndex: 5
-})
-
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
         const listOfNodeId = path.map(n => n.node) // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
@@ -376,7 +367,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         map.addLayer(vworldBaseLayer);
                         map.addLayer(UOSbasemapTile);
                         map.addLayer(basePoiText);
-                        map.addLayer(studentHallText);
                         break;
                     case 'base-satellite':
                         map.getLayers().clear();
