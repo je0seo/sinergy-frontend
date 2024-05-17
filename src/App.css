@@ -374,8 +374,8 @@
   margin-bottom: 5px;
 }
 .button-style{
-  margin: 0 7px 0 3px;
-  height:9mm;
+  margin: 0 8px 0 9px;
+  height:35px;
   font-size:13px;
   border: #a49c9c solid 1px;/*회색*/
   border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
@@ -527,10 +527,66 @@
 .user-obs-option-setting{
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin: 5px 2px 2px 2px;
+  margin: 10px 2px 2px 2px;
   border: #FFCD4A dashed 1px;
-
+  row-gap: 8px;
+}
+.slidecontainer{
+  width: 200px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.slider-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+}
+.slider {
+  /*-webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  width: 100%; /* 슬라이더 길이 */
+  height: 5px; /* 슬라이더 두께 */
+  border: #FFCD4A solid 1px;
+  border-radius: 5px; /* 슬라이더 모서리를 약간 둥글게 */
+  background: #ffe8b0; /* 슬라이더 색상 */
+  accent-color:#FFCD4A;
+  outline: none; /* 슬라이더 테두리 없이 */
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  width: 20px; /* 슬라이더 핸들 길이 */
+  height: 20px; /* 슬라이더 핸들 높이 */
+  border-radius: 50%; /* 핸들 모양을 원모양으로 만들기 위함 */
+  background: #FFCD4A; /* 슬라이더 핸들 색상 */
+  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+.slider::-moz-range-thumb {
+  width: 20px; /* 슬라이더 핸들 길이 */
+  height: 25px; /* 슬라이더 핸들 높이 */
+  border-radius: 50%; /* 핸들 모양을 원모양으로 만들기 위함 */
+  background: #FFCD4A; /* 슬라이더 핸들 색상 */
+  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+.slider-result {
+  width: 33px;
+  border: none;
+  margin-left: 5px;
+  font-family: 'Pretendard-Regular';
+  font-size: 16px;
+  font-weight: bold;
+  justify-content: right;
+  align-items: center;
+  text-align: right; /* 텍스트 좌측 정렬 */
+}
+.option-setting{
+  width: 300px;
+  margin: 5px 0 5px 0;
 }
 /*버튼 설정 */
 
@@ -666,47 +722,4 @@
 .total-distance{
   font-family: 'Pretendard-Regular';
   font-weight: 800;
-}
-.slidecontainer{
-  width: 200px;
-  margin-top: 10px;
-}
-.slider {
-  /*-webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
-  width: 100%; /* 슬라이더 길이 */
-  height: 5px; /* 슬라이더 두께 */
-  border: #FFCD4A solid 1px;
-  border-radius: 5px; /* 슬라이더 모서리를 약간 둥글게 */
-  background: #ffe8b0; /* 슬라이더 색상 */
-  accent-color:#FFCD4A;
-  outline: none; /* 슬라이더 테두리 없이 */
-}
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
-  appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
-  width: 20px; /* 슬라이더 핸들 길이 */
-  height: 20px; /* 슬라이더 핸들 높이 */
-  border-radius: 50%; /* 핸들 모양을 원모양으로 만들기 위함 */
-  background: #FFCD4A; /* 슬라이더 핸들 색상 */
-  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
-}
-.slider::-moz-range-thumb {
-  width: 20px; /* 슬라이더 핸들 길이 */
-  height: 25px; /* 슬라이더 핸들 높이 */
-  border-radius: 50%; /* 핸들 모양을 원모양으로 만들기 위함 */
-  background: #FFCD4A; /* 슬라이더 핸들 색상 */
-  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
-}
-.slider-result {
-  width: 30px;
-  border: none;
-  margin-left: 5px;
-  font-family: 'Pretendard-Regular';
-  font-size: 14px;
-  align-items: flex-end;
-  text-align: left; /* 텍스트 좌측 정렬 */
-}
-.option-setting{
-  width: 300px;
-  margin: 5px 0 5px 0;
 }
