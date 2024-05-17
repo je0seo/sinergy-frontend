@@ -103,15 +103,6 @@ const satellitePoiText = new TileLayer({
     zIndex: 5
 });
 
-const studentHallText = new TileLayer({
-    source: new TileWMS({
-        url: 'http://localhost:8080/geoserver/gp/wms',
-        params: { 'LAYERS': 'gp:poi_point_s'}, // 해당 스타일 발행 필요
-        serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
-    }),
-    zIndex: 5
-})
-
 const makelocaArrayFromNodes = (pathData, locaArray) => {
     pathData.forEach((path, index) => {
         const listOfNodeId = path.map(n => n.node) // 주의: 출발지의 start_vid, 도착지의 end_vid는 빼고 node가 다 2개씩 있음
@@ -221,6 +212,27 @@ const createIndoorLayer = (buildingName, floor) => {
     });
 }
 
+const scaleLineControl = new ScaleLine({
+  units: 'metric', // 기본 단위는 'metric'으로 설정
+  bar: true,
+  steps: 4,
+  text: true,
+});
+
+// cm 단위로 변환하는 커스텀 함수 정의
+scaleLineControl.getScaleForResolution = function(resolution) {
+  const dpi = 25.4 / 0.28; // 25.4mm per inch / 0.28mm per pixel (기본값)
+  const mpu = this.getMap().getView().getProjection().getMetersPerUnit();
+  const scale = resolution * mpu * 39.37 * dpi; // 1 meter = 39.37 inches
+  return scale * 100; // meter to centimeter 변환
+};
+
+// 사용자 정의 단위 문자열 설정
+scaleLineControl.render = function() {
+  const scale = this.getScaleForResolution(this.getMap().getView().getResolution());
+  this.element.innerHTML = `${scale.toFixed(2)} cm`;
+};
+
 export const useMap = () => { // 배경지도만 따로 분리
     const [map, setMap] = useState(null);
     //추가부분
@@ -255,6 +267,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
+    // ScaleLine 컨트롤 생성
 
     const handleLayerClick = (layer) => {
         setLayerState(layer);
@@ -345,7 +358,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
         if (map) {
             console.log('-------rendering------')
             const layerExists = map.getLayers();
-            map.addControl(new ScaleLine());    // 축척
+            map.addControl(scaleLineControl);    // 축척
             // 배경지도 옵션 설정
             if (layerExists) {
                 switch (layerState) {
@@ -354,7 +367,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         map.addLayer(vworldBaseLayer);
                         map.addLayer(UOSbasemapTile);
                         map.addLayer(basePoiText);
-                        map.addLayer(studentHallText);
                         break;
                     case 'base-satellite':
                         map.getLayers().clear();
