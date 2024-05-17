@@ -105,7 +105,7 @@ const createVisibleLinkObsLayer = (obsType, url) => {
     })
 }
 
-export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, showObs, onObstacleAvoidance}) => {
+export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, onObstacleAvoidance}) => {
     let [bumpLayer, setBumpLayer] = useState([]);
     let [bolLayer, setBolLayer] = useState([]);
     let [slopeLinkLayer, setSlopeLinkLayer] = useState([]);
@@ -186,7 +186,7 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
                 map.removeLayer(unpavedLayer);
             }
         }
-    }, [map, pathData, bump, bol, showObs]);
+    }, [map, bump, bol]);
 
     return (
         <div>

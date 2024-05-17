@@ -263,7 +263,7 @@ export const useMap = () => { // 배경지도만 따로 분리
     return map;
 }
 
-export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, slopeD, showObs, category, onObstacleAvoidance}) => {
+export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, slopeD, showObs, setShowObs, category, onObstacleAvoidance,}) => {
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
@@ -426,6 +426,15 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
         }
     }, [layerState,keyword])
 
+    useEffect(() => {
+        // showObs가 true일 때만 ShowObsOnPath 컴포넌트를 렌더링
+        if (showObs) {
+            // showObs가 true이면 컴포넌트를 다시 렌더링하도록 상태를 변경
+            setShowObs(false);
+            setTimeout(() => setShowObs(true), 0);
+        }
+    }, [layerState]); // layerState가 변경될 때마다 useEffect 실행
+
     return (
         <div>
             <div className="select-layer-wrap">
@@ -440,7 +449,17 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             </div>
             <div id="map" style={{ width, height }}></div>
             {map && category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
-            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} slopeD={slopeD} showObs={showObs} onObstacleAvoidance={onObstacleAvoidance} />}
+            {map && showObs && (
+                <ShowObsOnPath
+                    map={map}
+                    pathData={pathData}
+                    locaArray={locaArray}
+                    bump={bump}
+                    bol={bol}
+                    slopeD={slopeD}
+                    onObstacleAvoidance={onObstacleAvoidance}
+                />
+            )}
         </div>
     );
 };

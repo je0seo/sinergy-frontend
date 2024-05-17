@@ -718,7 +718,8 @@ const App = () => {
                 <button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD}
+                showObs={showObsOnPath} setShowObs = {setShowObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );
