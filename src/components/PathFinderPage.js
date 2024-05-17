@@ -32,7 +32,7 @@ const PathFinderPage = () => {
 
     const handlePathResult = (data) => {
         // 응답 데이터에서 총 거리 추출
-        console.log(data.minAggCost);
+        //console.log(data.minAggCost);
         const calculatedTotalDistance = data.minAggCost;
 
         // 총 거리를 UI에 업데이트
@@ -41,7 +41,6 @@ const PathFinderPage = () => {
         // 최단 경로 텍스트를 보이도록 상태를 설정
         setShowShortestPathText(true);
         const shortestPath = data.shortestPath;
-
         if (shortestPath) {
             setPathData(shortestPath);
         }
@@ -56,7 +55,7 @@ const PathFinderPage = () => {
                 stopovers,
                 features,
             };
-            console.log('중간점검용:',requestData );
+            console.log('중간점검용:',requestData);
             try {
                 var response = await axios.post(NODE_BACKEND_URL+'/findPathServer', requestData, {
                     headers: {

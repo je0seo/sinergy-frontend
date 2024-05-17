@@ -273,7 +273,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
     const createShortestPathLayer = (pathData) => {
         //console.log("pathData:", pathData);
-        const colorPalette = ['#FD5230', '#007AC5', '#FFCD4A','#44EAC5','blue','orange', 'purple', 'cyan', 'magenta'];
+        const colorPalette = ['#FD5230', '#007AC5', '#00b398','#44EAC5','blue','orange', 'purple', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
             const listOfEdgeId = path.map(e => e.edge);
@@ -295,7 +295,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 style: new Style({
                     stroke: new Stroke({
                         color: colorPalette[colorIndex],
-                        width: 2
+                        width: 4
                     })
                 }),
                 zIndex: 3
@@ -360,9 +360,9 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
-
+                console.log('엥:',pathData)
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-                //console.log(locaArray)
+                console.log('여기:',locaArray)
                 // 건물 출입구
                 const entryMarker = createEntryMarkerLayer(getNodeIdsOnPath(pathData).map(Number))
                 map.addLayer(entryMarker)
