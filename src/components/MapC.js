@@ -7,7 +7,6 @@ import View from 'ol/View';
 import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
 import { fromLonLat } from 'ol/proj';
-import makeCrsFilter4node from "./utils/filter-for-node.js";
 import {makeCrsFilter} from "./utils/crs-filter.js";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
@@ -23,7 +22,6 @@ import { click, pointerMove } from 'ol/events/condition';
 
 import HandleCategoryClick from './HandleCategoryClick';
 import {getNodeIdsOnPath, ShowObsOnPath} from './ShowObsOnPath';
-import PopupUIComponent from './PopupC'
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
