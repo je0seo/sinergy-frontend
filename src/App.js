@@ -25,7 +25,7 @@ import Search from './components/Search';
 //
 import irumarkerS from './components/images/IrumakerS.png';
 import irumarkerE from './components/images/IrumakerE.png';
-import irumarkerY from './components/images/IrumakerY.png';
+import irumarkerG from './components/images/IrumakerG.png';
 //
 import {Icons} from './components/MarkerStyle'
 
@@ -616,7 +616,7 @@ const App = () => {
                                 <div>
                                     {!(stopovers.length>STOPOVER_MAX_INDEX) && stopovers.map((stopover, index) => (
                                         <div className="input" key={index}>
-                                            <img src={irumarkerY} alt="stopover irumarker" className="irumarkerImage"/>
+                                            <img src={irumarkerG} alt="stopover irumarker" className="irumarkerImage"/>
                                             <div className="input-box">
                                                 <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
                                                 <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>―</button>
@@ -648,7 +648,7 @@ const App = () => {
                                     </div>
                                     {BarrierFreeMode && obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 &&(
                                         <div>
-                                            <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
+                                            <button className="button-style" style={{marginLeft:'7px'}} onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
                                         </div>
                                     )}
                                 </div>
@@ -718,7 +718,8 @@ const App = () => {
                 <button className='ToggleLeftSideBtn' onClick={() => {handleToggleLeftSide();}}>{toggleLeftSideFeature}</button>
                 {activeTab === '' && <Map width='100%' height='100vh' keyword={poiKeyword} category={showReqIdsNtype}/>}
                 {activeTab === '길찾기'
-                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD} showObs={showObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
+                && <Map width='100%' height='100vh' pathData={pathData} bol={bol} bump={bump} slopeD={slopeD}
+                showObs={showObsOnPath} setShowObs = {setShowObsOnPath} onObstacleAvoidance={handleObstacleAvoidance}/>}
             </div>
         </div>
     );

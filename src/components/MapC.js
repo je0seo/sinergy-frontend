@@ -17,6 +17,7 @@ import { register } from 'ol/proj/proj4';
 import {basicMarkerStyle, clickedMarkerStyle, entryMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
+import { ScaleLine } from 'ol/control';
 import { click, pointerMove } from 'ol/events/condition';
 
 import HandleCategoryClick from './HandleCategoryClick';
@@ -24,7 +25,7 @@ import {getNodeIdsOnPath, ShowObsOnPath} from './ShowObsOnPath';
 
 import irumarkerS from './images/IrumakerS.png';
 import irumarkerE from './images/IrumakerE.png';
-import irumarker2 from './images/IrumakerY.png';
+import irumarker2 from './images/IrumakerG.png';
 
 import layerBase from './images/layer-base.png';
 import layerDrone from './images/layer-drone.png';
@@ -153,7 +154,7 @@ const createPoiMarkerLayer = (cqlFilter) => {
         title: 'POI',
         visible: true,
         source: poiSource,
-        style: basicMarkerStyle(irumarker2),
+        style: basicMarkerStyle(irumarkerE),
         zIndex: 6
     });
 
@@ -209,6 +210,27 @@ const createIndoorLayer = (buildingName, floor) => {
     });
 }
 
+const scaleLineControl = new ScaleLine({
+  units: 'metric', // 기본 단위는 'metric'으로 설정
+  bar: true,
+  steps: 4,
+  text: true,
+});
+
+// cm 단위로 변환하는 커스텀 함수 정의
+scaleLineControl.getScaleForResolution = function(resolution) {
+  const dpi = 25.4 / 0.28; // 25.4mm per inch / 0.28mm per pixel (기본값)
+  const mpu = this.getMap().getView().getProjection().getMetersPerUnit();
+  const scale = resolution * mpu * 39.37 * dpi; // 1 meter = 39.37 inches
+  return scale * 100; // meter to centimeter 변환
+};
+
+// 사용자 정의 단위 문자열 설정
+scaleLineControl.render = function() {
+  const scale = this.getScaleForResolution(this.getMap().getView().getResolution());
+  this.element.innerHTML = `${scale.toFixed(2)} cm`;
+};
+
 export const useMap = () => { // 배경지도만 따로 분리
     const [map, setMap] = useState(null);
     //추가부분
@@ -239,10 +261,11 @@ export const useMap = () => { // 배경지도만 따로 분리
     return map;
 }
 
-export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, slopeD, showObs, category, onObstacleAvoidance}) => {
+export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, slopeD, showObs, setShowObs, category, onObstacleAvoidance,}) => {
     const map = useMap();
     const [layerState, setLayerState] = useState('base-base');
     var locaArray = []; // 출발, 경유지, 도착지의 link_id를 담는 배열
+    // ScaleLine 컨트롤 생성
 
     const handleLayerClick = (layer) => {
         setLayerState(layer);
@@ -333,6 +356,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
         if (map) {
             console.log('-------rendering------')
             const layerExists = map.getLayers();
+            map.addControl(scaleLineControl);    // 축척
             // 배경지도 옵션 설정
             if (layerExists) {
                 switch (layerState) {
@@ -358,9 +382,9 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
-                console.log('엥:',pathData)
+                //console.log('엥:',pathData)
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-                console.log('여기:',locaArray)
+                //console.log('여기:',locaArray)
                 // 건물 출입구
                 const entryMarker = createEntryMarkerLayer(getNodeIdsOnPath(pathData).map(Number))
                 map.addLayer(entryMarker)
@@ -398,7 +422,16 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 map.removeLayer(poiMarkerLayer);
            }
         }
-    }, [keyword])
+    }, [layerState,keyword])
+
+    useEffect(() => {
+        // showObs가 true일 때만 ShowObsOnPath 컴포넌트를 렌더링
+        if (showObs) {
+            // showObs가 true이면 컴포넌트를 다시 렌더링하도록 상태를 변경
+            setShowObs(false);
+            setTimeout(() => setShowObs(true), 0);
+        }
+    }, [layerState]); // layerState가 변경될 때마다 useEffect 실행
 
     return (
         <div>
@@ -414,7 +447,17 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             </div>
             <div id="map" style={{ width, height }}></div>
             {map && category && category.type && <HandleCategoryClick category = {category} map = {map}/>}
-            {map && showObs && <ShowObsOnPath map={map} pathData={pathData} locaArray={locaArray} bump={bump} bol={bol} slopeD={slopeD} showObs={showObs} onObstacleAvoidance={onObstacleAvoidance} />}
+            {map && showObs && (
+                <ShowObsOnPath
+                    map={map}
+                    pathData={pathData}
+                    locaArray={locaArray}
+                    bump={bump}
+                    bol={bol}
+                    slopeD={slopeD}
+                    onObstacleAvoidance={onObstacleAvoidance}
+                />
+            )}
         </div>
     );
 };

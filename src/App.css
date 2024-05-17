@@ -396,7 +396,7 @@
   text-align: center;
   padding: 2mm;
   gap: 5px;
-  margin: 10px 5px 10px 10px;
+  margin: 10px 7px 10px 7px;
   color: #FD5230;
   border: 2px solid #FD5230;
   font-family: 'Pretendard-Regular';
@@ -408,7 +408,7 @@
   flex-direction: column;
   padding: 4mm;
   gap: 5px;
-  margin: 0 5px 4px 10px;
+  margin: 0 7px 4px 7px;
   color: black; /*배경색*/
   border-bottom: 1px solid #FFCD4A; /*배경색*/
   border-top: 1px solid #FFCD4A;
