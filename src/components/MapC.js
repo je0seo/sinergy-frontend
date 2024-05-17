@@ -360,9 +360,9 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
             // 출발지 도착지 다 분홍색 노드로 보여줬던 부분. 링크 추출
             if (pathData && pathData.length >= 1) { // 경로를 이루는 간선이 하나라도 존재를 하면
                 createShortestPathLayer(pathData);
-                console.log('엥:',pathData)
+                //console.log('엥:',pathData)
                 locaArray = makelocaArrayFromNodes(pathData,locaArray); // pathData 가공해서 locaArray 도출
-                console.log('여기:',locaArray)
+                //console.log('여기:',locaArray)
                 // 건물 출입구
                 const entryMarker = createEntryMarkerLayer(getNodeIdsOnPath(pathData).map(Number))
                 map.addLayer(entryMarker)
