@@ -65,7 +65,7 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabC
                     <button ref={inputRef} onClick={handleSearch} style={{fontSize: '20%'}}><img src={searchicon} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'17px'}}/></button>
                 </div>
                 <div className="barrier-free-switch">
-                    <a style={{fontSize: '10px', color: '#61B29B', marginBottom: '5px', textAlign:"center", fontWeight: 'bold'}}>barrier-free</a>
+                    <a style={{fontSize: '10px', color: '#00b398', marginBottom: '5px', textAlign:"center", fontWeight: 'bold'}}>barrier-free</a>
                     <input type="checkbox" id="switch" checked={BarrierFreeMode} onChange={handleModeChange}/><label htmlFor="switch">
                 </label>
                 </div>

@@ -199,7 +199,7 @@
 }
 .barrier-free-switch input[type="checkbox"]:checked + label::before {
   content: "ON";
-  color: #046307; /* #004094*/
+  color: #00b398; /* #004094*/
   font-family: 'Pretendard-Regular';
   font-size: 12px;
   left: 11px;
