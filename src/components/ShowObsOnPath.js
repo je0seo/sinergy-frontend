@@ -25,32 +25,29 @@ const getEdgeIdsOnPath = (pathData) => {
     let listOfEdgeId = [];
     pathData.forEach((path, index) => {
         listOfEdgeId = listOfEdgeId.concat(path.map(e => e.edge));
+        listOfEdgeId.pop()  // id 리스트에서 맨 마지막값 -1 삭제
     });
     listOfEdgeId = Array.from(new Set(listOfEdgeId));
-    listOfEdgeId.pop()
     return listOfEdgeId
 }
 
-const url4slopeObs = (edgeIds, slopeD) => {
-    const crsFilter = makeCrsFilter(edgeIds);
+const url4slopeObs = (filter, slopeD) => {
     return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
            '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
-           + crsFilter
-           + ' And (link_att NEQ 5 AND grad_deg >='+slopeD + ')'
+           + filter
+           + 'And (link_att NEQ 5 AND grad_deg >='+slopeD + ')'
 }
-const url4unpavedObs = (edgeIds) => {
-    const crsFilter = makeCrsFilter(edgeIds);
+const url4unpavedObs = (filter) => {
     return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
         '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
-        + crsFilter
-        + ' AND link_att = 4'
+        + filter
+        + 'AND link_att = 4'
 }
-const url4stairObs = (edgeIds) => {
-    const crsFilter = makeCrsFilter(edgeIds);
+const url4stairObs = (filter) => {
     return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
         '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
-        + crsFilter
-        + ' AND link_att = 5'
+        + filter
+        + 'AND link_att = 5'
 }
 
 const createObsLayerWith = (obsType, pathNodeIds) => {
@@ -65,7 +62,6 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
         },
         serverType: 'geoserver'
     })
-    //console.log(obsSource.getFeatures())
     const obsLayer = new VectorLayer({
         title: `${obsType.type}OnPath Layer`,
         visible: true,
@@ -109,6 +105,7 @@ const createVisibleLinkObsLayer = (obsType, url) => {
             })
     })
 }
+
 export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, showObs, onObstacleAvoidance}) => {
     let [bumpLayer, setBumpLayer] = useState([]);
     let [bolLayer, setBolLayer] = useState([]);
@@ -120,6 +117,7 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
         if (map && locaArray && locaArray.length >= 2) {
             let pathNodeIds = getNodeIdsOnPath(pathData).map(Number);
             let pathEdgeIds = getEdgeIdsOnPath(pathData).map(Number);
+            const filter = 'id in (' +pathEdgeIds +')'
 
             // 1. 노드 장애물 레이어 생성
             const bumpMarker = createObsLayerWith(bump, pathNodeIds)
@@ -128,15 +126,17 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
             setBolLayer(bolMarker)
 
             // 2. 링크 장애물 레이어 생성
-            const urlSl = url4slopeObs(pathEdgeIds, slopeD)
-            slopeLinkLayer = createVisibleLinkObsLayer('slope', urlSl)
-            setSlopeLinkLayer(slopeLinkLayer) //setLinkObsLayer(createInvisibleLinkObsLayer(url)) 하면 null오류 남
-            const urlSt = url4stairObs(pathEdgeIds)
-            stairLinkLayer = createVisibleLinkObsLayer('stair', urlSt)
-            setStairLinkLayer(stairLinkLayer)
-            const urlUn = url4unpavedObs(pathEdgeIds)
-            unpavedLinkLayer = createVisibleLinkObsLayer('unpaved', urlUn)
-            setUnpavedLinkLayer(unpavedLinkLayer)
+            const urlSl = url4slopeObs(filter, slopeD)
+            const slopeLayer = createVisibleLinkObsLayer('slope', urlSl)
+            setSlopeLinkLayer(slopeLayer) //setLinkObsLayer(createInvisibleLinkObsLayer(url)) 하면 null오류 남
+
+            const urlSt = url4stairObs(filter)
+            const stairLayer = createVisibleLinkObsLayer('stair', urlSt)
+            setStairLinkLayer(stairLayer)
+
+            const urlUn = url4unpavedObs(filter)
+            const unpavedLayer = createVisibleLinkObsLayer('unpaved', urlUn)
+            setUnpavedLinkLayer(unpavedLayer)
 
             // 2. 범례 지도에 시각화
             pathData.forEach((path, index) => {
@@ -158,9 +158,9 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
             // 4. 모든 경로 내 장애물 레이어 지도에 추가
             map.addLayer(bumpMarker)
             map.addLayer(bolMarker)
-            map.addLayer(slopeLinkLayer)
-            map.addLayer(stairLinkLayer)
-            map.addLayer(unpavedLinkLayer)
+            map.addLayer(slopeLayer)
+            map.addLayer(stairLayer)
+            map.addLayer(unpavedLayer)
 
             // 장애물 레이어 위로 마우스 호버 시 포인터 커서 스타일 변경
             map.on('pointermove', (e) => {
@@ -186,9 +186,9 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
             return () => {  // cleanUp
                 map.removeLayer(bumpMarker);
                 map.removeLayer(bolMarker);
-                map.removeLayer(slopeLinkLayer);
-                map.removeLayer(stairLinkLayer);
-                map.removeLayer(unpavedLinkLayer);
+                map.removeLayer(slopeLayer);
+                map.removeLayer(stairLayer);
+                map.removeLayer(unpavedLayer);
             }
         }
     }, [map, pathData, bump, bol, showObs]);
