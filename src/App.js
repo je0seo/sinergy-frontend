@@ -648,7 +648,7 @@ const App = () => {
                                     </div>
                                     {BarrierFreeMode && obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 &&(
                                         <div>
-                                            <button className="button-style" onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
+                                            <button className="button-style" style={{marginLeft:'7px'}} onClick={handleShowObsOnPath}>경로 내 장애물 표시</button>
                                         </div>
                                     )}
                                 </div>
