@@ -56,13 +56,13 @@
     background-color:  white;/*배경색: #FFFEF4 */
 }
 .main-left-side::-webkit-scrollbar-button {
-  background:  white;/*배경색: #FFFEF4 */
-  height: 15px;
+  background: white;/*배경색: #FFFEF4 */
+  height: 15px;/*15*/
 }
 .main-left-side::-webkit-scrollbar-button:vertical:start:decrement,
 .main-left-side::-webkit-scrollbar-button:vertical:start:increment {
    display: block;
-   height: 93px;
+   height: 83px;
 }
 .main-left-side::-webkit-scrollbar-button:vertical:end:decrement {
      display: block;
@@ -588,54 +588,65 @@
 }
 
 /* 편의시설 버튼 */
-.showingFacBtn-iconImage {
+.showingFacilitiesBtns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+.showingFacBtn-category {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  border-top: #FFCD4A solid 0.5px ;
+  width: 100%;
+}
+.showingFacBtnT {
+  font-family: 'Pretendard-Regular';
+  font-size: 11px;
+  text-align: center;
+  width: 67px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .showingFacBtn {
-  height: 50px;
-  width: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 10px;
-  border-style: solid;
-  border-color: #dcdbd9;
+  border: #dcdbd9 solid 2px;
   padding: 0;
+  margin-inside: 0;
+  margin: 2px 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: white;
+  overflow: hidden;
 }
 .showingFacBtn:hover {
   border-color: #FFCD4A; /*메인색*/
 }
-.showingFacBtnT {
-  font-family: 'Pretendard-Regular';
-  font-size: 12px;
-  text-align: center;
-  width: 67px;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
+.showingFacBtn-iconImage {
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
 }
 .showingFacBtnText {
   font-family: 'Pretendard-Regular';
   font-size: 12px;
-  width: 35px;
+  width: 30px;
   margin: 0 0 0 5px;
   display: flex;
   align-items: center;
   text-align: center;
   font-weight: bold;
 }
-.showingFacBtn-category {
-  display: flex;
-  flex-direction: row;
-  padding: 2px 0 2px 0;
-  border-top: #FFCD4A solid 0.5px ;
-}
-.showingFacilitiesBtns {
-  display: inline-flex;
-  flex-wrap: wrap;
-  margin-top: 5px;
-  flex-direction: column;
-  margin-inline: 2px;
-}
+
+
 
 .legend {
   display: flex;
