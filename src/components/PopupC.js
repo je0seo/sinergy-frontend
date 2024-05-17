@@ -49,9 +49,14 @@ export const usePopup = (category, map, layer) => {
         setImage(category.data.images[index]);
         if (category.type == 'slope' || category.type == 'unpaved' || category.type == 'stairs') {
             setContent(null)    // 이전에 클릭한 객체 info가 남아있는 경우 방지
+            setLocation(null)
             if (category.data.info[index] > 0) {    //
                 setContent('경사도:  '+category.data.info[index]+' [°]');
             }
+        } else if (category.type =='bol'|| category.type == 'bump') {
+            setContent(null)
+            setLocation(null)
+            setContent(category.data.info[index]);
         } else {
             setLocation(category.data.location[index])
             setContent(category.data.info[index]);
@@ -141,7 +146,7 @@ export const PopupUIComponent = ({category, map, layer, onPath, onObstacleAvoida
         <div ref={containerRef} className="ol-popup">
           {<button ref={closerRef} className="ol-popup-closer" onClick={() => deletePopup()}>X</button>}
             {onPath && (<div>{ObstacleID}</div>)}
-          <div>{location}</div>
+            <div style={{marginBottom: '5px'}}><strong>{location}</strong></div>
           {image && <img src={image} alt="Popup Image" style={{ width: '180px', height: '150px', display: 'block'}}/>}
           <div className="ol-popup-content">
             {type === 'bump' && <>도로턱 높이[cm]: </>}
