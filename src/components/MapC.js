@@ -18,6 +18,7 @@ import { register } from 'ol/proj/proj4';
 import {basicMarkerStyle, clickedMarkerStyle, entryMarkerStyle} from './MarkerStyle'
 
 import Select from 'ol/interaction/Select';
+import { ScaleLine } from 'ol/control';
 import { click, pointerMove } from 'ol/events/condition';
 
 import HandleCategoryClick from './HandleCategoryClick';
@@ -335,6 +336,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
         if (map) {
             console.log('-------rendering------')
             const layerExists = map.getLayers();
+            map.addControl(new ScaleLine());    // 축척
             // 배경지도 옵션 설정
             if (layerExists) {
                 switch (layerState) {
