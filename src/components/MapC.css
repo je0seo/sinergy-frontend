@@ -174,3 +174,21 @@
     bottom: 6px;
     right: 1px;
 }
+.ol-scale-line {
+    background: #FFFFFF;
+    align-items: center;
+    width: 40px;
+    height: 22px;
+    z-index: 100;
+    margin: 0 5px 0 5px;
+    position: absolute;
+    padding: 2px 15px 0 15px;
+    bottom: 6px;
+    left: 1px;
+    border-radius: 5px;
+    border: #dcdbd9 solid 1px;
+}
+.ol-scale-line-inner {
+    font-family: 'Pretendard-Regular';
+    font-size: 17px;
+}
