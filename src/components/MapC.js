@@ -457,7 +457,6 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                     bump={bump}
                     bol={bol}
                     slopeD={slopeD}
-                    showObs={showObs}
                     onObstacleAvoidance={onObstacleAvoidance}
                 />
             )}
