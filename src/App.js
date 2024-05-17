@@ -476,21 +476,33 @@ const App = () => {
                                 {showObstacleMenu && (
                                     <div className='user-obs-option-setting'>
                                         <div className="slidecontainer">
-                                            <input className='slider' type="range" min="1.00" max="6.00" step="0.001" value={slopeD} onChange={handleChange} placeholder="임계값"/>
-                                            <div className='option-setting'> 경사도
+                                            <div className="slider-row">
+                                                1°
+                                                <input className='slider' type="range" min="1" max="6.00" step="0.001" value={slopeD} onChange={handleChange} placeholder="임계값"/>
+                                                6°
+                                            </div>
+                                            <div className='option-setting'> 경사각도
                                                 <input className='slider-result' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)}/>
-                                                [°] 이상 제외
+                                                [°] ( 기울기: {(slopeD*3.14/180*100).toFixed(2)}%) 이상 제외
                                             </div>
                                         </div>
                                         <div className="slidecontainer">
-                                            <input className='slider' type="range" min="40" max="200" value={bolC} onChange={(e) => setBolC(e.target.value)} placeholder="임계값"/>
+                                            <div className="slider-row">
+                                                40cm
+                                                <input className='slider' type="range" min="40" max="160" value={bolC} onChange={(e) => setBolC(e.target.value)} placeholder="임계값"/>
+                                                150cm
+                                            </div>
                                             <div className='option-setting'> 볼라드 간격
                                                 <input className='slider-result' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)}/>
                                                 [cm] 이하 제외
                                             </div>
                                         </div>
                                         <div className="slidecontainer">
-                                            <input className='slider' type="range" min="1" max="10" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                            <div className="slider-row">
+                                                1.0cm
+                                                <input className='slider' type="range" min="1" max="8" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                                8.0cm
+                                            </div>
                                             <div className='option-setting'> 도로턱 높이
                                                 <input className='slider-result' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)}/>
                                                 [cm] 이상 제외
@@ -581,21 +593,33 @@ const App = () => {
                                     {showObstacleMenu && (
                                         <div className='user-obs-option-setting'>
                                             <div className="slidecontainer">
-                                                <input className='slider' type="range" min="1.00" max="6.00" step="0.001" value={slopeD} onChange={handleChange} placeholder="임계값"/>
-                                                <div className='option-setting'> 경사도
+                                                <div className="slider-row">
+                                                    1°
+                                                    <input className='slider' type="range" min="1" max="6.00" step="0.001" value={slopeD} onChange={handleChange} placeholder="임계값"/>
+                                                    6°
+                                                </div>
+                                                <div className='option-setting'> 경사각도
                                                     <input className='slider-result' type="text" placeholder="임계값" value={slopeD} onChange={(e) => setSlopeD(e.target.value)}/>
-                                                    [°] 이상 제외
+                                                    [°] ( 기울기: {(slopeD*3.14/180*100).toFixed(2)}%) 이상 제외
                                                 </div>
                                             </div>
                                             <div className="slidecontainer">
-                                                <input className='slider' type="range" min="40" max="200" value={bolC} onChange={(e) => setBolC(e.target.value)} placeholder="임계값"/>
+                                                <div className="slider-row">
+                                                    40cm
+                                                    <input className='slider' type="range" min="40" max="150" value={bolC} onChange={(e) => setBolC(e.target.value)} placeholder="임계값"/>
+                                                    150cm
+                                                </div>
                                                 <div className='option-setting'> 볼라드 간격
                                                     <input className='slider-result' type="text" placeholder="임계값" value={bolC} onChange={(e) => setBolC(e.target.value)}/>
                                                     [cm] 이하 제외
                                                 </div>
                                             </div>
                                             <div className="slidecontainer">
-                                                <input className='slider' type="range" min="1" max="10" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                                <div className="slider-row">
+                                                    1.0cm
+                                                    <input className='slider' type="range" min="1" max="8" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                                    8.0cm
+                                                </div>
                                                 <div className='option-setting'> 도로턱 높이
                                                     <input className='slider-result' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)}/>
                                                     [cm] 이상 제외
