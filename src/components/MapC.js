@@ -400,7 +400,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 map.removeLayer(poiMarkerLayer);
            }
         }
-    }, [keyword])
+    }, [layerState,keyword])
 
     return (
         <div>
