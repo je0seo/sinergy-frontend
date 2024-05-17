@@ -7,7 +7,6 @@ import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import {GeoJSON} from "ol/format";
 
-import {makeCrsFilter} from "./utils/crs-filter.js";
 import { Stroke, Style } from "ol/style";
 import {showMarkerStyle} from './MarkerStyle'
 import {PopupUIComponent} from './PopupC'
@@ -139,21 +138,17 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, show
             setUnpavedLinkLayer(unpavedLayer)
 
             // 2. 범례 지도에 시각화
-            pathData.forEach((path, index) => {
-                const listOfEdgeId = path.map(e => e.edge);
-                const crsFilter = makeCrsFilter(listOfEdgeId);
-                const legendLayer = new TileLayer({
-                    title: `legend ${index + 1}`,
-                    source: new TileWMS({
-                        url: 'http://localhost:8080/geoserver/gp/wms',
-                        params: { 'LAYERS': 'gp:link','CQL_FILTER': crsFilter },
-                        serverType: 'geoserver',
-                        visible: true,
-                    }),
-                    zIndex: 4
-                });
-                map.addLayer(legendLayer);
-            })
+            const legendLayer = new TileLayer({
+                title: `legend`,
+                source: new TileWMS({
+                    url: 'http://localhost:8080/geoserver/gp/wms',
+                    params: { 'LAYERS': 'gp:link','CQL_FILTER': filter },
+                    serverType: 'geoserver',
+                    visible: true,
+                }),
+                zIndex: 4
+            });
+            map.addLayer(legendLayer);
 
             // 4. 모든 경로 내 장애물 레이어 지도에 추가
             map.addLayer(bumpMarker)
