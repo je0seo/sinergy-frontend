@@ -1,14 +1,10 @@
 // App.js
 import React, { useRef, useState, KeyboardEvent } from 'react';
-import UOSLogo from './components/images/uosMark.png';
 import {MapC as Map} from './components/MapC';
-import ThreeDContent from './components/ThreeDContent';
 import fullKLogo from './components/images/fullKLogo.png';
 import fullKLogoG from './components/images/fullKLogoG.png';
 import SLogo from './components/images/SLogo.png';
 import searchicon from './components/images/search.png';
-import GLogo from './components/images/logo_G_red.png';
-import YLogo from './components/images/logo_Y_yellow.png';
 import './App.css'; // App.css 파일을 import
 
 // FindPathContent.js
@@ -35,7 +31,7 @@ import {Icons} from './components/MarkerStyle'
 
 import { PopupUIComponent } from './components/PopupC';
 
-const Header = ({ searchTerm, setSearchTerm, handleSearch, activeTab, handleTabChange, handleModeChange, BarrierFreeMode}) => {
+const Header = ({ searchTerm, setSearchTerm, handleSearch, handleModeChange, BarrierFreeMode}) => {
     const inputRef = useRef(null);
     const handleKeyPress = (e) => {
         if (e.key === "Enter") { // Enter 키를 누르면 연결된 버튼을 클릭
@@ -140,7 +136,7 @@ const usePathfinding = () => {
           } else if (!unpavedFound && item.link_att == 4) {   // 비포장
             setExist('unpaved',true)
             unpavedFound = true
-          } else if (!slopeFound && item.link_att != 5 && item.grad_deg>=3.18){    // 경사로
+          } else if (!slopeFound && item.link_att !== 5 && item.grad_deg>=3.18){    // 경사로
             setExist('slope',true)
             slopeFound = true
           } else if (!indoorFound && item.link_att == 6){    // 실내
@@ -339,7 +335,6 @@ const App = () => {
 
     const [activeTab, setActiveTab] = useState('');
     const [showObstacleMenu, setShowObstacleMenu] = useState(false); // 상태 추가
-    const [ToggBtnType, setToggBtnType] = useState('');
     const [showFacilitiesMenu, setShowFacilitiesMenu] = useState( false);
     const [toggleLeftSide, setToggleLeftSide] = useState(true);
     const [toggleLeftSideFeature, setToggleLeftSideFeature] = useState('<')
@@ -380,9 +375,7 @@ const App = () => {
     const handleToggleObstacleMenu = () => {
         setShowObstacleMenu(!showObstacleMenu);
     };
-    const handleToggleFacilitiesMenu = () =>{
-        setShowFacilitiesMenu(!showFacilitiesMenu);
-    }
+
     const handleToggleLeftSide = () =>{
         setToggleLeftSide(!toggleLeftSide);
         if (toggleLeftSideFeature === '<'){
@@ -454,13 +447,6 @@ const App = () => {
                 </div>
                 {activeTab === '' && <div className='home-left'>
                     <div>
-                        {/*
-                        {!showFacilitiesMenu && (
-                            <button className='showingBtn' onClick={() => {handleToggleFacilitiesMenu(); handleShowReq('facilities');}}>
-                                <div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div>
-                            </button>
-                        )}
-                        */}
                         {keyword != '' && <div className='info-page'><Search keyword={keyword} setKeyword={setKeyword} setFinalKeyword={setPoiKeyword}/></div>}
                         {BarrierFreeMode && (
                             <div style={{borderStyle: 'solid', borderColor: '#FFCD4A', margin: '0 10px 3px 7px'}}>
@@ -517,8 +503,6 @@ const App = () => {
                         <div style={{fontSize: '14px', textAlign: 'center', marginTop: '3px', marginBottom: '3px', display: 'flex', flexDirection: 'column',alignItems: 'center', justifyContent: 'center', fontFamily: 'Pretendard-Regular', padding: '0'}}>편의시설 둘러보기</div>
                         {!showFacilitiesMenu &&( // showFacilitiesMenu 상태에 따라 보이게 설정
                             <div className='showingFacilitiesBtns'>
-                                {/*<button className='showingBtn' onClick={handleToggleFacilitiesMenu}>캠퍼스 내 편의시설 종류별 보기 버튼 가리기</button> */}
-                                {/*<button className='showingBtn' onClick={() => handleShowReq('facilities')}><div><img src={facilitiesIcon} alt="Facilities Icon" className="iconImage" /> 편의시설 전체 보기</div></button> */}
                                 {BarrierFreeMode && (<div className='showingFacBtn-category'>
                                     <div className='showingFacBtnText'>지원<br></br>시설</div>
                                     <div className='showingFacBtnT'><button className='showingFacBtn' onClick={() => handleShowReq('toilet')}><img src={Icons.toiletIcon} alt="toiletIcon" className="showingFacBtn-iconImage" /></button>장애인 화장실</div>
@@ -567,14 +551,6 @@ const App = () => {
                         )}
                         </div>
                     </div>
-                    {/*<a href="https://www.uos.ac.kr/main.do?epTicket=INV">
-                        <img src={UOSLogo} alt="UOS Logo for link" style={{ width: '160px', margin: '0 auto' }} />
-                    </a>*/}
-                    {/*{showText4deco && keyword == '' && (
-                        <div className="deco-text-style">
-                            <p>서울시립대학교를 탐색해보세요!</p>
-                        </div>
-                    )}*/}
                 </div>}
                 {activeTab === '길찾기' && (
                     <div>
@@ -629,7 +605,7 @@ const App = () => {
                                         </div>
                                     )}
                                 </div>
-                            )} {/*배리어프리 모드 해당 끝*/}
+                            )}
                             <div className="input-row">
                                 <div className="input">
                                     <img src={irumarkerS} alt="start irumarker" className="irumarkerImage" />
@@ -655,7 +631,7 @@ const App = () => {
                                         <input className='pf-input-style' type="text" placeholder="도착지를 입력하세요" value={end} onChange={(e) => setEnd(e.target.value)} />
                                     </div>
                                 </div>
-                            </div> {/*공통 끝*/}
+                            </div>
                             {obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0 && (
                                 <div className="button-row">
                                     <button className="button-style" onClick={() => {handleInputReset();    initialObsState();}}>⟲ 다시입력</button>
@@ -676,7 +652,7 @@ const App = () => {
                                         </div>
                                     )}
                                 </div>
-                            )} {/*공통: 길찾기 결과 있을 떄*/}
+                            )}
                             {!(obstacleIDs.ObstacleNodeIDs.length === 0 && obstacleIDs.ObstacleLinkIDs.length === 0) && (
                                 <div className="obstacles-list">
                                     [추가로 회피할 장애물 목록]
