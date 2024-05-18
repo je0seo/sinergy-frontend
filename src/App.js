@@ -85,8 +85,8 @@ const usePathfinding = () => {
   };
 
   const [features, setFeatures] = useState(initialFeaturesState);
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
+  let [start, setStart] = useState('');
+  let [end, setEnd] = useState('');
   const [slopeD, setSlopeD] = useState(3.18);
   const [bolC, setBolC] = useState(120);
   const [bumpC, setBumpC] = useState(2);
@@ -172,6 +172,8 @@ const usePathfinding = () => {
 
   const handleFindPathClick = async () => {
     setStartEndNormalCheckMessage('');
+    start = start.split(' ').join('')
+    end = end.split(' ').join('')
     try {
       const requestData = {
         start,
@@ -618,7 +620,7 @@ const App = () => {
                                         <div className="input" key={index}>
                                             <img src={irumarkerG} alt="stopover irumarker" className="irumarkerImage"/>
                                             <div className="input-box">
-                                                <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
+                                                <input className='pf-input-style' type="text" placeholder={`${index + 1}번째 경유지`} value={stopover.split(' ').join('')} onChange={(e) => handleStopoverChange(index, e.target.value)}/>
                                                 <button className='stopover-remove-button' onClick={() => handleRemoveStopover(index)}>―</button>
                                             </div>
                                         </div>
