@@ -3,6 +3,7 @@ import axios from 'axios';
 import {NODE_BACKEND_URL} from "../constants/urls";
 import './MapC.css';
 import {Icons} from './MarkerStyle'
+import searchicon from './images/search.png';
 
 const searchBuildingInfo = async (keyword, setBuildingInfo) => {
     const req = {keyword};
@@ -87,7 +88,7 @@ const SearchResultUIComponent = ({keyword, setKeyword, setFinalKeyword}) => {
             <div className = 'result-list'>
                 {resultList.map((item, index) => (
                     <button key={index} className = 'result' onClick={() => {setCandidatesExist(false); setKeyword(item); setFinalKeyword(item)}}>
-                        <img src={Icons.magnifier} style={{width:'5%', height:'5%'}}></img>
+                        <img src={searchicon} style={{width:'5%', height:'5%'}}></img>
                         <div style={{paddingLeft: '8px'}}>{item}</div>
                     </button>
                 ))}
