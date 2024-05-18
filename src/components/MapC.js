@@ -228,7 +228,7 @@ scaleLineControl.getScaleForResolution = function(resolution) {
 // 사용자 정의 단위 문자열 설정
 scaleLineControl.render = function() {
   const scale = this.getScaleForResolution(this.getMap().getView().getResolution());
-  this.element.innerHTML = `${scale.toFixed(2)} cm`;
+  this.element.innerHTML = `1: ${scale.toFixed(2)}`;
 };
 
 export const useMap = () => { // 배경지도만 따로 분리
