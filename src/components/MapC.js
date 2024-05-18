@@ -294,7 +294,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
 
     const createShortestPathLayer = (pathData) => {
         //console.log("pathData:", pathData);
-        const colorPalette = ['#FD5230', '#007AC5', '#00b398','#44EAC5','purple','blue','orange', 'cyan', 'magenta'];
+        const colorPalette = ['#FF2B00', '#007AC5', '#00b398','#44EAC5','purple','blue','orange', 'cyan', 'magenta'];
 
         pathData.forEach((path, index) => {
             const listOfEdgeId = path.map(e => e.edge);
