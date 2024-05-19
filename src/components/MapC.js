@@ -130,7 +130,7 @@ const poiMarkerClickEventWith = (keyword, selectClick) => {
 
         selectedFeatures.forEach(function(feature) {
             if (feature.get('bg_name') === keyword) {
-                feature.setStyle(clickedMarkerStyle(irumarker2))
+                feature.setStyle(clickedMarkerStyle(irumarkerE))
                 console.log(keyword + ' click')
             }
         });
