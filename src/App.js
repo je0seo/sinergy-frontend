@@ -485,8 +485,8 @@ const App = () => {
                                         <div className="slidecontainer">
                                             <div className="slider-row">
                                                 1.0cm
-                                                <input className='slider' type="range" min="1" max="8" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
-                                                8.0cm
+                                                <input className='slider' type="range" min="1" max="15" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                                15.0cm
                                             </div>
                                             <div className='option-setting'> 도로턱 높이
                                                 <input className='slider-result' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)}/>
@@ -603,8 +603,8 @@ const App = () => {
                                             <div className="slidecontainer">
                                                 <div className="slider-row">
                                                     1.0cm
-                                                    <input className='slider' type="range" min="1" max="8" step="0.10" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
-                                                    8.0cm
+                                                    <input className='slider' type="range" min="1" max="15" step="0.5" value={bumpC} onChange={(e) => setBumpC(e.target.value)} placeholder="임계값"/>
+                                                    15.0cm
                                                 </div>
                                                 <div className='option-setting'> 도로턱 높이
                                                     <input className='slider-result' type="text" placeholder="임계값" value={bumpC} onChange={(e) => setBumpC(e.target.value)}/>
