@@ -55,10 +55,12 @@ const Header = ({ searchTerm, setSearchTerm, handleSearch, handleModeChange, Bar
                            placeholder="검색어를 입력하세요"
                            value={searchTerm}
                            onChange={(e) => setSearchTerm(e.target.value)}
-                           style={{margin: '1px Auto'}}
+                           style={{margin: '1px'}}
                            onKeyPress={handleKeyPress}
                     />
-                    <button ref={inputRef} onClick={handleSearch} style={{fontSize: '20%'}}><img src={searchicon} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'17px'}}/></button>
+                    <button ref={inputRef} onClick={handleSearch}>
+                        <img src={searchicon} alt="SㅣnerGY SLogo" style={{padding:'3px', width:'17px'}}/>
+                    </button>
                 </div>
                 <div className="barrier-free-switch">
                     <a style={{fontSize: '10px', color: '#00b398', marginBottom: '5px', textAlign:"center", fontWeight: 'bold'}}>barrier-free</a>
