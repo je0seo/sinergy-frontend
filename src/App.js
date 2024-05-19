@@ -254,9 +254,6 @@ const usePathfinding = () => {
     };
   const addStopover = () => {
     setStopovers([...stopovers, '']);
-    console.log(stopovers)
-    if (stopovers.length >= STOPOVER_MAX_INDEX) // >3하면 한 번 stopovers값이 초기화 되는 과정 때문에 경유지 추가 버튼을 한 번 더 클릭해야 다시 처음부터 추가 가능
-      handleInputReset();
   };
   const handleRemoveStopover = (indexToRemove) => {
         const updatedStopovers = stopovers.filter((_, index) => index !== indexToRemove);
@@ -627,7 +624,7 @@ const App = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    {!(stopovers.length>STOPOVER_MAX_INDEX) && stopovers.map((stopover, index) => (
+                                    {stopovers.map((stopover, index) => (
                                         <div className="input" key={index}>
                                             <img src={irumarkerG} alt="stopover irumarker" className="irumarkerImage"/>
                                             <div className="input-box">
@@ -637,7 +634,7 @@ const App = () => {
                                         </div>
                                     ))}
                                 </div>
-                                <button className="stopover-add-button" onClick={addStopover}>+</button>
+                                {(stopovers.length<STOPOVER_MAX_INDEX) && <button className="stopover-add-button" onClick={addStopover}>+</button>}
                                 <div className="input">
                                     <img src={irumarkerE} alt="end irumarker" className="irumarkerImage"/>
                                     <div className="input-box">
