@@ -62,21 +62,6 @@
     font-family: 'Pretendard-Regular';
 }
 
-.select-layer{
-    position: absolute;
-    top: 4px; /* 0*/
-    right: 20px; /* 0*/
-    width: 70px;
-    height: 80px;
-    z-index: 100;
-    fontSize: 15px;
-    font-family: 'Pretendard-Regular';
-    border: none;
-    background-color: rgba(255, 255, 255, 0.5); /* 배경색을 흰색의 투명도 50%로 설정 */
-    border: none; /* 테두리 제거 */
-    padding: 5px; /* 내부 여백 설정 */
-}
-
 .select-layer-wrap {
     display: flex;
     position: absolute;
@@ -94,7 +79,7 @@
     align-items: center;
     width: 60px;
     height: 60px;
-    z-index: 100;
+    z-index: 20;
     padding: 0;
     margin: 0 5px 0 5px;
 }
@@ -111,7 +96,6 @@
     margin: 0 0 0 0;
     border-radius: 9px 9px 0 0;
 }
-
 .layer-text {
     font-size: 11px;
     font-family: 'Pretendard-Regular';
@@ -127,7 +111,7 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    z-index: 100;
+    z-index: 20;
     padding: 0;
     margin: 0 5px 0 5px;
     font-family: 'Pretendard-Regular';
@@ -146,7 +130,7 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    z-index: 100;
+    z-index: 20;
     padding: 0;
     margin: 0 5px 0 5px;
     font-family: 'Pretendard-Regular';
@@ -165,7 +149,7 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    z-index: 100;
+    z-index: 20;
     padding: 0;
     margin: 0 5px 0 5px;
     font-family: 'Pretendard-Regular';
@@ -178,7 +162,7 @@
     background: rgba(255, 255, 255, 0.2);
     width: 100px;
     height: 20px;
-    z-index: 100;
+    z-index: 20;
     margin: 0 5px 0 5px;
     padding: 2px 2px 0 2px;
     position: absolute;
