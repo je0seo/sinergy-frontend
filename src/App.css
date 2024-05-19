@@ -211,16 +211,15 @@
 }
 /*탭 구성*/
 .menu {
-  width: 100%;
+  width: 379px;
   display: flex;
-  justify-content: space-around;
-  margin:0 1% 1% 1%;
+  margin: 0 0 0 10px;
   background-color: white;/*배경색: #FFFEF4 */
 }
-.menu-tab {
+.menu-tab- {
   font-family: 'Pretendard-Regular';
   width: 50%;
-  height: 25px;
+  height: 30px;
   background-color: rgba(0, 0, 0, 0); /* 탭 배경색 */
   color: black; /* 탭 텍스트 색상 */
   border: none;
@@ -230,9 +229,27 @@
   text-decoration: none;
   border-radius: 0px;
   transition: background-color 0.8s ease;
+  border-bottom: #FFCD4A solid 1px;
 }
-.menu-tab:hover {
+.menu-tab-:hover {
   background-color: #555; /* 마우스 호버 시 배경색 변경 */
+}
+.menu-tab-active:hover {
+  background-color: #555; /* 마우스 호버 시 배경색 변경 */
+}
+.menu-tab-active {
+  font-family: 'Pretendard-Regular';
+  width: 50%;
+  height: 30px;
+  color: black; /* 탭 텍스트 색상 */
+  cursor: pointer;
+  display: block;
+  padding: 0 0 0 0;
+  text-decoration: none;
+  border-radius: 0px;
+  background: #ffe8b0;
+  border: #FFCD4A solid 1px;
+  border-bottom: none;
 }
 /*홈화면 좌측 패널*/
 .home-left {
@@ -246,9 +263,10 @@
   border-style: solid;
   border-color: #FFCD4A; /*메인색*/
   background-color: white;/*배경색: #FFFEF4 */
-  margin: 0px 10px 5px 7px;; /*위 오 아래 왼*/
+  margin: 4px 5px 5px 5px; /*위 오 아래 왼*/
   padding-left: 0px;
   padding-right: 0px;
+  width: 377px;
 }
 /*pathfinder-page*/
 .pathfinder-page {
@@ -616,7 +634,7 @@
   align-items: center;
   justify-content: center;
   font-family:'Pretendard-Regular';
-  font-size: 12px;
+  font-size: 15px;
   text-align: center;
   display: inline-flex;
 }
@@ -660,9 +678,13 @@
   border-top: #FFCD4A solid 0.5px ;
   width: 100%;
 }
+.showingFac-row{
+  display: flex;
+  flex-direction: row;
+}
 .showingFacBtnT {
   font-family: 'Pretendard-Regular';
-  font-size: 11px;
+  font-size: 14px;
   text-align: center;
   width: 67px;
   display: flex;
@@ -693,17 +715,17 @@
 }
 .showingFacBtnText {
   font-family: 'Pretendard-Regular';
-  font-size: 12px;
-  width: 30px;
-  margin: 0 0 0 5px;
+  font-size: 13px;
+  width:39px;
+  margin: 0 0 0 0px;
   display: flex;
+  justify-content: center;
   align-items: center;
   text-align: center;
   font-weight: bold;
+  border: none;
+  background-color: #ffe8b0; /*메인색 마우스 호버 시 배경색 변경 */
 }
-
-
-
 .legend {
   display: flex;
   flex-direction: column;
