@@ -11,6 +11,8 @@ import { Stroke, Style } from "ol/style";
 import {showMarkerStyle} from './MarkerStyle'
 import {PopupUIComponent} from './PopupC'
 
+import {GEO_SERVER_URL} from './constants/urls.js';
+
 export const getNodeIdsOnPath = (pathData) => {
     let listOfNodeId = [];
     pathData.forEach((path, index) => {
@@ -31,19 +33,19 @@ const getEdgeIdsOnPath = (pathData) => {
 }
 
 const url4slopeObs = (filter, slopeD) => {
-    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+    return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
            '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
            + filter
            + 'And (link_att NEQ 5 AND grad_deg >='+slopeD + ')'
 }
 const url4unpavedObs = (filter) => {
-    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+    return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
         '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
         + filter
         + 'AND link_att = 4'
 }
 const url4stairObs = (filter) => {
-    return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+    return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
         '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='
         + filter
         + 'AND link_att = 5'
@@ -55,7 +57,7 @@ const createObsLayerWith = (obsType, pathNodeIds) => {
             dataProjection: 'EPSG:5181'
         }),
         url: function (extent) {
-            return  'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+            return  GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                               '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
                               +obsType.data.ids +') and node_id in (' +pathNodeIds + ')';
         },
@@ -141,7 +143,7 @@ export const ShowObsOnPath = ({map, pathData, locaArray, bump, bol, slopeD, onOb
             const legendLayer = new TileLayer({
                 title: `legend`,
                 source: new TileWMS({
-                    url: 'http://localhost:8080/geoserver/gp/wms',
+                    url: GEO_SERVER_URL+'/gp/wms',
                     params: { 'LAYERS': 'gp:link','CQL_FILTER': filter },
                     serverType: 'geoserver',
                     visible: true,

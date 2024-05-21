@@ -19,7 +19,7 @@ import legend_in from './components/images/legend_indoor.png';
 
 
 import axios from 'axios';
-import {NODE_BACKEND_URL} from "./constants/urls";
+import {NODE_BACKEND_URL} from './components/constants/urls.js';
 //
 import Search from './components/Search';
 //

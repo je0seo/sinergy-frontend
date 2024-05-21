@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {NODE_BACKEND_URL} from "../constants/urls";
+import {NODE_BACKEND_URL} from "./constants/urls";
 import './MapC.css';
 import {Icons} from './MarkerStyle'
 import searchicon from './images/search.png';
