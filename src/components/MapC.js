@@ -31,7 +31,7 @@ import layerBase from './images/layer-base.png';
 import layerDrone from './images/layer-drone.png';
 
 import axios from 'axios';
-import {NODE_BACKEND_URL} from "../constants/urls";
+import {NODE_BACKEND_URL, GEO_SERVER_URL} from "./constants/urls";
 
 const VWorldBaseUrl = 'https://api.vworld.kr/req/wmts/1.0.0/ABA020A7-DBB7-3954-900F-E891C0E4995E';
 
@@ -66,7 +66,7 @@ const UOSbasemapTile = new TileLayer({
     title: 'UOS Base Map',
     visible: true,
     source: new TileWMS({
-        url: 'http://localhost:8080/geoserver/gp/wms',
+        url: GEO_SERVER_URL+'/gp/wms',
         params: { 'LAYERS': 'gp:basemap' },
         serverType: 'geoserver',
     }),
@@ -76,7 +76,7 @@ const UOSorthoTile = new TileLayer({
         title: 'UOS Road',
         visible: true,
         source: new TileWMS({
-            url: 'http://localhost:8080/geoserver/gp/wms',
+            url: GEO_SERVER_URL+'/gp/wms',
             params: { 'LAYERS': 'gp:uos_orthomosaic' },
             serverType: 'geoserver',
         }),
@@ -85,7 +85,7 @@ const UOSorthoTile = new TileLayer({
 
 const basePoiText = new TileLayer({
     source: new TileWMS({
-        url: 'http://localhost:8080/geoserver/gp/wms',
+        url: GEO_SERVER_URL+'/gp/wms',
         params: { 'LAYERS': 'gp:poi_point'}, // 해당 스타일 발행 필요
         serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
     }),
@@ -94,7 +94,7 @@ const basePoiText = new TileLayer({
 
 const satellitePoiText = new TileLayer({
     source: new TileWMS({
-        url: 'http://localhost:8080/geoserver/gp/wms',
+        url: GEO_SERVER_URL+'/gp/wms',
         params: { 'LAYERS': 'gp:poi_point','STYLES': 'orthomosaic_poi_point'}, // 해당 스타일 발행 필요
         serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
     }),
@@ -143,7 +143,7 @@ const createPoiMarkerLayer = (cqlFilter) => {
             dataProjection: 'EPSG:5181'
         }),
         url: function(extent) {
-            return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+            return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                 '&request=GetFeature&typeName=gp%3Apoi_point&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+cqlFilter;
         },
         serverType: 'geoserver'
@@ -170,7 +170,7 @@ const createEntryMarkerLayer = (pathNodeIds) => {
                 dataProjection: 'EPSG:5181'
             }),
             url: function(extent) {
-                return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                     '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id IN ('+pathNodeIds+ ') AND node_att = 2';
             },
             serverType: 'geoserver'
@@ -202,7 +202,7 @@ const createIndoorLayer = (buildingName, floor) => {
 
     return new TileLayer({
         source: new TileWMS({
-            url: 'http://localhost:8080/geoserver/gp/wms',
+            url: GEO_SERVER_URL+'/gp/wms',
             params: { 'LAYERS': 'gp:bd_in','CQL_FILTER': cqlFilter, 'STYLES': 'bd_in'}, // bd_in 스타일 발행 필요
             serverType: 'geoserver' // 사용 중인 WMS 서버 종류에 따라 설정
         }),
@@ -310,7 +310,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                 title: `UOS Shortest Path ${index + 1}`,
                 source: new VectorSource({
                     format: new GeoJSON(),
-                    url: 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                    url: GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                         '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER='+crsFilter
                 }),
                 style: new Style({
@@ -338,7 +338,7 @@ export const MapC = ({ pathData, width, height, keyword, setKeyword, bol, bump, 
                         dataProjection: 'EPSG:5181'
                     }),
                     url: function(extent) { // WMS방식에서 WFS로 변경
-                        return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+                        return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                             '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id='+nodeId;
                     },
                     serverType: 'geoserver'

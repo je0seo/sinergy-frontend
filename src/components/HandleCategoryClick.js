@@ -9,17 +9,18 @@ import {GeoJSON} from "ol/format";
 
 import { Style } from "ol/style";
 import {showMarkerStyle} from './MarkerStyle'
+import {GEO_SERVER_URL} from './constants/urls.js'
 
 const createUrl4WFS = (category) => {
      switch (category.type) {
          case 'unpaved':
          case 'stairs':
          case 'slope':
-             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+             return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                   '&request=GetFeature&typeName=gp%3Alink&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=id in ('
                   +category.data.ids + ')';
          default:
-             return 'http://localhost:8080/geoserver/gp/wfs?service=WFS&version=2.0.0' +
+             return GEO_SERVER_URL+'/gp/wfs?service=WFS&version=2.0.0' +
                  '&request=GetFeature&typeName=gp%3Anode&maxFeatures=50&outputFormat=application%2Fjson&CQL_FILTER=node_id in ('
                  +category.data.ids +')';
      }
