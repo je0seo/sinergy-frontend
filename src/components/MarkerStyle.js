@@ -76,7 +76,7 @@ export const Icons = {
     restaurantIcon, showerRoomIcon, squashIcon, footvolleyballIcon,bookstoreIcon, parkingIcon, unmannedIcon, settingsIcon
 }
 
-export const entryMarkerStyle = new Style({
+export const entryMarkerStyle = new Style({ // 건물 출입구 스타일
     image: new Circle({
         fill: new Fill({
             color: '#ffffff'
@@ -96,7 +96,7 @@ export const clickedLinkStyle = new Style({
      })
 })
 
-export const basicMarkerStyle = (irumarker) => { //출발지 스타일
+export const basicMarkerStyle = (irumarker) => { // 출발지 스타일
     return new Style({
         image: new Icon({
             src: irumarker,
