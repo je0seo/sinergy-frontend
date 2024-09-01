@@ -1,0 +1,2 @@
+export const NODE_BACKEND_URL = 'http://localhost:5000'//'https://sinergy-backend.azurewebsites.net' //5000포트
+export const GEO_SERVER_URL = 'http://localhost:8080/geoserver'//'http://3.141.2.179:8080/geoserver' //8080
