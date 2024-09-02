@@ -4,9 +4,8 @@
 )
 
 ---
-![시너지 썸네일.png](..%2F%EC%8B%9C%EB%84%88%EC%A7%80%20%EC%8D%B8%EB%84%A4%EC%9D%BC.png)
-![시너지 소개.png](..%2F%EC%8B%9C%EB%84%88%EC%A7%80%20%EC%86%8C%EA%B0%9C.png)
-
+![시너지 썸네일](https://github.com/user-attachments/assets/9faa49f8-6ab9-40b3-b9c8-927783b58e85)
+![시너지 소개](https://github.com/user-attachments/assets/02111e2d-d3f3-4e78-8f5b-32ff73e982e9)
 
 ```
 📍링크 및 노드 데이터를 전달 받은 분들은 DB를 새로 생성해야 합니다.
