@@ -18,6 +18,9 @@
 ```
 *백엔드* ➡️ https://github.com/je0seo/sinergy-backend
 
+*DB연결 및 GeoServer 레이어 발행 방법* ➡️
+[**Getting Started DB with azure**](https://uos-urbanscience.org/archives/uos_portfolio/%ec%8b%9c%eb%84%88%ec%a7%80-%ec%8b%9c%eb%a6%bd%eb%8c%80%eb%a5%bc-%eb%88%84%eb%b9%84%eb%8a%94-%eb%84%88%eb%a5%bc-%ec%9c%84%ed%95%9c-%ec%a7%80%eb%8f%84](https://rattle-grip-3aa.notion.site/Getting-Started-DB-with-azure-6dc1c73abd3e4c17a8e1ceb5777fa013
+)
 ## 👩‍💻 Developers 🙌
 
 ---
@@ -46,6 +49,7 @@ npm start
 ```
 - frontend 뿐만 아니라 backend도 설치 후 frontend와 함께 run해야 브라우저에서 원하는 동작이 제대로 기능할 수 있을 것.
 - 로컬 환경이라면 http://localhost:3000에서 바로 접속이 가능하다.
+
 ## 🛠️ Stack
 
 ---
